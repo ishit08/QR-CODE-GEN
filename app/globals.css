@@ -25,3 +25,10 @@ body {
     text-wrap: balance;
   }
 }
+/* Ensure content has padding to account for fixed navbar and footer */
+body {
+  padding-top: 60px;
+  /* Adjust to match navbar height */
+  padding-bottom: 40px;
+  /* Adjust to match footer height */
+}

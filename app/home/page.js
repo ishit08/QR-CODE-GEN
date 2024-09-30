@@ -1,14 +1,10 @@
-const Home = () => {
+const HomePage = () => {
   return (
     <div>
       <h1>Welcome to Our Platform</h1>
-      <h2>Subscription Offers</h2>
-      <ul>
-      
-      </ul>
-    
+      <p>Explore our subscription offers and enjoy exclusive benefits!</p>
     </div>
   );
 };
 
-export default Home;
+export default HomePage;

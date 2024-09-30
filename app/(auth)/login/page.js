@@ -1,16 +1,19 @@
-const Register = () => {
-  const [name, setName] = useState('');
+'use client';
+
+import { useState } from 'react';
+
+const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleRegister = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    const res = await fetch('/api/register', {
+    const res = await fetch('/api/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ email, password }),
     });
     const data = await res.json();
     alert(data.message);
@@ -18,13 +21,8 @@ const Register = () => {
 
   return (
     <div>
-      <h1>Register</h1>
-      <form onSubmit={handleRegister}>
-        <input 
-          type="text" 
-          value={name} 
-          onChange={(e) => setName(e.target.value)} 
-          placeholder="Name" required />
+      <h1>Login</h1>
+      <form onSubmit={handleLogin}>
         <input 
           type="email" 
           value={email} 
@@ -35,10 +33,10 @@ const Register = () => {
           value={password} 
           onChange={(e) => setPassword(e.target.value)} 
           placeholder="Password" required />
-        <button type="submit">Register</button>
+        <button type="submit">Login</button>
       </form>
     </div>
   );
 };
 
-export default Register;
+export default LoginPage;

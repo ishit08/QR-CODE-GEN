@@ -1,18 +1,22 @@
-const Subscribe= () => {
-  const router = useRouter();
-  const { offer } = router.query;
+"use client"; // This marks the component as a Client Component
+
+import { useSearchParams } from 'next/navigation'; // Replaces useRouter
+import { useEffect, useState } from 'react';
+
+const Subscribe = () => {
+  const searchParams = useSearchParams();
+  const [offer, setOffer] = useState(null);
+
+  useEffect(() => {
+    const offerParam = searchParams.get('offer');
+    setOffer(offerParam);
+  }, [searchParams]);
 
   const handleSubscribe = async () => {
-    const res = await fetch('/api/subscribe', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ offer }),
-    });
-    const data = await res.json();
-    alert(data.message);
+    // Your subscription logic here
   };
+
+  if (!offer) return <p>Loading...</p>;
 
   return (
     <div>
