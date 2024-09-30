@@ -1,6 +1,6 @@
 import Link from 'next/link';
 //import { HomeIcon, CurrencyDollarIcon, LoginIcon, UserAddIcon } from '@heroicons/react/outline'; // Importing icons
-import { HomeIcon, CurrencyDollarIcon,  ArrowRightIcon ,UserPlusIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, CurrencyDollarIcon, DocumentTextIcon, ArrowRightIcon ,UserPlusIcon } from '@heroicons/react/24/outline';
 const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 w-full bg-gray-800 text-white z-50">
@@ -29,6 +29,10 @@ const Navbar = () => {
             <CurrencyDollarIcon className="h-5 w-5" />
             <span>Subscription Plans</span>
           </Link>
+           <Link href="/qr" className="mx-4 flex items-center space-x-2 hover:text-gray-300">
+          <DocumentTextIcon className="h-5 w-5 mr-1" />
+          QR Code Generator
+        </Link>
         </div>
 
         {/* Right-aligned login and register */}

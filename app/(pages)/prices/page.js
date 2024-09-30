@@ -18,9 +18,9 @@ export default function Prices() {
   ];
 
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-3xl font-bold text-center mb-10">Our Subscription Plans</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div className="container mx-auto py-10 md:py-20">
+      <h1 className="text-3xl font-bold text-center py-8">Our Subscription Plans</h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4 md:px-10">
         {offers.map((offer, index) => (
           <div key={index} className="border border-gray-300 rounded-lg p-6 shadow-lg">
             <h2 className="text-2xl font-bold mb-4">{offer.name}</h2>
