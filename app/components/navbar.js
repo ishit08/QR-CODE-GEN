@@ -1,7 +1,6 @@
-<<<<<<< HEAD
 import Link from 'next/link';
 //import { HomeIcon, CurrencyDollarIcon, LoginIcon, UserAddIcon } from '@heroicons/react/outline'; // Importing icons
-import { HomeIcon, CurrencyDollarIcon, ArrowRightOnRectangleIcon, UserPlusIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, CurrencyDollarIcon,  ArrowRightIcon ,UserPlusIcon } from '@heroicons/react/24/outline';
 const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 w-full bg-gray-800 text-white z-50">
@@ -9,26 +8,33 @@ const Navbar = () => {
         
         {/* Logo on the left */}
         <div className="flex items-center space-x-2">
-          <img src="/logo.png" alt="App Logo" className="h-10 w-10" />
-          <span className="text-lg font-bold">MyApp</span>
+         {/* Logo as a link to the home page */}
+      <Link href="/" className="flex items-center">
+        <img 
+          src="/images/logo.png" // Ensure the path to your logo is correct
+          alt="CodeSnap"
+          className="h-10 w-10" // Adjust the size as needed
+        />
+        <span className="text-lg font-bold ml-2">CodeSnap</span> {/* Added margin-left for spacing */}
+      </Link>
         </div>
 
         {/* Centered links */}
         <div className="flex space-x-8">
           <Link href="/" className="flex items-center space-x-2 hover:text-gray-300">
             <HomeIcon className="h-5 w-5" />
-            <span>HOME</span>
+            <span>Home</span>
           </Link>
           <Link href="/prices" className="flex items-center space-x-2 hover:text-gray-300">
             <CurrencyDollarIcon className="h-5 w-5" />
-            <span>Prices & Offers</span>
+            <span>Subscription Plans</span>
           </Link>
         </div>
 
         {/* Right-aligned login and register */}
         <div className="flex space-x-4">
           <Link href="/login" className="flex items-center space-x-2 hover:text-gray-300">
-            <ArrowRightOnRectangleIcon className="h-5 w-5" />
+         <ArrowRightIcon className="h-5 w-5"></ArrowRightIcon>
             <span>Login</span>
           </Link>
           <Link href="/register" className="flex items-center space-x-2 hover:text-gray-300">
@@ -42,38 +48,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-=======
-import Image from 'next/image';
-import Link from 'next/link';
-
-export default function Navbar() {
-  return (
-    <nav className="flex justify-between items-center p-4 bg-white text-black shadow-md">
-      {/* Logo */}
-      <div className="flex items-center">
-        <Image src="/images/logo.png" alt="Logo" width={100} height={100} />
-      </div>
-
-      {/* Navigation links */}
-      <div className="flex space-x-8 text-lg font-medium">
-        <Link href="/single-generator" className="hover:text-blue-500">
-          Single Generator
-        </Link>
-        <Link href="/bulk-generator" className="hover:text-blue-500">
-          Bulk Generator
-        </Link>
-      </div>
-
-      {/* Buttons */}
-      <div className="flex space-x-4">
-        <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300">
-          Register
-        </button>
-        <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300">
-          Log In
-        </button>
-      </div>
-    </nav>
-  );
-}
->>>>>>> ajay
