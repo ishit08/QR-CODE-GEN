@@ -14,17 +14,17 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="icon" href="/favicon.ico" type="image/x-icon" />
       </head>
-      <body className="flex flex-col min-h-screen overflow-hidden">
+      <body className="flex flex-col min-h-screen">
         {/* Navbar at the top */}
         <Navbar />
 
         {/* Main content */}
-        <main className="flex-grow container mx-auto py-10 px-4 md:px-10">
+        <main className="flex-grow container">
           {children}
         </main>
 
         {/* Footer at the bottom */}
-        <Footer className="mt-auto" />
+        <Footer />
       </body>
     </html>
   );

@@ -6,56 +6,56 @@ import ImageQR from '../../components/imageqr';
 
 const QRPage = () => {
   const [activeTab, setActiveTab] = useState('basic');
-const renderTabContent = () => {
-  switch (activeTab) {
-    case 'basic':
-      return <BasicQr />; // Render the Basic QR code generator
-    case 'withImage':     // Use the ImageQR component here
-      return <ImageQR />;
-    case 'dynamic':
-      return <div>Dynamic QR Code Generator (Feature under development)</div>;
-    case 'bulk':
-      return <div>Bulk QR Code Generator</div>;
-    case 'invitation':
-      return <div>Invitation QR Code Generator</div>;
-    default:
-      return null;
-  }
-};
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'basic':
+        return <BasicQr />; // Render the Basic QR code generator
+      case 'withImage':     
+        return <ImageQR />; // Use the ImageQR component here
+      case 'dynamic':
+        return <div>Dynamic QR Code Generator (Feature under development)</div>;
+      case 'bulk':
+        return <div>Bulk QR Code Generator</div>;
+      case 'invitation':
+        return <div>Invitation QR Code Generator</div>;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div className="min-h-screen py-20 bg-gray-100">
-      <h1 className="text-3xl text-center font-bold mb-6">QR Code Generator</h1>
-      
-      {/* Tabs */}
-      <div className="flex space-x-4 mb-8 px-4">
+    <div className="">
+      <h1 className="text-3xl text-center font-bold m-10">QR Code Generator</h1>
+
+      {/* Tabs - Make the layout mobile responsive */}
+      <div className="flex flex-wrap justify-center space-y-2 md:space-y-0 md:space-x-4 mb-8 px-4">
         <button
-          className={`py-2 px-4 ${activeTab === 'basic' ? 'bg-blue-500 text-white' : 'bg-gray-300'} rounded`}
+          className={`py-2 px-4 w-full md:w-auto ${activeTab === 'basic' ? 'bg-blue-500 text-white' : 'bg-gray-300'} rounded`}
           onClick={() => setActiveTab('basic')}
         >
           Basic
-              </button>
-               <button
-          className={`py-2 px-4 ${activeTab === 'withImage' ? 'bg-blue-500 text-white' : 'bg-gray-300'} rounded`}
+        </button>
+        <button
+          className={`py-2 px-4 w-full md:w-auto ${activeTab === 'withImage' ? 'bg-blue-500 text-white' : 'bg-gray-300'} rounded`}
           onClick={() => setActiveTab('withImage')}
         >
           With Image
         </button>
         <button
-          className={`py-2 px-4 ${activeTab === 'dynamic' ? 'bg-blue-500 text-white' : 'bg-gray-300'} rounded`}
+          className={`py-2 px-4 w-full md:w-auto ${activeTab === 'dynamic' ? 'bg-blue-500 text-white' : 'bg-gray-300'} rounded`}
           onClick={() => setActiveTab('dynamic')}
         >
           Dynamic
         </button>
-       
         <button
-          className={`py-2 px-4 ${activeTab === 'bulk' ? 'bg-blue-500 text-white' : 'bg-gray-300'} rounded`}
+          className={`py-2 px-4 w-full md:w-auto ${activeTab === 'bulk' ? 'bg-blue-500 text-white' : 'bg-gray-300'} rounded`}
           onClick={() => setActiveTab('bulk')}
         >
           Bulk
         </button>
         <button
-          className={`py-2 px-4 ${activeTab === 'invitation' ? 'bg-blue-500 text-white' : 'bg-gray-300'} rounded`}
+          className={`py-2 px-4 w-full md:w-auto ${activeTab === 'invitation' ? 'bg-blue-500 text-white' : 'bg-gray-300'} rounded`}
           onClick={() => setActiveTab('invitation')}
         >
           Invitation
@@ -63,7 +63,7 @@ const renderTabContent = () => {
       </div>
 
       {/* Tab Content */}
-      <div className="p-4 bg-white rounded shadow max-h-[80vh] overflow-auto">
+      <div className="p-4 bg-white rounded shadow min-h-[50] overflow-auto mx-4 bg-gray-200 ">
         {renderTabContent()}
       </div>
     </div>
