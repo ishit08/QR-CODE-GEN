@@ -1,5 +1,3 @@
-// imageqr.js
-
 "use client";
 
 import { useState } from "react";
@@ -23,42 +21,68 @@ export default function ImageQR() {
     qrCodeElement.innerHTML = "";
     orgNameElement.innerHTML = "";
 
-    if (text && orgText && location && imageFile) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const imageUrl = event.target.result;
-        const qrContent = `${text} \n Location: ${location}`;
+    const qrContentArray = [];
 
+    // Build the QR content based on filled inputs
+    if (text) qrContentArray.push(`URL: ${text}`);
+    if (orgText) qrContentArray.push(`Organization: ${orgText}`); // Add organization name to QR content
+    if (location) qrContentArray.push(`Location: ${location}`);
+    
+    const qrContent = qrContentArray.join('\n'); // Join filled content for QR code
+
+    // Only proceed if there's content for QR code
+    if (qrContent) {
+      const reader = new FileReader();
+
+      // If an image file is provided, load it
+      if (imageFile) {
+        reader.onload = (event) => {
+          const imageUrl = event.target.result;
+          const canvas = document.createElement("canvas");
+          qrCodeElement.appendChild(canvas);
+          setCanvasRef(canvas);
+
+          // Generate the QR code
+          QRCode.toCanvas(canvas, qrContent, { width: 300, height: 300 }, (error) => {
+            if (error) console.error(error);
+
+            const ctx = canvas.getContext("2d");
+            const img = new Image();
+            img.src = imageUrl;
+
+            img.onload = function () {
+              const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height) * 0.2;
+              const imgWidth = img.width * scaleFactor;
+              const imgHeight = img.height * scaleFactor;
+              const x = canvas.width / 2 - imgWidth / 2;
+              const y = canvas.height / 2 - imgHeight / 2;
+
+              ctx.drawImage(img, x, y, imgWidth, imgHeight);
+            };
+          });
+
+          orgNameElement.style.color = textColor;
+          orgNameElement.style.backgroundColor = bgColor;
+          orgNameElement.innerHTML = orgText;
+        };
+
+        reader.readAsDataURL(imageFile);
+      } else {
+        // If no image, just generate the QR code without it
         const canvas = document.createElement("canvas");
         qrCodeElement.appendChild(canvas);
         setCanvasRef(canvas);
 
         QRCode.toCanvas(canvas, qrContent, { width: 300, height: 300 }, (error) => {
           if (error) console.error(error);
-
-          const ctx = canvas.getContext("2d");
-          const img = new Image();
-          img.src = imageUrl;
-
-          img.onload = function () {
-            const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height) * 0.2;
-            const imgWidth = img.width * scaleFactor;
-            const imgHeight = img.height * scaleFactor;
-            const x = canvas.width / 2 - imgWidth / 2;
-            const y = canvas.height / 2 - imgHeight / 2;
-
-            ctx.drawImage(img, x, y, imgWidth, imgHeight);
-          };
         });
 
         orgNameElement.style.color = textColor;
         orgNameElement.style.backgroundColor = bgColor;
         orgNameElement.innerHTML = orgText;
-      };
-
-      reader.readAsDataURL(imageFile);
+      }
     } else {
-      alert("Please enter a URL, organization name, Google Maps location, and upload an image.");
+      alert("Please enter at least a URL or location to generate a QR code.");
     }
   };
 
@@ -70,21 +94,21 @@ export default function ImageQR() {
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Enter URL"
+          placeholder="Enter URL (optional)"
           className="p-2 mb-4 border rounded w-full"
         />
         <input
           type="text"
           value={orgText}
           onChange={(e) => setOrgText(e.target.value)}
-          placeholder="Enter organization name"
+          placeholder="Enter organization name (optional)"
           className="p-2 mb-4 border rounded w-full"
         />
         <input
           type="text"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          placeholder="Enter Google Maps location URL"
+          placeholder="Enter Google Maps location URL (optional)"
           className="p-2 mb-4 border rounded w-full"
         />
         <input
