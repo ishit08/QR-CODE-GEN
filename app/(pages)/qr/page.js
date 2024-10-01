@@ -1,56 +1,73 @@
-"use client"; // Marking as a client component to use the QR code library
+"use client";
 
 import { useState } from 'react';
+import BasicQr from '../../components/basicqr.js'; // Import the QRGenerator component
+import ImageQR from '../../components/imageqr';
 
-const QRGenerator = () => {
-  const [text, setText] = useState('');
-  const [canvasRef, setCanvasRef] = useState(null);
-
-  const generateQRCode = () => {
-    const qrCodeElement = document.getElementById('qrcode');
-    
-    // Clear any existing QR code
-    qrCodeElement.innerHTML = '';
-
-    if (text) {
-      // Create a canvas element
-      const canvas = document.createElement('canvas');
-      qrCodeElement.appendChild(canvas);
-      setCanvasRef(canvas); // Store the canvas reference
-
-      // Generate the QR code dynamically and render it on the canvas
-      QRCode.toCanvas(canvas, text, function (error) {
-        if (error) {
-          console.error(error);
-        }
-      });
-    } else {
-      alert("Please enter some text or URL to generate the QR code.");
-    }
-  };
+const QRPage = () => {
+  const [activeTab, setActiveTab] = useState('basic');
+const renderTabContent = () => {
+  switch (activeTab) {
+    case 'basic':
+      return <BasicQr />; // Render the Basic QR code generator
+    case 'withImage':     // Use the ImageQR component here
+      return <ImageQR />;
+    case 'dynamic':
+      return <div>Dynamic QR Code Generator (Feature under development)</div>;
+    case 'bulk':
+      return <div>Bulk QR Code Generator</div>;
+    case 'invitation':
+      return <div>Invitation QR Code Generator</div>;
+    default:
+      return null;
+  }
+};
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-2xl font-bold mb-4">QR Code Generator</h1>
-      <input
-        type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Enter text or URL"
-        className="p-2 mb-4 border rounded"
-      />
-      <button
-        onClick={generateQRCode}
-        className="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700"
-      >
-        Generate QR Code
-      </button>
-      <div id="qrcode" className="mt-4"></div>
+    <div className="min-h-screen py-20 bg-gray-100">
+      <h1 className="text-3xl text-center font-bold mb-6">QR Code Generator</h1>
+      
+      {/* Tabs */}
+      <div className="flex space-x-4 mb-8 px-4">
+        <button
+          className={`py-2 px-4 ${activeTab === 'basic' ? 'bg-blue-500 text-white' : 'bg-gray-300'} rounded`}
+          onClick={() => setActiveTab('basic')}
+        >
+          Basic
+              </button>
+               <button
+          className={`py-2 px-4 ${activeTab === 'withImage' ? 'bg-blue-500 text-white' : 'bg-gray-300'} rounded`}
+          onClick={() => setActiveTab('withImage')}
+        >
+          With Image
+        </button>
+        <button
+          className={`py-2 px-4 ${activeTab === 'dynamic' ? 'bg-blue-500 text-white' : 'bg-gray-300'} rounded`}
+          onClick={() => setActiveTab('dynamic')}
+        >
+          Dynamic
+        </button>
+       
+        <button
+          className={`py-2 px-4 ${activeTab === 'bulk' ? 'bg-blue-500 text-white' : 'bg-gray-300'} rounded`}
+          onClick={() => setActiveTab('bulk')}
+        >
+          Bulk
+        </button>
+        <button
+          className={`py-2 px-4 ${activeTab === 'invitation' ? 'bg-blue-500 text-white' : 'bg-gray-300'} rounded`}
+          onClick={() => setActiveTab('invitation')}
+        >
+          Invitation
+        </button>
+      </div>
 
-      {/* Include the QRCode library */}
-      <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
+      {/* Tab Content */}
+      <div className="p-4 bg-white rounded shadow max-h-[80vh] overflow-auto">
+        {renderTabContent()}
+      </div>
     </div>
   );
 };
 
-export default QRGenerator;
+export default QRPage;
