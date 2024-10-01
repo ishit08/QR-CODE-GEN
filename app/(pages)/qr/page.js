@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import BasicQr from '../../components/basicqr.js'; // Import the QRGenerator component
 import ImageQR from '../../components/imageqr';
+import DynamicQR from '../../components/dynamicqr';
 
 const QRPage = () => {
   const [activeTab, setActiveTab] = useState('basic');
@@ -14,7 +15,7 @@ const QRPage = () => {
       case 'withImage':     
         return <ImageQR />; // Use the ImageQR component here
       case 'dynamic':
-        return <div>Dynamic QR Code Generator (Feature under development)</div>;
+        return <DynamicQR />;
       case 'bulk':
         return <div>Bulk QR Code Generator</div>;
       case 'invitation':
@@ -25,7 +26,7 @@ const QRPage = () => {
   };
 
   return (
-    <div className="">
+    <div className="pt-20">
       <h1 className="text-3xl text-center font-bold m-10">QR Code Generator</h1>
 
       {/* Tabs - Make the layout mobile responsive */}
@@ -63,7 +64,7 @@ const QRPage = () => {
       </div>
 
       {/* Tab Content */}
-      <div className="p-4 bg-white rounded shadow min-h-[50] overflow-auto mx-4 bg-gray-200 ">
+      <div className="p-4 bg-white rounded shadow min-h-[50] overflow-auto mx-4 bg-cyan-50 mb-10">
         {renderTabContent()}
       </div>
     </div>
