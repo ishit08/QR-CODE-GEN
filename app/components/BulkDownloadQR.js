@@ -2,26 +2,27 @@
 "use client";
 import React from "react";
 import { jsPDF } from "jspdf";
+
 const BulkDownloadQR = ({ canvasRef, qrCodes }) => {
   const downloadQRCode = (format) => {
     if (canvasRef.current) {
       const canvas = canvasRef.current;
 
       if (format === "png" || format === "jpeg") {
-        const dataURL = canvas.toDataURL(`image/${format}`);
+        const dataURL = canvas.toDataURL(`image/${format}`); // Corrected template literals
         const link = document.createElement("a");
         link.href = dataURL;
-        link.download = `qr_codes.${format}`;
+        link.download = `qr_codes.${format}`; // Corrected template literals
         link.click();
       } else if (format === "pdf") {
         const pdf = new jsPDF();
-        const imgData = canvas.toDataURL("image/png");
+        const imgData = canvas.toDataURL("image/png"); // PNG format for PDF
         const imgWidth = 190; // Adjust the width of the image in the PDF
         const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
 
         // Add image to the PDF
         pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-        pdf.save(`qr_codes.pdf`);
+        pdf.save("qr_codes.pdf"); // Corrected file name string
       }
     } else {
       alert("No QR codes available for download.");

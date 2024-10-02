@@ -5,7 +5,6 @@ import BulkDownloadQR from "./BulkDownloadQR"; // Import the new component
 import QrLayout from './qrlayout';
 import { drawQRCodesOnCanvas } from '../utility/qrCanvasUtils'; 
 
-
 const BulkQR = () => {
   const [csvData, setCsvData] = useState([]);
   const [qrCodes, setQrCodes] = useState([]);
@@ -15,6 +14,7 @@ const BulkQR = () => {
   const [processedRecords, setProcessedRecords] = useState(0);
   const [error, setError] = useState('');
   const canvasRef = useRef(null);
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -22,7 +22,7 @@ const BulkQR = () => {
       Papa.parse(file, {
         header: true,
         complete: (results) => {
-          setCsvData(results.data);
+          setCsvData(results.data.slice(0, -1));
           setProcessedRecords(0);
           setQrCodes([]);       
         },
@@ -66,7 +66,7 @@ const BulkQR = () => {
       drawQRCodesOnCanvas( canvasRef, qrCodes );
     }
   }, [qrCodes]);
-  
+
   return (
     <QrLayout title="Upload CSV to Generate QR Codes">
       <div className="bg-white px-2">
@@ -116,7 +116,7 @@ const BulkQR = () => {
         )}
         {processedRecords > 0 && !isProcessing && (
           <div className="mt-4 text-center text-green-600">
-            {processedRecords-1} records processed from the file.
+            {processedRecords} records processed from the file.
           </div>
         )}
 
@@ -127,17 +127,25 @@ const BulkQR = () => {
         )}
       </div>
 
-      {/* Canvas for QR code generation */}
-      {qrCodes.length > 0 && (
-        <div className="mt-4 flex flex-col items-center">
-          <canvas
-            ref={canvasRef}
-            className="border max-w-xs max-h-xs" // Adjust max width and height here
-            style={{ width: '300px', height: '300px' }} // Explicitly set dimensions
-          />
-           <BulkDownloadQR canvasRef={canvasRef} qrCodes={qrCodes} />
-        </div>
-      )}
+{qrCodes.length > 0 && (
+  <div className="mt-4 flex flex-col items-center">
+    {/* Scrollable container for vertical scrolling */}
+    <div
+      className="overflow-y-auto"
+      style={{ width: '340px', height: '300px' }} // Set fixed width and max height for vertical scrolling
+    >
+      <canvas
+        ref={canvasRef}
+        className="border"
+        style={{ width: '300px', height: 'auto', display: 'block' }} // Set width and allow auto height
+      />
+    </div>
+    {/* Bulk Download Button */}
+    <BulkDownloadQR canvasRef={canvasRef} qrCodes={qrCodes} />
+  </div>
+)}
+
+
     </QrLayout>
   );
 };
