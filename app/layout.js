@@ -5,14 +5,21 @@ import Footer from './components/footer';
 
 export const metadata = {
   title: "CodeSnap", // Update title as needed
-  description: "This is Custom QR code generator Application", // Update description as needed
+  description: "This is a Custom QR code generator Application", // Update description as needed
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        {/* Correctly referencing favicon without '/public' */}
+        <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+        
+        {/* Font Awesome Stylesheet */}
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        />
       </head>
       <body className="flex flex-col min-h-screen">
         {/* Navbar at the top */}

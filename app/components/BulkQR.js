@@ -1,73 +1,170 @@
-// app/components/BulkQR.js
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Papa from 'papaparse';
 import QRCode from 'qrcode';
-import DownloadDynamicQR from './DownloadDynamicQR'; // Use this component for downloading
-import QrLayout from './QrLayout'; // Import the QrLayout component
+import BulkDownloadQR from "./BulkDownloadQR"; // Import the new component
+import QrLayout from './qrlayout';
 
 const BulkQR = () => {
   const [csvData, setCsvData] = useState([]);
   const [qrCodes, setQrCodes] = useState([]);
-  const canvasRefs = useRef([]); // Store references to multiple canvas elements
+  const [fileName, setFileName] = useState('');
+  const [progress, setProgress] = useState(0);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [processedRecords, setProcessedRecords] = useState(0);
+  const [error, setError] = useState('');
+  const canvasRef = useRef(null);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setFileName(file.name);
       Papa.parse(file, {
         header: true,
         complete: (results) => {
           setCsvData(results.data);
-          generateQRCodes(results.data);
+          setProcessedRecords(0);
+          setQrCodes([]);
         },
       });
     }
   };
 
-  const generateQRCodes = (data) => {
-    const codes = data.map((row, index) => {
-      const qrData = Object.entries(row)
-        .map(([key, value]) => `${key}: ${value}`)
-        .join(', ');
-      return QRCode.toDataURL(qrData).then((dataUrl) => {
-        // Store the canvas ref for each QR code
-        const img = new Image();
-        img.src = dataUrl;
-        return img; // Return the image for later use
-      });
-    });
+  const generateQRCodes = async () => {
+    if (csvData.length === 0) {
+      alert("Please upload a CSV file first.");
+      return;
+    }
 
-    Promise.all(codes).then((values) => {
-      setQrCodes(values); // Set QR codes as images
+    setIsProcessing(true);
+    setProgress(0);
+    setError('');
+       try {
+      const codes = [];
+      for (let i = 0; i < csvData.length; i++) {
+        const row = csvData[i];
+        const qrData = Object.entries(row)
+          .map(([key, value]) => `${key}: ${value}`)
+          .join(', ');
+        const qrCode = await QRCode.toDataURL(qrData);
+        codes.push(qrCode);
+        setProgress(Math.floor(((i + 1) / csvData.length) * 100));
+        setProcessedRecords(i + 1);
+      }
+      setQrCodes(codes);
+    } catch (err) {
+      setError('Error generating QR codes. Please check the file format.');
+    } finally {
+      setIsProcessing(false);
+      setFileName('');  // Clear selected file name after processing
+    }
+  };
+
+  useEffect(() => {
+    if (qrCodes.length > 0) {
+      drawQRCodesOnCanvas();
+    }
+  }, [qrCodes]);
+
+ const drawQRCodesOnCanvas = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const a4Width = 2480; // A4 width at 300 DPI
+    const a4Height = 3508; // A4 height at 300 DPI
+    const qrSize = 400; // Size of each QR code
+    const padding = 20; // Padding between QR codes
+    const cols = Math.floor(a4Width / (qrSize + padding));
+    const rows = Math.ceil(qrCodes.length / cols);
+
+    canvas.width = a4Width;
+    canvas.height = a4Height * Math.ceil(rows / (Math.floor(a4Height / (qrSize + padding))));
+
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    qrCodes.forEach((qrCode, index) => {
+      const img = new Image();
+      img.onload = () => {
+        const x = (index % cols) * (qrSize + padding) + padding / 2;
+        const y = Math.floor(index / cols) * (qrSize + padding) + padding / 2;
+        ctx.drawImage(img, x, y, qrSize, qrSize);
+      };
+      img.src = qrCode;
     });
   };
 
+
   return (
     <QrLayout title="Upload CSV to Generate QR Codes">
-      {/* Input Section */}
-      <div>
-        <input
-          type="file"
-          accept=".csv"
-          onChange={handleFileChange}
-          className="mb-4"
-        />
+      <div className="bg-white px-2">
+        {/* File upload section */}
+        <div className="max-w-md mx-auto rounded-lg overflow-hidden md:max-w-xl">
+          <div className="md:flex">
+            <div className="w-full p-3">
+              <div className="relative border-dotted h-48 rounded-lg border-dashed border-2 border-blue-700 bg-gray-100 flex justify-center items-center">
+                <div className="absolute">
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">Attach your files here</span>
+                    {fileName && (
+                      <span className="text-gray-500 mt-2">
+                        Selected file: {fileName}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <input
+                  type="file"
+                  accept=".csv"
+                  onChange={handleFileChange}
+                  className="h-full w-full opacity-0"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Generate QR code button and progress bar */}
+        <div className="mt-4 flex justify-center">
+          <button
+            onClick={generateQRCodes}
+            className="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700"
+            disabled={isProcessing}
+          >
+            {isProcessing ? "Generating..." : "Generate QR Codes"}
+          </button>
+        </div>
+
+        {isProcessing && (
+          <div className="mt-4 text-center">
+            <span>Processing: {Math.round(progress)}%</span>
+            <progress value={progress} max="100" className="w-full"></progress>
+          </div>
+        )}
+          {processedRecords > 0 && !isProcessing && (
+        <div className="mt-4 text-center text-green-500">
+          {processedRecords} records processed from the file.
+        </div>
+        )}
+        
+      {error && (
+        <div className="mt-4 text-center text-red-500">
+          {error}
+        </div>
+      )}
       </div>
 
-      {/* QR Code Section */}
-      <div className="grid grid-cols-2 gap-4">
-        {qrCodes.map((qrCode, index) => (
-          <div key={index} className="flex flex-col items-center">
-            <canvas
-              ref={(el) => (canvasRefs.current[index] = el)} // Set canvas ref for download
-              width={200}
-              height={200}
-            >
-              <img src={qrCode.src} alt={`QR Code ${index + 1}`} />
-            </canvas>
-            <DownloadDynamicQR canvasRef={canvasRefs} />
-          </div>
-        ))}
-      </div>
+    
+      {/* Canvas for QR code generation */}
+      {qrCodes.length > 0 && (
+        <div className="mt-4 flex flex-col items-center">
+          <canvas
+            ref={canvasRef}
+            className="border max-w-xs max-h-xs" // Adjust max width and height here
+            style={{ width: '300px', height: '300px' }} // Explicitly set dimensions
+          />
+          <BulkDownloadQR canvasRef={canvasRef} /> {/* Pass the ref directly */}
+        </div>
+      )}
     </QrLayout>
   );
 };

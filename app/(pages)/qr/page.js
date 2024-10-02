@@ -4,6 +4,7 @@ import { useState } from 'react';
 import BasicQr from '../../components/basicqr.js'; // Import the QRGenerator component
 import ImageQR from '../../components/imageqr';
 import DynamicQR from '../../components/dynamicqr';
+import BulkQR from '../../components/BulkQR';
 
 const QRPage = () => {
   const [activeTab, setActiveTab] = useState('basic');
@@ -17,9 +18,9 @@ const QRPage = () => {
       case 'dynamic':
         return <DynamicQR />;
       case 'bulk':
-        return <div>Bulk QR Code Generator</div>;
+        return <BulkQR />;
       case 'invitation':
-        return <div>Invitation QR Code Generator</div>;
+        return <div>Invitation -coming soon</div>;
       default:
         return null;
     }
