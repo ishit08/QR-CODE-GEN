@@ -3,6 +3,8 @@ import Papa from 'papaparse';
 import QRCode from 'qrcode';
 import BulkDownloadQR from "./BulkDownloadQR"; // Import the new component
 import QrLayout from './qrlayout';
+import { drawQRCodesOnCanvas } from '../utility/qrCanvasUtils'; 
+
 
 const BulkQR = () => {
   const [csvData, setCsvData] = useState([]);
@@ -13,7 +15,6 @@ const BulkQR = () => {
   const [processedRecords, setProcessedRecords] = useState(0);
   const [error, setError] = useState('');
   const canvasRef = useRef(null);
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -23,7 +24,7 @@ const BulkQR = () => {
         complete: (results) => {
           setCsvData(results.data);
           setProcessedRecords(0);
-          setQrCodes([]);
+          setQrCodes([]);       
         },
       });
     }
@@ -38,7 +39,7 @@ const BulkQR = () => {
     setIsProcessing(true);
     setProgress(0);
     setError('');
-       try {
+    try {
       const codes = [];
       for (let i = 0; i < csvData.length; i++) {
         const row = csvData[i];
@@ -47,6 +48,7 @@ const BulkQR = () => {
           .join(', ');
         const qrCode = await QRCode.toDataURL(qrData);
         codes.push(qrCode);
+        
         setProgress(Math.floor(((i + 1) / csvData.length) * 100));
         setProcessedRecords(i + 1);
       }
@@ -55,44 +57,16 @@ const BulkQR = () => {
       setError('Error generating QR codes. Please check the file format.');
     } finally {
       setIsProcessing(false);
-      setFileName('');  // Clear selected file name after processing
+      setFileName(''); // Clear selected file name after processing
     }
   };
 
   useEffect(() => {
     if (qrCodes.length > 0) {
-      drawQRCodesOnCanvas();
+      drawQRCodesOnCanvas( canvasRef, qrCodes );
     }
   }, [qrCodes]);
-
- const drawQRCodesOnCanvas = () => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    const a4Width = 2480; // A4 width at 300 DPI
-    const a4Height = 3508; // A4 height at 300 DPI
-    const qrSize = 400; // Size of each QR code
-    const padding = 20; // Padding between QR codes
-    const cols = Math.floor(a4Width / (qrSize + padding));
-    const rows = Math.ceil(qrCodes.length / cols);
-
-    canvas.width = a4Width;
-    canvas.height = a4Height * Math.ceil(rows / (Math.floor(a4Height / (qrSize + padding))));
-
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    qrCodes.forEach((qrCode, index) => {
-      const img = new Image();
-      img.onload = () => {
-        const x = (index % cols) * (qrSize + padding) + padding / 2;
-        const y = Math.floor(index / cols) * (qrSize + padding) + padding / 2;
-        ctx.drawImage(img, x, y, qrSize, qrSize);
-      };
-      img.src = qrCode;
-    });
-  };
-
-
+  
   return (
     <QrLayout title="Upload CSV to Generate QR Codes">
       <div className="bg-white px-2">
@@ -140,20 +114,19 @@ const BulkQR = () => {
             <progress value={progress} max="100" className="w-full"></progress>
           </div>
         )}
-          {processedRecords > 0 && !isProcessing && (
-        <div className="mt-4 text-center text-green-500">
-          {processedRecords} records processed from the file.
-        </div>
+        {processedRecords > 0 && !isProcessing && (
+          <div className="mt-4 text-center text-green-600">
+            {processedRecords-1} records processed from the file.
+          </div>
         )}
-        
-      {error && (
-        <div className="mt-4 text-center text-red-500">
-          {error}
-        </div>
-      )}
+
+        {error && (
+          <div className="mt-4 text-center text-red-500">
+            {error}
+          </div>
+        )}
       </div>
 
-    
       {/* Canvas for QR code generation */}
       {qrCodes.length > 0 && (
         <div className="mt-4 flex flex-col items-center">
@@ -162,7 +135,7 @@ const BulkQR = () => {
             className="border max-w-xs max-h-xs" // Adjust max width and height here
             style={{ width: '300px', height: '300px' }} // Explicitly set dimensions
           />
-          <BulkDownloadQR canvasRef={canvasRef} /> {/* Pass the ref directly */}
+           <BulkDownloadQR canvasRef={canvasRef} qrCodes={qrCodes} />
         </div>
       )}
     </QrLayout>
