@@ -21,12 +21,12 @@ export default function RootLayout({ children }) {
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
         />
       </head>
-      <body className="flex flex-col min-h-screen">
+      <body className="flex w-full h-screen min-h-screen">
         {/* Navbar at the top */}
         <Navbar />
 
         {/* Main content */}
-        <main className="flex-grow container">
+        <main className="w-full pt-[72px]">
           {children}
         </main>
 

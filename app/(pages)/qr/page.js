@@ -27,7 +27,7 @@ const QRPage = () => {
   };
 
   return (
-    <div className="pt-20">
+    <div >
       <h1 className="text-3xl text-center font-bold m-10">QR Code Generator</h1>
 
       {/* Tabs - Make the layout mobile responsive */}
