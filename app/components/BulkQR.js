@@ -3,7 +3,7 @@ import Papa from 'papaparse';
 import QRCode from 'qrcode';
 import BulkDownloadQR from "./BulkDownloadQR"; // Import the new component
 import QrLayout from './QrLayout';
-import { drawQRCodesOnCanvas } from '../utility/qrcanvasutils'; 
+import { drawQRCodesOnCanvas } from '../utility/drawQRCodesOnCanvas'; 
 
 const BulkQR = () => {
   const [csvData, setCsvData] = useState([]);

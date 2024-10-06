@@ -1,4 +1,4 @@
-// basicqr.js
+// BasicQr.js
 
 "use client";
 
