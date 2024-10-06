@@ -39,6 +39,7 @@ const BulkQR = () => {
     setIsProcessing(true);
     setProgress(0);
     setError('');
+    
     try {
       const codes = [];
       for (let i = 0; i < csvData.length; i++) {
@@ -55,6 +56,7 @@ const BulkQR = () => {
       setQrCodes(codes);
     } catch (err) {
       setError('Error generating QR codes. Please check the file format.');
+      console.error(err);
     } finally {
       setIsProcessing(false);
       setFileName(''); // Clear selected file name after processing
@@ -63,7 +65,7 @@ const BulkQR = () => {
 
   useEffect(() => {
     if (qrCodes.length > 0) {
-      drawQRCodesOnCanvas( canvasRef, qrCodes );
+      drawQRCodesOnCanvas(canvasRef, qrCodes);
     }
   }, [qrCodes]);
 
@@ -114,6 +116,7 @@ const BulkQR = () => {
             <progress value={progress} max="100" className="w-full"></progress>
           </div>
         )}
+        
         {processedRecords > 0 && !isProcessing && (
           <div className="mt-4 text-center text-green-600">
             {processedRecords} records processed from the file.
@@ -127,25 +130,23 @@ const BulkQR = () => {
         )}
       </div>
 
-{qrCodes.length > 0 && (
-  <div className="mt-4 flex flex-col items-center">
-    {/* Scrollable container for vertical scrolling */}
-    <div
-      className="overflow-y-auto"
-      style={{ width: '340px', height: '300px' }} // Set fixed width and max height for vertical scrolling
-    >
-      <canvas
-        ref={canvasRef}
-        className="border"
-        style={{ width: '300px', height: 'auto', display: 'block' }} // Set width and allow auto height
-      />
-    </div>
-    {/* Bulk Download Button */}
-    <BulkDownloadQR canvasRef={canvasRef} qrCodes={qrCodes} />
-  </div>
-)}
-
-
+      {qrCodes.length > 0 && (
+        <div className="mt-4 flex flex-col items-center">
+          {/* Scrollable container for vertical scrolling */}
+          <div
+            className="overflow-y-auto"
+            style={{ width: '340px', height: '300px' }} // Set fixed width and max height for vertical scrolling
+          >
+            <canvas
+              ref={canvasRef}
+              className="border"
+              style={{ width: '300px', height: 'auto', display: 'block' }} // Set width and allow auto height
+            />
+          </div>
+          {/* Bulk Download Button */}
+          <BulkDownloadQR qrCodes={qrCodes} />
+        </div>
+      )}
     </QrLayout>
   );
 };

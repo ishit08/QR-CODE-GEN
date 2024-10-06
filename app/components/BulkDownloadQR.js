@@ -7,7 +7,8 @@ const BulkDownloadQR = ({ qrCodes }) => {
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
     const img = new Image();
-    return new Promise((resolve, reject) => {
+
+    return new Promise((resolve) => {
       img.onload = () => {
         canvas.width = img.width;
         canvas.height = img.height;
@@ -51,8 +52,8 @@ const BulkDownloadQR = ({ qrCodes }) => {
             x = 7; // Reset x to start a new row
             y += qrSize + margin; // Move y down for the next row
           }
-        } catch (err) {
-          console.error("Failed to add QR code to PDF", err);
+        } catch (error) {
+          console.error("Failed to add QR code to PDF:", error);
         }
       }
 

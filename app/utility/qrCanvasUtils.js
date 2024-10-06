@@ -8,7 +8,7 @@ export const drawQRCodesOnCanvas = (canvasRef, qrCodes) => {
   const ctx = canvas.getContext('2d');
 
   const a4Width = 2480; // A4 width at 300 DPI
-  const a4Height = 3508; // A4 height at 300 DPI
+ // const a4Height = 3508; // A4 height at 300 DPI
   const qrSize = 400; // Size of each QR code
   const padding = 20; // Padding between QR codes
   const cols = Math.floor(a4Width / (qrSize + padding)); // Calculate columns
