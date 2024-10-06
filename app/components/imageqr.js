@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import DownloadQR from "./DownloadQR";
-import QrLayout from "./qrlayout";
+import QrLayout from "./QrLayout";
 import QRCode from 'qrcode';  // Ensure this line is present
 
 export default function ImageQR() {

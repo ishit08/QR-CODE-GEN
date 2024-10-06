@@ -1,4 +1,4 @@
-// app/components/DownloadDynamicQR.js
+// app/components/downloaddynamicqr.js
 "use client";
 
 import React from "react";

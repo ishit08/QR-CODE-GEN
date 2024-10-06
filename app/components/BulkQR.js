@@ -2,8 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import Papa from 'papaparse';
 import QRCode from 'qrcode';
 import BulkDownloadQR from "./BulkDownloadQR"; // Import the new component
-import QrLayout from './qrlayout';
-import { drawQRCodesOnCanvas } from '../utility/qrCanvasUtils'; 
+import QrLayout from './QrLayout';
+import { drawQRCodesOnCanvas } from '../utility/qrcanvasutils'; 
 
 const BulkQR = () => {
   const [csvData, setCsvData] = useState([]);

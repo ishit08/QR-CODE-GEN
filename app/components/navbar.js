@@ -6,13 +6,13 @@ import Image from 'next/image'; // Import the Image component
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State to track if mobile menu is open
 
-  // Define link data for both desktop and mobile
+  // Define link data for both desktop and mobile, including icons
   const links = [
-    { href: "/", label: "Home" },
-    { href: "/prices", label: "Plans" },
-    { href: "/qr", label: "QR Options" },
-    { href: "/login", label: "Login" },
-    { href: "/register", label: "Register" },
+    { href: "/", label: "Home", icon: "fa fa-home" },
+    { href: "/prices", label: "Plans", icon: "fa fa-tags" },
+    { href: "/qr", label: "QR Options", icon: "fa fa-qrcode" },
+    { href: "/login", label: "Login", icon: "fa fa-right-to-bracket" },
+    { href: "/register", label: "Register", icon: "fa fa-user-plus" },
   ];
 
   return (
@@ -52,6 +52,7 @@ const Navbar = () => {
         <div className={`hidden md:flex space-x-8`}>
           {links.slice(0, 3).map(link => (
             <Link key={link.href} href={link.href} className="flex items-center space-x-2 hover:text-gray-300">
+              <i className={link.icon}></i> {/* Render the icon */}
               <span>{link.label}</span>
             </Link>
           ))}
@@ -61,6 +62,7 @@ const Navbar = () => {
         <div className="hidden md:flex space-x-4">
           {links.slice(3).map(link => (
             <Link key={link.href} href={link.href} className="flex items-center space-x-2 hover:text-gray-300">
+              <i className={link.icon}></i> {/* Render the icon */}
               <span>{link.label}</span>
             </Link>
           ))}
@@ -72,6 +74,7 @@ const Navbar = () => {
         <div className="flex flex-col items-center space-y-4 py-4">
           {links.map(link => (
             <Link key={link.href} href={link.href} className="flex items-center space-x-2 hover:text-gray-300">
+              <i className={link.icon}></i> {/* Render the icon */}
               <span>{link.label}</span>
             </Link>
           ))}

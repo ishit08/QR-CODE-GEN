@@ -4,7 +4,7 @@ import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
 const Footer = () => {
   return (
     <footer className="bg-gray-800 text-white py-4 w-full text-center">
-      <p>© CodeSnap by <Link href="https://exponentsolutions.ai/">@ExponentSolutions.ai</Link> All rights reserved.</p>
+      <p>© CodeSnap by <Link href="https://exponent-ag.vercel.app/">@ExponentSolutions.ai</Link> All rights reserved.</p>
       <div className="flex justify-center mt-2">
         <Link href="https://www.facebook.com" target="_blank" className="mx-2">
           <FaFacebook className="text-white hover:text-blue-500" />
