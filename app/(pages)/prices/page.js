@@ -2,17 +2,17 @@ export default function Prices() {
   const offers = [
     {
       name: "Basic Plan",
-      price: "₹250/month",
+      price: "₹1250/month",
       features: ["Feature 1", "Feature 2", "Feature 3"],
     },
     {
       name: "Standard Plan",
-      price: "₹1000 / 6 months",
+      price: "₹5000 / 6 months",
       features: ["Feature 1", "Feature 2", "Feature 3", "Feature 4"],
     },
     {
       name: "Premium Plan",
-      price: "₹ 2500 / Year",
+      price: "₹ 10000 / Year",
       features: ["Feature 1", "Feature 2", "Feature 3", "Feature 4", "Feature 5"],
     },
   ];

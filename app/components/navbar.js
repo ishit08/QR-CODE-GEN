@@ -1,6 +1,7 @@
 "use client";
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image'; // Import the Image component
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State to track if mobile menu is open
@@ -20,9 +21,11 @@ const Navbar = () => {
         {/* Logo on the left */}
         <div className="flex items-center space-x-2">
           <Link href="/" className="flex items-center">
-            <img 
+            <Image 
               src="/images/logo.png"
               alt="CodeSnap"
+              width={40} // Set desired width
+              height={40} // Set desired height
               className="h-10 w-10"
             />
             <span className="text-lg font-bold ml-2">CodeSnap</span>
