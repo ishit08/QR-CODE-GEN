@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import Papa from 'papaparse';
 import QRCode from 'qrcode';
-import BulkDownloadQR from "./BulkDownloadQR"; // Import the new component
+import BulkDownloadQR from "./BulkDownloadQR";
 import QrLayout from './QrLayout';
-import { drawQRCodesOnCanvas } from '../utility/drawQRCodesOnCanvas'; 
+import { drawQRCodesOnCanvas } from '../utility/drawQRCodesOnCanvas';
 
 const BulkQR = () => {
   const [csvData, setCsvData] = useState([]);
@@ -13,6 +13,10 @@ const BulkQR = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [processedRecords, setProcessedRecords] = useState(0);
   const [error, setError] = useState('');
+  const [selectedColumn, setSelectedColumn] = useState('');
+  const [imageFile, setImageFile] = useState(null);
+  const [bgColor, setBgColor] = useState("#ffffff");
+  const [textColor, setTextColor] = useState("#000000");
   const canvasRef = useRef(null);
 
   const handleFileChange = (e) => {
@@ -24,7 +28,8 @@ const BulkQR = () => {
         complete: (results) => {
           setCsvData(results.data.slice(0, -1));
           setProcessedRecords(0);
-          setQrCodes([]);       
+          setQrCodes([]);
+          setSelectedColumn('');
         },
       });
     }
@@ -47,9 +52,36 @@ const BulkQR = () => {
         const qrData = Object.entries(row)
           .map(([key, value]) => `${key}: ${value}`)
           .join(', ');
-        const qrCode = await QRCode.toDataURL(qrData);
-        codes.push(qrCode);
-        
+        if (!qrData) continue;
+
+        const options = {
+          width: 300,
+          color: {
+            dark: textColor,
+            light: bgColor,
+          },
+        };
+
+        const qrCodeCanvas = document.createElement('canvas');
+        await QRCode.toCanvas(qrCodeCanvas, qrData, options);
+
+        if (imageFile) {
+          const ctx = qrCodeCanvas.getContext('2d');
+          const img = new Image();
+          img.src = URL.createObjectURL(imageFile);
+          await new Promise((resolve) => {
+            img.onload = () => {
+              const imgSize = qrCodeCanvas.width * 0.2;
+              const x = (qrCodeCanvas.width - imgSize) / 2;
+              const y = (qrCodeCanvas.height - imgSize) / 2;
+              ctx.drawImage(img, x, y, imgSize, imgSize);
+              resolve();
+            };
+          });
+        }
+
+        const qrCode = qrCodeCanvas.toDataURL();
+        codes.push({ qrCode, label: row[selectedColumn] });
         setProgress(Math.floor(((i + 1) / csvData.length) * 100));
         setProcessedRecords(i + 1);
       }
@@ -65,9 +97,9 @@ const BulkQR = () => {
 
   useEffect(() => {
     if (qrCodes.length > 0) {
-      drawQRCodesOnCanvas(canvasRef, qrCodes);
+      drawQRCodesOnCanvas(canvasRef, qrCodes.map(code => code.qrCode), imageFile);
     }
-  }, [qrCodes]);
+  }, [qrCodes, imageFile]);
 
   return (
     <QrLayout title="Upload CSV to Generate QR Codes">
@@ -96,6 +128,47 @@ const BulkQR = () => {
                 />
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Column selection */}
+        {csvData.length > 0 && (
+          <div className="mt-4">
+            <label htmlFor="columnSelect">Select Column to Generate QR Codes:</label>
+            <select
+              id="columnSelect"
+              value={selectedColumn}
+              onChange={(e) => setSelectedColumn(e.target.value)}
+              className="ml-2 p-2 border rounded"
+            >
+              <option value="">--Select Column--</option>
+              {Object.keys(csvData[0]).map((column, index) => (
+                <option key={index} value={column}>{column}</option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Image upload section */}
+        <div className="mt-4">
+          <label htmlFor="imageUpload">Upload an Image to Add to QR Codes (optional):</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImageFile(e.target.files[0])}
+            className="ml-2 p-2 border rounded"
+          />
+        </div>
+
+        {/* Color selection */}
+        <div className="mt-4 flex gap-4">
+          <div>
+            <label>Background Color</label>
+            <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="ml-2" />
+          </div>
+          <div>
+            <label>Text Color</label>
+            <input type="color" value={textColor} onChange={(e) => setTextColor(e.target.value)} className="ml-2" />
           </div>
         </div>
 
@@ -131,20 +204,23 @@ const BulkQR = () => {
       </div>
 
       {qrCodes.length > 0 && (
-        <div className="mt-4 flex flex-col items-center">
-          {/* Scrollable container for vertical scrolling */}
-          <div
-            className="overflow-y-auto"
-            style={{ width: '340px', height: '300px' }} // Set fixed width and max height for vertical scrolling
-          >
-            <canvas
-              ref={canvasRef}
-              className="border"
-              style={{ width: '300px', height: 'auto', display: 'block' }} // Set width and allow auto height
-            />
-          </div>
-          {/* Bulk Download Button */}
-          <BulkDownloadQR qrCodes={qrCodes} />
+        <div className="mt-4 overflow-auto">
+          <table className="table-auto border-collapse border border-black w-full">
+            <tbody>
+              {qrCodes.map((code, index) => (
+                index % 3 === 0 ? (
+                  <tr key={index} className="border border-black">
+                    {qrCodes.slice(index, index + 3).map((innerCode, innerIndex) => (
+                      <td key={innerIndex} className="border border-black p-4 text-center">
+                        <img src={innerCode.qrCode} alt={`QR Code ${index + innerIndex + 1}`} className="border mb-2" />
+                        <span className="text-center text-sm font-bold">{innerCode.label}</span>
+                      </td>
+                    ))}
+                  </tr>
+                ) : null
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </QrLayout>
