@@ -204,7 +204,7 @@ const BulkQR = () => {
       </div>
 
       {qrCodes.length > 0 && (
-        <div className="mt-4 overflow-auto">
+        <div className="mt-4 overflow-y-auto" style={{ maxHeight: '500px' }}>
           <table className="table-auto border-collapse border border-black w-full">
             <tbody>
               {qrCodes.map((code, index) => (
@@ -221,6 +221,12 @@ const BulkQR = () => {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {qrCodes.length > 0 && (
+        <div className="mt-4 flex justify-center">
+          <BulkDownloadQR qrCodes={qrCodes.map(code => code.qrCode)} />
         </div>
       )}
     </QrLayout>
