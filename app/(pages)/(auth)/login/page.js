@@ -1,3 +1,5 @@
+
+// app/auth/login/page.js
 'use client';
 
 import { useState } from 'react';
@@ -8,7 +10,7 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const res = await fetch('/api/login', {
+    const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
