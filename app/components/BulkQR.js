@@ -29,23 +29,19 @@ const BulkQR = () => {
 
   const hasLoggedRef = useRef(false);
 
-  const handlePrint = () => {
-     // Implement your print functionality here
-    console.log('Print icon clicked');
-     if (qrCodes && qrCodes.length > 0) {
-      printQRCodePDF(qrCodes);
+  const handlePrint = (settings) => {
+        
+    if (qrCodes && qrCodes.length > 0) {
+      printQRCodePDF(qrCodes, settings);
     } else {
       alert('No QR codes available for printing.');
     }
    
   };
 
-  const handleDownload = () => {
-
-    // Implement your download functionality here
-    console.log('Download icon clicked');
-      if (qrCodes && qrCodes.length > 0) {
-      downloadQRCodePDF(qrCodes);
+  const handleDownload = (settings) => {
+    if (qrCodes && qrCodes.length > 0) {
+      downloadQRCodePDF(qrCodes, settings);
     } else {
       alert('No QR codes available for download.');
     }
