@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import SettingsModal from './SettingsModal';
 
-export default function QrLayout({ children, title, onPrint, onDownload }) {
+export default function QrLayout({ children, title, onPrint, onDownload, hasQRCodes }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionType, setActionType] = useState(''); // 'print' or 'download'
 
@@ -45,14 +45,19 @@ export default function QrLayout({ children, title, onPrint, onDownload }) {
           <div className="flex items-center justify-between w-full">
             <h2 className="text-xl font-bold mb-4">Generated QR Code</h2>
             <div>
+              {/* Disable print button if no QR codes */}
               <button
                 onClick={() => handleIconClick('print')}
-                className="mr-4"
+                className={`mr-4 ${!hasQRCodes ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={!hasQRCodes} // Disable when no QR codes are present
               >
                 <i className="fa fa-print text-blue-600 hover:text-gray-800 cursor-pointer fa-2x"></i>
               </button>
+              {/* Disable download button if no QR codes */}
               <button
                 onClick={() => handleIconClick('download')}
+                className={`${!hasQRCodes ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={!hasQRCodes} // Disable when no QR codes are present
               >
                 <i className="fa fa-download text-blue-600 hover:text-gray-800 cursor-pointer fa-2x"></i>
               </button>

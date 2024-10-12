@@ -1,5 +1,3 @@
-// BulkQR.js
-
 import { useState, useEffect, useRef } from 'react';
 import Papa from 'papaparse';
 import QRCode from 'qrcode';
@@ -9,7 +7,6 @@ import ImageUpload from './ImageUpload';
 import ColorSelection from './ColorSelection';
 import QRCodeTable from './QRCodeTable';
 import QrLayout from './QrLayout';
-// ... other imports ...
 import { downloadQRCodePDF } from '../utility/downloadQRCodePDF';
 import { printQRCodePDF } from '../utility/printQRCodePDF';
 
@@ -30,13 +27,11 @@ const BulkQR = () => {
   const hasLoggedRef = useRef(false);
 
   const handlePrint = (settings) => {
-        
     if (qrCodes && qrCodes.length > 0) {
       printQRCodePDF(qrCodes, settings);
     } else {
       alert('No QR codes available for printing.');
     }
-   
   };
 
   const handleDownload = (settings) => {
@@ -46,7 +41,8 @@ const BulkQR = () => {
       alert('No QR codes available for download.');
     }
   };
-  // Update allQRCodesReady state
+
+  // Update allQRCodesReady state based on QR codes availability
   useEffect(() => {
     if (qrCodes.length > 0) {
       setAllQRCodesReady(true);
@@ -136,7 +132,12 @@ const BulkQR = () => {
   }, [qrCodes.length, csvData.length, allQRCodesReady]);
 
   return (
-    <QrLayout title="Upload CSV to Generate QR Codes"  onPrint={handlePrint} onDownload={handleDownload}>
+    <QrLayout
+      title="Upload CSV to Generate QR Codes"
+      onPrint={handlePrint}
+      onDownload={handleDownload}
+      hasQRCodes={allQRCodesReady} // Pass allQRCodesReady to QrLayout
+    >
       <div className="bg-white px-2">
         <FileUpload setCsvData={setCsvData} setFileName={setFileName} />
         <ColumnSelection csvData={csvData} selectedColumn={selectedColumn} setSelectedColumn={setSelectedColumn} />
@@ -174,11 +175,11 @@ const BulkQR = () => {
         )}
       </div>
 
-       {/* Children[1]: QR Code Display Section */}
+      {/* Children[1]: QR Code Display Section */}
       <div>
         <QRCodeTable qrCodes={qrCodes} />
         {/* If you have other components to display, include them here */}
-      </div>     
+      </div>
     </QrLayout>
   );
 };
