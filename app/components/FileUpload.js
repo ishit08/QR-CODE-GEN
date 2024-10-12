@@ -28,7 +28,7 @@ const FileUpload = ({ setCsvData, setFileName }) => {
           <div className="relative border-dotted h-32 rounded-lg border-dashed border-2 border-blue-700 bg-gray-100 flex flex-col justify-center items-center">
             <div className="absolute top-1/4">
               <div className="flex flex-col items-center">
-                <i className="fa fa-folder-open fa-3x text-blue-700 mb-2"></i>
+                <i className="fa fa-folder-open fa-2x text-blue-700 mb-2"></i>
                 {!uploadedFileName && ( // Only show this when no file is uploaded
                   <span className="block text-gray-400 font-normal">Attach your files here</span>
                 )}

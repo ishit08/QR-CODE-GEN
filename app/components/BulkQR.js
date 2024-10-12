@@ -1,4 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+// BulkQR.js
+
+import { useState, useEffect, useRef } from 'react';
 import Papa from 'papaparse';
 import QRCode from 'qrcode';
 import FileUpload from './FileUpload';
@@ -6,9 +8,10 @@ import ColumnSelection from './ColumnSelection';
 import ImageUpload from './ImageUpload';
 import ColorSelection from './ColorSelection';
 import QRCodeTable from './QRCodeTable';
-import BulkDownloadQR from './BulkDownloadQR';
 import QrLayout from './QrLayout';
-import { drawQRCodesOnCanvas } from '../utility/drawQRCodesOnCanvas';
+// ... other imports ...
+import { downloadQRCodePDF } from '../utility/downloadQRCodePDF';
+import { printQRCodePDF } from '../utility/printQRCodePDF';
 
 const BulkQR = () => {
   const [csvData, setCsvData] = useState([]);
@@ -22,8 +25,48 @@ const BulkQR = () => {
   const [imageFile, setImageFile] = useState(null);
   const [bgColor, setBgColor] = useState("#ffffff");
   const [textColor, setTextColor] = useState("#000000");
-  
-  const canvasRef = useRef(null);
+  const [allQRCodesReady, setAllQRCodesReady] = useState(false);
+
+  const hasLoggedRef = useRef(false);
+
+  const handlePrint = () => {
+     // Implement your print functionality here
+    console.log('Print icon clicked');
+     if (qrCodes && qrCodes.length > 0) {
+      printQRCodePDF(qrCodes);
+    } else {
+      alert('No QR codes available for printing.');
+    }
+   
+  };
+
+  const handleDownload = () => {
+
+    // Implement your download functionality here
+    console.log('Download icon clicked');
+      if (qrCodes && qrCodes.length > 0) {
+      downloadQRCodePDF(qrCodes);
+    } else {
+      alert('No QR codes available for download.');
+    }
+  };
+  // Update allQRCodesReady state
+  useEffect(() => {
+    if (qrCodes.length > 0) {
+      setAllQRCodesReady(true);
+    } else {
+      setAllQRCodesReady(false);
+      hasLoggedRef.current = false; // Reset the log flag
+    }
+  }, [qrCodes.length]);
+
+  // Log only once when all QR codes are ready
+  useEffect(() => {
+    if (allQRCodesReady && !hasLoggedRef.current) {
+      console.log('All QR codes are ready:', qrCodes);
+      hasLoggedRef.current = true;
+    }
+  }, [allQRCodesReady, qrCodes]);
 
   const generateQRCodes = async () => {
     if (csvData.length === 0) {
@@ -34,6 +77,10 @@ const BulkQR = () => {
     setIsProcessing(true);
     setProgress(0);
     setError('');
+    setAllQRCodesReady(false);
+    setQrCodes([]);
+    setProcessedRecords(0);
+    hasLoggedRef.current = false; // Reset the log flag
 
     try {
       const codes = [];
@@ -78,21 +125,22 @@ const BulkQR = () => {
       setQrCodes(codes);
     } catch (err) {
       setError('Error generating QR codes. Please check the file format.');
-      console.error(err);
+      console.error('Error in generateQRCodes:', err);
     } finally {
       setIsProcessing(false);
       setFileName('');
     }
   };
 
+  // Logging when qrCodes or csvData change
   useEffect(() => {
-    if (qrCodes.length > 0) {
-      drawQRCodesOnCanvas(canvasRef, qrCodes.map(code => code.qrCode), imageFile);
-    }
-  }, [qrCodes, imageFile]);
+    console.log('qrCodes.length:', qrCodes.length);
+    console.log('csvData.length:', csvData.length);
+    console.log('allQRCodesReady:', allQRCodesReady);
+  }, [qrCodes.length, csvData.length, allQRCodesReady]);
 
   return (
-    <QrLayout title="Upload CSV to Generate QR Codes">
+    <QrLayout title="Upload CSV to Generate QR Codes"  onPrint={handlePrint} onDownload={handleDownload}>
       <div className="bg-white px-2">
         <FileUpload setCsvData={setCsvData} setFileName={setFileName} />
         <ColumnSelection csvData={csvData} selectedColumn={selectedColumn} setSelectedColumn={setSelectedColumn} />
@@ -103,6 +151,7 @@ const BulkQR = () => {
           <button
             onClick={generateQRCodes}
             className="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700"
+            style={{ display: isProcessing ? 'none' : 'inline-block' }}
             disabled={isProcessing}
           >
             {isProcessing ? "Generating..." : "Generate QR Codes"}
@@ -129,14 +178,11 @@ const BulkQR = () => {
         )}
       </div>
 
-      <QRCodeTable qrCodes={qrCodes} />
-
-      {qrCodes.length > 0 && (
-        <div className="mt-4 flex justify-center">
-          {/* Pass the canvas reference and QR Codes to BulkDownloadQR */}
-          <BulkDownloadQR qrCodes={qrCodes.map(code => code.qrCode)} canvasRef={canvasRef} />
-        </div>
-      )}
+       {/* Children[1]: QR Code Display Section */}
+      <div>
+        <QRCodeTable qrCodes={qrCodes} />
+        {/* If you have other components to display, include them here */}
+      </div>     
     </QrLayout>
   );
 };
