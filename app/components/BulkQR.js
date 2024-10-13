@@ -18,7 +18,7 @@ const BulkQR = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [processedRecords, setProcessedRecords] = useState(0);
   const [error, setError] = useState('');
-  const [selectedColumn, setSelectedColumn] = useState('');
+  const [selectedColumn, setSelectedColumn] = useState(''); // Track all selected columns
   const [imageFile, setImageFile] = useState(null);
   const [bgColor, setBgColor] = useState("#ffffff");
   const [textColor, setTextColor] = useState("#000000");
@@ -55,10 +55,29 @@ const BulkQR = () => {
   // Log only once when all QR codes are ready
   useEffect(() => {
     if (allQRCodesReady && !hasLoggedRef.current) {
-      console.log('All QR codes are ready:', qrCodes);
+      //console.log('All QR codes are ready:', qrCodes);
       hasLoggedRef.current = true;
     }
   }, [allQRCodesReady, qrCodes]);
+
+  // Helper to filter columns that are marked for QR code generation ({IncludeInQR}=Y)
+  const filterQrColumns = (row) => {
+    return Object.entries(row)
+      .filter(([key]) => key.split('-')[2] === 'Y') // {IncludeInQR} = 'Y'
+      .map(([key, value]) => `${key.split('-')[0]}: ${value}`) // Get column name and value
+      .join(', ');
+  };
+
+  // Helper to generate the label from selected columns
+  const generateLabel = (row) => {
+
+
+  //Step 1: Check if row[selectedColumn] contains a pipe ('|')
+let value = row[selectedColumn];
+// Construct the label
+  const label = selectedColumn.split('-')[0] +'|'+ value; // Get only the column name from "ColumnName-IncludeInDropDown-IncludeInQR"  
+    return label;
+  };
 
   const generateQRCodes = async () => {
     if (csvData.length === 0) {
@@ -76,13 +95,11 @@ const BulkQR = () => {
 
     try {
       const codes = [];
-      for (let i = 0; i < csvData.length; i++) {
-        const row = csvData[i];
-        const qrData = Object.entries(row)
-          .map(([key, value]) => `${key}: ${value}`)
-          .join(', ');
-        if (!qrData) continue;
-
+      for (let i = 0; i < csvData.length; i++) {      
+    
+        const row = csvData[i];      
+        const qrData = filterQrColumns(row); // Only include columns marked with {IncludeInQR}=Y
+        if (!qrData) continue;     
         const options = {
           width: 300,
           color: {
@@ -110,7 +127,8 @@ const BulkQR = () => {
         }
 
         const qrCode = qrCodeCanvas.toDataURL();
-        codes.push({ qrCode, label: row[selectedColumn] });
+        const label = generateLabel(row); // Label with selected columns      
+        codes.push({ qrCode, label });
         setProgress(Math.floor(((i + 1) / csvData.length) * 100));
         setProcessedRecords(i + 1);
       }
@@ -124,13 +142,6 @@ const BulkQR = () => {
     }
   };
 
-  // Logging when qrCodes or csvData change
-  useEffect(() => {
-    console.log('qrCodes.length:', qrCodes.length);
-    console.log('csvData.length:', csvData.length);
-    console.log('allQRCodesReady:', allQRCodesReady);
-  }, [qrCodes.length, csvData.length, allQRCodesReady]);
-
   return (
     <QrLayout
       title="Upload CSV to Generate QR Codes"
@@ -140,7 +151,11 @@ const BulkQR = () => {
     >
       <div className="bg-white px-2">
         <FileUpload setCsvData={setCsvData} setFileName={setFileName} />
-        <ColumnSelection csvData={csvData} selectedColumn={selectedColumn} setSelectedColumn={setSelectedColumn} />
+        <ColumnSelection
+          csvData={csvData}
+          selectedColumn={selectedColumn}
+          setSelectedColumn={setSelectedColumn} // Modified to handle multiple selections
+        />
         <ImageUpload setImageFile={setImageFile} />
         <ColorSelection bgColor={bgColor} setBgColor={setBgColor} textColor={textColor} setTextColor={setTextColor} />
 

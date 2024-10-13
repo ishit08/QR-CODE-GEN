@@ -10,8 +10,24 @@ const QRCodeTable = ({ qrCodes }) => {
                 <tr key={index} className="border border-black">
                   {qrCodes.slice(index, index + 3).map((innerCode, innerIndex) => (
                     <td key={innerIndex} className="border border-black p-4 text-center">
-                      <img src={innerCode.qrCode} alt={`QR Code ${index + innerIndex + 1}`} className="border mb-2" />
-                      <span className="text-center text-sm font-bold">{innerCode.label}</span>
+                      <img
+                        src={innerCode.qrCode}
+                        alt={`QR Code ${index + innerIndex + 1}`}
+                        className="border mb-2"
+                      />
+                      
+                      {/* Conditional rendering based on whether label contains '|' */}
+                      <span className="text-center text-sm font-bold">
+                        {innerCode.label.includes('|') ? (
+                          // New code: Split label by '|' and render each part as a new line
+                          innerCode.label.split('|').map((line, lineIndex) => (
+                            <div key={lineIndex}>{line}</div>
+                          ))
+                        ) : (
+                          // Old code: Render label as a single line
+                          innerCode.label
+                        )}
+                      </span>
                     </td>
                   ))}
                 </tr>

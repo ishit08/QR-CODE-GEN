@@ -7,8 +7,8 @@ const SettingsModal = ({ isOpen, onClose, onSave }) => {
 
   const handleSave = () => {
     const qrPerRowInt = parseInt(qrPerRow);
-    if (isNaN(qrPerRowInt) || qrPerRowInt < 1 || qrPerRowInt > 10) {
-      alert('Please enter a number between 1 and 10 for QR codes per row.');
+    if (isNaN(qrPerRowInt) || qrPerRowInt < 1 || qrPerRowInt > 5) {
+      alert('Please enter a number between 1 and 5 for QR codes per row.');
       return;
     }
 
@@ -34,7 +34,7 @@ const SettingsModal = ({ isOpen, onClose, onSave }) => {
             <input
               type="number"
               min="1"
-              max="10"
+              max="5"
               value={qrPerRow}
               onChange={(e) => setQrPerRow(e.target.value)}
               className="mt-1 block w-full border border-gray-300 rounded px-2 py-1"

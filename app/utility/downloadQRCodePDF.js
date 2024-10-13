@@ -1,5 +1,6 @@
 import { jsPDF } from "jspdf";
 import { compressQRCode } from "./compressQRCode";
+import { kokila } from './kokila';  // Base64 font file
 
 export const downloadQRCodePDF = async (qrCodes, settings) => {
   const { qrPerRow } = settings;
@@ -7,15 +8,21 @@ export const downloadQRCodePDF = async (qrCodes, settings) => {
   try {
     if (qrCodes && qrCodes.length > 0) {
       const pdf = new jsPDF("p", "pt", "a4");
+
+      // Add the Unicode font
+      pdf.addFileToVFS("Kokila.ttf", kokila); // Add your Base64 font
+      pdf.addFont("Kokila.ttf", "Kokila", "normal");
+      pdf.setFont("Kokila");
+
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
 
-      const margin = 10; // Adjust margin for equal spacing on all sides
+      const margin = 10;
       const availableWidth = pageWidth - margin * 2;
       const availableHeight = pageHeight - margin * 2;
 
       const qrSize = (availableWidth - (qrPerRow - 1) * margin) / qrPerRow;
-      const labelHeight = qrSize * 0.2; // Label height is 20% of QR size
+      const labelHeight = qrSize * 0.2;  // Initial label height for single line
 
       const qrPlusLabelHeight = qrSize + labelHeight + margin;
       const qrPerColumn = Math.floor((availableHeight + margin) / qrPlusLabelHeight);
@@ -38,7 +45,7 @@ export const downloadQRCodePDF = async (qrCodes, settings) => {
           pdf.addImage(imgData, "JPEG", x, y, qrSize, qrSize);
 
           // Add cell borders
-          pdf.setDrawColor(0); // Black border
+          pdf.setDrawColor(0);
           pdf.setLineWidth(0.5);
           pdf.rect(x, y, qrSize, qrSize + labelHeight);
 
@@ -50,25 +57,42 @@ export const downloadQRCodePDF = async (qrCodes, settings) => {
 
           pdf.setFontSize(fontSize);
 
-          // Truncate label text if too long
           const labelText = qrCodes[i].label || `QR Code ${i + 1}`;
-          const maxLabelWidth = qrSize - 4; // 2pt padding on each side
-          const truncatedLabel = pdf.splitTextToSize(labelText, maxLabelWidth);
+          let labelLines;
 
-          // Add the label text below the QR code
-          pdf.text(
-            truncatedLabel,
-            x + qrSize / 2,
-            y + qrSize + labelHeight / 2 + fontSize / 2 - 2,
-            { align: "center" }
-          );
+          if (labelText.includes('|')) {
+            // Split label into multiple lines if '|' is present
+            labelLines = labelText.split('|');
+          } else {
+            // Automatically split text into multiple lines based on width
+            labelLines = pdf.splitTextToSize(labelText, qrSize - 4);
+          }
+
+          // Dynamically calculate the label height based on the number of lines
+          const dynamicLabelHeight = labelLines.length * (fontSize + 2); // Adjusted spacing between lines
+
+          // Adjust label Y-position to fit the content and remove extra spacing
+          let labelY = y + qrSize + fontSize / 2 - 2;  // Reduce gap between QR and label
+
+          // Increase the height of the label cell to accommodate multiple lines
+          pdf.rect(x, y, qrSize, qrSize + dynamicLabelHeight); // Updated height for the label cell
+
+          // Render each line of the label text
+          labelLines.forEach((line, index) => {
+            pdf.text(
+              line,
+              x + qrSize / 2,
+              labelY + index * (fontSize + 1), // Reduce gap between lines
+              { align: "center" }
+            );
+          });
 
           count++;
           x += qrSize + margin;
 
           if (count % qrPerRow === 0) {
             x = margin;
-            y += qrSize + labelHeight + margin;
+            y += qrSize + dynamicLabelHeight + margin; // Adjust Y-position with new dynamic label height
           }
         } catch (error) {
           console.error("Failed to add QR code and label to PDF:", error);
