@@ -1,14 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import Papa from 'papaparse';
 import QRCode from 'qrcode';
-import FileUpload from './FileUpload';
-import ColumnSelection from './ColumnSelection';
-import ImageUpload from './ImageUpload';
-import QRColorSelection from './QRColorSelection';
-import QRCodeTable from './QRCodeTable';
-import QrLayout from './QrLayout';
-import { downloadQRCodePDF } from '../utility/downloadQRCodePDF';
-import { printQRCodePDF } from '../utility/printQRCodePDF';
+import FileUpload from '../FileUpload';
+import ColumnSelection from '../ColumnSelection';
+import ImageUpload from '../ImageUpload';
+import QRColorSelection from '../QRColorSelection';
+import QRCodeTable from '../QRCodeTable';
+import QrLayout from '../QrLayout';
+import { downloadQRCodePDF } from '../../../utility/qr/bulk/downloadQRCodePDF';
+import { printQRCodePDF } from '../../../utility/qr/bulk/printQRCodePDF';
 
 const BulkQR = () => {
   const [csvData, setCsvData] = useState([]);

@@ -3,10 +3,10 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import BasicQr from '../../components/BasicQR.js'; // Import the QRGenerator component
-import ImageQR from '../../components/ImageQR.js';
-import DynamicQR from '../../components/DynamicQR.js';
-import BulkQR from '../../components/BulkQR.js';
+import BasicQr from '../../components/qr/basic/BasicQR.js'; // Import the QRGenerator component
+import ImageQR from '../../components/qr/withimage/ImageQR.js';
+import DynamicQR from '../../components/qr/dynamic/DynamicQR.js';
+import BulkQR from '../../components/qr/bulk/BulkQR.js';
 
 const QRPage = () => {
   const [activeTab, setActiveTab] = useState('basic');

@@ -1,6 +1,8 @@
+// this is for bulk print
+
 import { jsPDF } from "jspdf";
-import { compressQRCode } from "./compressQRCode";
-import { kokila } from './kokila';  // Base64 font file
+import { compressQRCode } from "../compressQRCode";
+import { kokila } from '../../../utility/font/kokila';  // Base64 font file
  
 export const printQRCodePDF = async (qrCodes, settings) => {
   const { qrPerRow, qrPerPage } = settings;  // qrPerPage is now passed as a setting

@@ -1,6 +1,8 @@
+// this is for bulk
+
 import { jsPDF } from "jspdf"; 
-import { compressQRCode } from "./compressQRCode";
-import { kokila } from './kokila';  // Base64 font file
+import { compressQRCode } from "../compressQRCode";
+import { kokila } from '../../font/kokila';  // Base64 font file
 //import { notoSansDevanagariBase64 } from './NotoSansDevanagari-Regular'; 
 export const downloadQRCodePDF = async (qrCodes, settings) => {
   const { qrPerRow } = settings;
