@@ -3,8 +3,8 @@
 "use client";
 
 import { useState } from "react";
-import DownloadQR from "./DownloadQR";
-import QrLayout from "./QrLayout";
+import DownloadQR from "../DownloadQR";
+import QrLayout from "../QrLayout";
 import QRCode from 'qrcode';  // Ensure this line is present
 export default function BasicQr() {
   const [text, setText] = useState("");
@@ -48,7 +48,7 @@ export default function BasicQr() {
 
       {/* QR Code Display */}
       <>
-        <div id="qrcode" className="border p-4 bg-white"></div>
+        <div id="qrcode" className="p-4 bg-white"></div>
         {canvasRef && <DownloadQR canvasRef={canvasRef} />}
       </>
     </QrLayout>

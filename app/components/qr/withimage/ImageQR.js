@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import DownloadQR from "./DownloadQR";
-import QrLayout from "./QrLayout";
+import DownloadQR from "../DownloadQR";
+import QrLayout from "../QrLayout";
 import QRCode from 'qrcode';  // Ensure this line is present
 
 export default function ImageQR() {
@@ -136,7 +136,7 @@ export default function ImageQR() {
 
       {/* QR Code Display */}
       <>
-        <div id="qrcode" className="border p-4 bg-white overflow-y-auto"></div>
+        <div id="qrcode" className="p-4 bg-white overflow-y-auto"></div>
         <div id="orgName" className="mt-4 text-lg font-semibold"></div>
         {canvasRef && <DownloadQR canvasRef={canvasRef} />}
       </>
