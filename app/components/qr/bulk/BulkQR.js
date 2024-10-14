@@ -18,11 +18,13 @@ const BulkQR = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [processedRecords, setProcessedRecords] = useState(0);
   const [error, setError] = useState('');
-  const [selectedColumn, setSelectedColumn] = useState(''); // Track all selected columns
+  const [selectedColumn, setSelectedColumn] = useState(''); 
   const [imageFile, setImageFile] = useState(null);
   const [bgColor, setBgColor] = useState("#ffffff");
-  const [textColor, setTextColor] = useState("#000000");
   const [qrColor, setQRColor] = useState("#000000");
+  const [secondaryColor, setSecondaryColor] = useState("#FF0000"); 
+  const [colorSplitOption, setColorSplitOption] = useState(''); 
+  const [showSecondaryColor, setShowSecondaryColor] = useState(false); // This state will control the visibility of the secondary color picker
   const [allQRCodesReady, setAllQRCodesReady] = useState(false);
 
   const hasLoggedRef = useRef(false);
@@ -43,41 +45,74 @@ const BulkQR = () => {
     }
   };
 
-  // Update allQRCodesReady state based on QR codes availability
   useEffect(() => {
     if (qrCodes.length > 0) {
       setAllQRCodesReady(true);
     } else {
       setAllQRCodesReady(false);
-      hasLoggedRef.current = false; // Reset the log flag
+      hasLoggedRef.current = false; 
     }
   }, [qrCodes.length]);
 
-  // Log only once when all QR codes are ready
   useEffect(() => {
     if (allQRCodesReady && !hasLoggedRef.current) {
-      //console.log('All QR codes are ready:', qrCodes);
       hasLoggedRef.current = true;
     }
   }, [allQRCodesReady, qrCodes]);
 
-  // Helper to filter columns that are marked for QR code generation ({IncludeInQR}=Y)
   const filterQrColumns = (row) => {
     return Object.entries(row)
-      .filter(([key]) => key.split('-')[2] === 'Y') // {IncludeInQR} = 'Y'
-      .map(([key, value]) => `${key.split('-')[0]}: ${value}`) // Get column name and value
+      .filter(([key]) => key.split('-')[2] === 'Y') 
+      .map(([key, value]) => `${key.split('-')[0]}: ${value}`) 
       .join(', ');
   };
 
-  // Helper to generate the label from selected columns
   const generateLabel = (row) => {
-
-
-  //Step 1: Check if row[selectedColumn] contains a pipe ('|')
-let value = row[selectedColumn];
-// Construct the label
-  const label = selectedColumn.split('-')[0] +'|'+ value; // Get only the column name from "ColumnName-IncludeInDropDown-IncludeInQR"  
+    const value = row[selectedColumn];
+    const label = selectedColumn.split('-')[0] + '|' + value;
     return label;
+  };
+
+  const applyColorSplit = (ctx, width, height, imgData) => {
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const index = (y * width + x) * 4;
+        const isDark = imgData.data[index] === 0 && imgData.data[index + 1] === 0 && imgData.data[index + 2] === 0;
+
+        if (isDark) {
+          let applyPrimaryColor = true;
+
+          switch (colorSplitOption) {
+            case 'vertical':
+              applyPrimaryColor = x < width / 2;
+              break;
+            case 'horizontal':
+              applyPrimaryColor = y < height / 2;
+              break;
+            case 'diagonal-lr':
+              applyPrimaryColor = x + y < width;
+              break;
+            case 'diagonal-rl':
+              applyPrimaryColor = x + y > width;
+              break;
+            default:
+              applyPrimaryColor = true;
+              break;
+          }
+
+          if (applyPrimaryColor) {
+            imgData.data[index] = parseInt(qrColor.substring(1, 3), 16); 
+            imgData.data[index + 1] = parseInt(qrColor.substring(3, 5), 16); 
+            imgData.data[index + 2] = parseInt(qrColor.substring(5, 7), 16);
+          } else {
+            imgData.data[index] = parseInt(secondaryColor.substring(1, 3), 16);
+            imgData.data[index + 1] = parseInt(secondaryColor.substring(3, 5), 16);
+            imgData.data[index + 2] = parseInt(secondaryColor.substring(5, 7), 16);
+          }
+        }
+      }
+    }
+    ctx.putImageData(imgData, 0, 0);
   };
 
   const generateQRCodes = async () => {
@@ -92,28 +127,27 @@ let value = row[selectedColumn];
     setAllQRCodesReady(false);
     setQrCodes([]);
     setProcessedRecords(0);
-    hasLoggedRef.current = false; // Reset the log flag
+    hasLoggedRef.current = false;
 
     try {
       const codes = [];
       for (let i = 0; i < csvData.length; i++) {      
-    
         const row = csvData[i];      
-        const qrData = filterQrColumns(row); // Only include columns marked with {IncludeInQR}=Y
-        if (!qrData) continue;     
-        const options = {
-          width: 300,
-          color: {
-            dark: qrColor,
-            light: bgColor,
-          },
-        };
+        const qrData = filterQrColumns(row);
+        if (!qrData) continue;
 
         const qrCodeCanvas = document.createElement('canvas');
-        await QRCode.toCanvas(qrCodeCanvas, qrData, options);
+        await QRCode.toCanvas(qrCodeCanvas, qrData, { width: 300, color: { dark: qrColor, light: bgColor } });
+
+        const ctx = qrCodeCanvas.getContext('2d');
+        const { width, height } = qrCodeCanvas;
+        const imgData = ctx.getImageData(0, 0, width, height);
+
+        if (colorSplitOption) {
+          applyColorSplit(ctx, width, height, imgData); 
+        }
 
         if (imageFile) {
-          const ctx = qrCodeCanvas.getContext('2d');
           const img = new Image();
           img.src = URL.createObjectURL(imageFile);
           await new Promise((resolve) => {
@@ -128,7 +162,7 @@ let value = row[selectedColumn];
         }
 
         const qrCode = qrCodeCanvas.toDataURL();
-        const label = generateLabel(row); // Label with selected columns      
+        const label = generateLabel(row);      
         codes.push({ qrCode, label });
         setProgress(Math.floor(((i + 1) / csvData.length) * 100));
         setProcessedRecords(i + 1);
@@ -143,22 +177,64 @@ let value = row[selectedColumn];
     }
   };
 
+  const handleColorSplitOptionChange = (option) => {
+    setColorSplitOption(option);
+    if (option) {
+      setShowSecondaryColor(true);
+    } else {
+      setShowSecondaryColor(false); // Hide secondary color if 'None' is selected
+    }
+  };
+
   return (
     <QrLayout
       title="Upload CSV to Generate QR Codes"
       onPrint={handlePrint}
       onDownload={handleDownload}
-      hasQRCodes={allQRCodesReady} // Pass allQRCodesReady to QrLayout
+      hasQRCodes={allQRCodesReady}
     >
       <div className="bg-white px-2">
         <FileUpload setCsvData={setCsvData} setFileName={setFileName} />
         <ColumnSelection
           csvData={csvData}
           selectedColumn={selectedColumn}
-          setSelectedColumn={setSelectedColumn} // Modified to handle multiple selections
+          setSelectedColumn={setSelectedColumn}
         />
         <ImageUpload setImageFile={setImageFile} />
-        <QRColorSelection bgColor={bgColor} setBgColor={setBgColor} qrColor={qrColor} setQRColor={setQRColor} />
+        <QRColorSelection
+          bgColor={bgColor}
+          setBgColor={setBgColor}
+          qrColor={qrColor}
+          setQRColor={setQRColor}
+        />
+
+        {/* Option to select color split pattern */}
+        <div className="mt-4">
+          <label className="block mb-2 text-lg font-semibold text-gray-700">
+            Do you want to create a two-color QR code? Select a split option:
+          </label>
+          <select
+            value={colorSplitOption}
+            onChange={(e) => handleColorSplitOptionChange(e.target.value)}
+            className="p-2 border rounded"
+          >
+            <option value="">None</option>
+            <option value="vertical">Vertical Split</option>
+            <option value="horizontal">Horizontal Split</option>
+            <option value="diagonal-lr">Diagonal Split (Left-Right)</option>
+            <option value="diagonal-rl">Diagonal Split (Right-Left)</option>
+          </select>
+        </div>
+
+        {/* Show secondary color picker based on selection */}
+        {showSecondaryColor && (
+         <QRColorSelection
+  bgColor={bgColor}
+  setBgColor={setBgColor}
+  qrColor={qrColor}
+  setQRColor={setQRColor}
+/>
+        )}
 
         <div className="mt-4 flex justify-center">
           <button
@@ -191,10 +267,8 @@ let value = row[selectedColumn];
         )}
       </div>
 
-      {/* Children[1]: QR Code Display Section */}
       <div>
         <QRCodeTable qrCodes={qrCodes} />
-        {/* If you have other components to display, include them here */}
       </div>
     </QrLayout>
   );
