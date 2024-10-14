@@ -7,7 +7,7 @@ const router = express.Router();
 // Admin Credentials
 const adminCredentials = {
     username: 'admin',
-    password: 'adminpassword' // Make sure to hash this in a real app
+    password: 'admin@123' // Make sure to hash this in a real app
 };
 
 // User Registration

@@ -1,13 +1,24 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BasicQr from '../../components/BasicQR.js'; // Import the QRGenerator component
 import ImageQR from '../../components/ImageQR.js';
 import DynamicQR from '../../components/DynamicQR.js';
 import BulkQR from '../../components/BulkQR.js';
+import { CircularProgress } from '@mui/material';
 
 const QRPage = () => {
   const [activeTab, setActiveTab] = useState('basic');
+  const [isLoading, setIsLoading] = useState(true); // State to manage loading status
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false); 
+    }, 2000);
+
+    return () => clearTimeout(timer); // Clean up the timer on component unmount
+  }, []);
+
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -25,6 +36,15 @@ const QRPage = () => {
         return null;
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="lex justify-center items-center pt-20" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
+        <CircularProgress />
+        <h2 style={{ marginLeft: '10px' }}>Loading....</h2>
+      </div>
+    );
+  }
 
   return (
     <div >

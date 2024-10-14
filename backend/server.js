@@ -1,21 +1,21 @@
-// backend/server.js
 const express = require('express');
-const session = require('express-session');
 const bodyParser = require('body-parser');
+const cors = require('cors'); // Import CORS
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const sequelize = require('./config/db');
 
 const app = express();
 
+// CORS configuration
+app.use(cors({
+    origin: 'http://localhost:3000', // Allow requests from the Next.js frontend
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true // Allow credentials like cookies
+}));
+
 // Middleware
 app.use(bodyParser.json());
-app.use(session({
-    secret: process.env.SESSION_SECRET || 'your-secret-key',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false } // Set to true if using HTTPS
-}));
 
 // Routes
 app.use('/api/auth', authRoutes);
