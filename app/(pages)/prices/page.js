@@ -1,67 +1,41 @@
-//** NextAuth Integration with Google and Facebook Providers:**
-
-// app/auth/[...nextauth].js
-import NextAuth from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import GoogleProvider from 'next-auth/providers/google';
-import FacebookProvider from 'next-auth/providers/facebook';
-import { openDb } from '../../api/utility/database';
-import bcrypt from 'bcrypt';
-import { getUserByEmailQuery } from '../../api/queries/userQueries';
-import { ERROR_MESSAGES } from '../../api/constants/errorMessages';
-import { handleError } from '../../api/utility/errorHandler';
-
-export default NextAuth({
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
-    FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-    }),
-    CredentialsProvider({
-      name: 'Credentials',
-      credentials: {
-        email: { label: 'Email', type: 'text' },
-        password: { label: 'Password', type: 'password' }
-      },
-      async authorize(credentials) {
-        try {
-          const db = await openDb();
-          const user = await db.get(getUserByEmailQuery, credentials.email);
-
-          if (user && (await bcrypt.compare(credentials.password, user.password))) {
-            return { id: user.id, name: user.email, role: user.role };
-          } else {
-            throw new Error(ERROR_MESSAGES.INVALID_CREDENTIALS);
-          }
-        } catch (error) {
-          handleError(error, ERROR_MESSAGES.FAILED_AUTHORIZE_USER);
-        }
-      }
-    })
-  ],
-  pages: {
-    signIn: '/auth/login',
-  },
-  session: {
-    jwt: true,
-  },
-  secret: process.env.NEXTAUTH_SECRET,
-  callbacks: {
-    async session({ session, token }) {
-      session.user.id = token.id;
-      session.user.role = token.role;
-      return session;
+export default function Prices() {
+  const offers = [
+    {
+      name: "Basic Plan",
+      price: "₹1250/month",
+      features: ["Feature 1", "Feature 2", "Feature 3"],
     },
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.role = user.role;
-      }
-      return token;
-    }
-  }
-});
+    {
+      name: "Standard Plan",
+      price: "₹5000 / 6 months",
+      features: ["Feature 1", "Feature 2", "Feature 3", "Feature 4"],
+    },
+    {
+      name: "Premium Plan",
+      price: "₹ 10000 / Year",
+      features: ["Feature 1", "Feature 2", "Feature 3", "Feature 4", "Feature 5"],
+    },
+  ];
+ 
+  return (
+    <div className="container mx-auto py-10 md:py-20">
+      <h1 className="text-3xl font-bold text-center py-8">Our Subscription Plans</h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4 md:px-10">
+        {offers.map((offer, index) => (
+          <div key={index} className="border border-gray-300 rounded-lg p-6 shadow-lg">
+            <h2 className="text-2xl font-bold mb-4">{offer.name}</h2>
+            <p className="text-xl mb-4">{offer.price}</p>
+            <ul className="mb-4">
+              {offer.features.map((feature, i) => (
+                <li key={i} className="text-gray-700">- {feature}</li>
+              ))}
+            </ul>
+            <button className="bg-blue-500 text-white px-4 py-2 rounded">
+              Subscribe
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
