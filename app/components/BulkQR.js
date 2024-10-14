@@ -4,7 +4,7 @@ import QRCode from 'qrcode';
 import FileUpload from './FileUpload';
 import ColumnSelection from './ColumnSelection';
 import ImageUpload from './ImageUpload';
-import ColorSelection from './ColorSelection';
+import QRColorSelection from './QRColorSelection';
 import QRCodeTable from './QRCodeTable';
 import QrLayout from './QrLayout';
 import { downloadQRCodePDF } from '../utility/downloadQRCodePDF';
@@ -22,6 +22,7 @@ const BulkQR = () => {
   const [imageFile, setImageFile] = useState(null);
   const [bgColor, setBgColor] = useState("#ffffff");
   const [textColor, setTextColor] = useState("#000000");
+  const [qrColor, setQRColor] = useState("#000000");
   const [allQRCodesReady, setAllQRCodesReady] = useState(false);
 
   const hasLoggedRef = useRef(false);
@@ -103,7 +104,7 @@ let value = row[selectedColumn];
         const options = {
           width: 300,
           color: {
-            dark: textColor,
+            dark: qrColor,
             light: bgColor,
           },
         };
@@ -157,7 +158,7 @@ let value = row[selectedColumn];
           setSelectedColumn={setSelectedColumn} // Modified to handle multiple selections
         />
         <ImageUpload setImageFile={setImageFile} />
-        <ColorSelection bgColor={bgColor} setBgColor={setBgColor} textColor={textColor} setTextColor={setTextColor} />
+        <QRColorSelection bgColor={bgColor} setBgColor={setBgColor} qrColor={qrColor} setQRColor={setQRColor} />
 
         <div className="mt-4 flex justify-center">
           <button

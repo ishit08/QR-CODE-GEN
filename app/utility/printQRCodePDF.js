@@ -1,7 +1,7 @@
 import { jsPDF } from "jspdf";
 import { compressQRCode } from "./compressQRCode";
 import { kokila } from './kokila';  // Base64 font file
-
+ 
 export const printQRCodePDF = async (qrCodes, settings) => {
   const { qrPerRow, qrPerPage } = settings;  // qrPerPage is now passed as a setting
 
@@ -9,10 +9,9 @@ export const printQRCodePDF = async (qrCodes, settings) => {
     if (qrCodes && qrCodes.length > 0) {
       const pdf = new jsPDF("p", "pt", "a4");
 
-      // Add the custom font
-      pdf.addFileToVFS("Kokila.ttf", kokila); // Add your base64 encoded font
-      pdf.addFont("Kokila.ttf", "Kokila", "normal"); // Register the font
-      pdf.setFont("Kokila"); // Set the font
+   pdf.addFileToVFS("Kokila.ttf", kokila); // Add your Base64 font
+   pdf.addFont("Kokila.ttf", "Kokila", "normal");
+  pdf.setFont("Kokila");     
 
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
@@ -73,7 +72,7 @@ export const printQRCodePDF = async (qrCodes, settings) => {
           pdf.setFontSize(qrSize * 0.1); // Adjust font size based on QR size
 
           // Add the label text below the QR code, taking into account multiline labels
-          let labelY = y + qrSize + 8;  // Increased gap of 8pt between QR code and label
+          let labelY = y + qrSize + 10;  // Increased gap of 8pt between QR code and label
           labelLines.forEach((line, index) => {
             pdf.text(
               line,

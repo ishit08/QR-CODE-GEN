@@ -1,7 +1,7 @@
-import { jsPDF } from "jspdf";
+import { jsPDF } from "jspdf"; 
 import { compressQRCode } from "./compressQRCode";
 import { kokila } from './kokila';  // Base64 font file
-
+//import { notoSansDevanagariBase64 } from './NotoSansDevanagari-Regular'; 
 export const downloadQRCodePDF = async (qrCodes, settings) => {
   const { qrPerRow } = settings;
 
@@ -9,11 +9,10 @@ export const downloadQRCodePDF = async (qrCodes, settings) => {
     if (qrCodes && qrCodes.length > 0) {
       const pdf = new jsPDF("p", "pt", "a4");
 
-      // Add the Unicode font
-      pdf.addFileToVFS("Kokila.ttf", kokila); // Add your Base64 font
-      pdf.addFont("Kokila.ttf", "Kokila", "normal");
-      pdf.setFont("Kokila");
-
+           // Add the Unicode font
+     pdf.addFileToVFS("Kokila.ttf", kokila); // Add your Base64 font
+     pdf.addFont("Kokila.ttf", "Kokila", "normal");
+     pdf.setFont("Kokila");
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
 
@@ -22,9 +21,10 @@ export const downloadQRCodePDF = async (qrCodes, settings) => {
       const availableHeight = pageHeight - margin * 2;
 
       const qrSize = (availableWidth - (qrPerRow - 1) * margin) / qrPerRow;
-      const labelHeight = qrSize * 0.2;  // Initial label height for single line
+      const baseLabelHeight = qrSize * 0.2;  // Initial label height for a single line
 
-      const qrPlusLabelHeight = qrSize + labelHeight + margin;
+      // Dynamically calculate the height of the QR cell based on the label lines
+      const qrPlusLabelHeight = qrSize + baseLabelHeight + margin;
       const qrPerColumn = Math.floor((availableHeight + margin) / qrPlusLabelHeight);
       const qrPerPage = qrPerRow * qrPerColumn;
 
@@ -47,16 +47,8 @@ export const downloadQRCodePDF = async (qrCodes, settings) => {
           // Add cell borders
           pdf.setDrawColor(0);
           pdf.setLineWidth(0.5);
-          pdf.rect(x, y, qrSize, qrSize + labelHeight);
 
-          // Adjust font size based on QR size
-          const maxFontSize = 12;
-          const minFontSize = 6;
-          let fontSize = qrSize * 0.1; // Font size is 10% of QR size
-          fontSize = Math.max(minFontSize, Math.min(maxFontSize, fontSize));
-
-          pdf.setFontSize(fontSize);
-
+          // Get label text, split into multiple lines if needed
           const labelText = qrCodes[i].label || `QR Code ${i + 1}`;
           let labelLines;
 
@@ -69,10 +61,10 @@ export const downloadQRCodePDF = async (qrCodes, settings) => {
           }
 
           // Dynamically calculate the label height based on the number of lines
-          const dynamicLabelHeight = labelLines.length * (fontSize + 2); // Adjusted spacing between lines
+          const dynamicLabelHeight = labelLines.length * (qrSize * 0.1 + 2); // Adjusted spacing between lines
 
           // Adjust label Y-position to fit the content and remove extra spacing
-          let labelY = y + qrSize + fontSize / 2 - 2;  // Reduce gap between QR and label
+          let labelY = y + qrSize + 8;  // Added gap of 8pt between QR and label
 
           // Increase the height of the label cell to accommodate multiple lines
           pdf.rect(x, y, qrSize, qrSize + dynamicLabelHeight); // Updated height for the label cell
@@ -82,7 +74,7 @@ export const downloadQRCodePDF = async (qrCodes, settings) => {
             pdf.text(
               line,
               x + qrSize / 2,
-              labelY + index * (fontSize + 1), // Reduce gap between lines
+              labelY + index * (qrSize * 0.1 + 1), // Reduced gap between lines
               { align: "center" }
             );
           });
