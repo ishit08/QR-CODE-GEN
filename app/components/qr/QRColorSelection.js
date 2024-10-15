@@ -38,7 +38,7 @@ const QRColorSelection = ({ qrColor, setQRColor, bgColor, setBgColor, label }) =
         ref={colorInputRef}
         value={qrColor}
         onChange={(e) => setQRColor(e.target.value)}  // Updates QR color
-        onChange={(e) => setQRColor(e.target.value)}  // Updates QR color
+     
         className="absolute top-0 left-0 opacity-0 w-0 h-0"
         style={{ position: "absolute" }}
       />

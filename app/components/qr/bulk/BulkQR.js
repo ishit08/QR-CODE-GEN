@@ -69,9 +69,7 @@ const BulkQR = () => {
 
   const generateLabel = (row) => {
     const value = row[selectedColumn];
-    const label = selectedColumn.split('-')[0] + '|' + value;
-    const value = row[selectedColumn];
-    const label = selectedColumn.split('-')[0] + '|' + value;
+    const label = selectedColumn.split('-')[0] + '|' + value;   
     return label;
   };
 
@@ -169,7 +167,7 @@ const BulkQR = () => {
  
         const qrCode = qrCodeCanvas.toDataURL();
         const label = generateLabel(row);      
-        const label = generateLabel(row);      
+       
         codes.push({ qrCode, label });
         setProgress(Math.floor(((i + 1) / csvData.length) * 100));
         setProcessedRecords(i + 1);
@@ -199,7 +197,7 @@ const BulkQR = () => {
       onPrint={handlePrint}
       onDownload={handleDownload}
       hasQRCodes={allQRCodesReady}
-      hasQRCodes={allQRCodesReady}
+    
     >
       <div className="bg-white px-2">
         <FileUpload setCsvData={setCsvData} setFileName={setFileName} />
@@ -207,7 +205,7 @@ const BulkQR = () => {
           csvData={csvData}
           selectedColumn={selectedColumn}
           setSelectedColumn={setSelectedColumn}
-          setSelectedColumn={setSelectedColumn}
+         
         />
         <div>
           <ImageUpload setImageFile={setImageFile} />
