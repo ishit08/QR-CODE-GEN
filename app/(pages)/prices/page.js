@@ -1,20 +1,8 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { CircularProgress } from '@mui/material';
+import {useState } from 'react';
 
 export default function Prices() {
-
-  const [isLoading, setIsLoading] = useState(true); // State to manage loading status
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false); 
-    }, 2000);
-
-    return () => clearTimeout(timer); // Clean up the timer on component unmount
-  }, []);
-
 
   const offers = [
     {
@@ -34,14 +22,6 @@ export default function Prices() {
     },
   ];
 
-  if (isLoading) {
-    return (
-      <div className="lex justify-center items-center pt-20" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
-        <CircularProgress />
-        <h2 style={{ marginLeft: '10px' }}>Loading....</h2>
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto py-10 md:py-20">

@@ -7,7 +7,7 @@ import Image from 'next/image';
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State to track if mobile menu is open
   const [userName, setUserName] = useState(null); // State for user's name
-  const [loading, setLoading] = useState(true); // State for loading
+  
 
 
   // Define link data for both desktop and mobile, including icons
@@ -26,7 +26,6 @@ const Navbar = () => {
     if (user) {
       setUserName(user); // Set the userName state directly
     }
-    setLoading(false);
   }, []);
 
   // Logout function

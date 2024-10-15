@@ -3,12 +3,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import BasicQr from '../../components/BasicQR.js'; // Import the QRGenerator component
-import ImageQR from '../../components/ImageQR.js';
-import DynamicQR from '../../components/DynamicQR.js';
-import BulkQR from '../../components/BulkQR.js';
 import { CircularProgress } from '@mui/material';
-import { useState, useEffect } from 'react';
 import BasicQr from '../../components/qr/basic/BasicQR.js'; // Import the QRGenerator component
 import ImageQR from '../../components/qr/withimage/ImageQR.js';
 import DynamicQR from '../../components/qr/dynamic/DynamicQR.js';
@@ -16,16 +11,6 @@ import BulkQR from '../../components/qr/bulk/BulkQR.js';
 
 const QRPage = () => {
   const [activeTab, setActiveTab] = useState('basic');
-  const [isLoading, setIsLoading] = useState(true); // State to manage loading status
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false); 
-    }, 2000);
-
-    return () => clearTimeout(timer); // Clean up the timer on component unmount
-  }, []);
-
 
   // Load active tab from localStorage on component mount
   useEffect(() => {
@@ -58,14 +43,6 @@ const QRPage = () => {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="lex justify-center items-center pt-20" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
-        <CircularProgress />
-        <h2 style={{ marginLeft: '10px' }}>Loading....</h2>
-      </div>
-    );
-  }
 
   return (
     <div>
