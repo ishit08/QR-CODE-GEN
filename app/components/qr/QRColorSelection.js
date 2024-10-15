@@ -1,7 +1,8 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { FaPalette } from "react-icons/fa";
 
 const QRColorSelection = ({ qrColor, setQRColor, bgColor, setBgColor, label }) => {
+  const [iconHoverColor, setIconHoverColor] = useState(null); // State to handle icon hover color
   const colorInputRef = useRef(null);
 
   // Function to trigger the color input click
@@ -15,16 +16,19 @@ const QRColorSelection = ({ qrColor, setQRColor, bgColor, setBgColor, label }) =
         {/* Label for the icon */}
         <label className="text-lg font-semibold text-gray-700">{label || "Choose QR color"}</label>
 
-        {/* FontAwesome palette icon with dynamic color */}
+        {/* FontAwesome palette icon with dynamic background */}
         <FaPalette
           onClick={handleIconClick}
           className="text-5xl cursor-pointer transition-colors duration-300 ease-in-out"
           style={{
-            color: qrColor,  // Set icon color to the selected color
+            color: iconHoverColor || qrColor,  // Use the hover color if exists, otherwise use the selected color
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            padding: "5px",
           }}
           // Change icon color on hover
-          onMouseEnter={(e) => e.target.style.color = "#4A90E2"}  // Blue on hover
-          onMouseLeave={(e) => e.target.style.color = qrColor}  // Revert to selected color
+          onMouseEnter={() => setIconHoverColor("#4A90E2")}  // Set hover color (blue)
+          onMouseLeave={() => setIconHoverColor(null)}  // Reset hover color to null (back to qrColor)
         />
       </div>
 

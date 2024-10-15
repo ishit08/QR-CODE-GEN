@@ -21,10 +21,10 @@ const BulkQR = () => {
   const [selectedColumn, setSelectedColumn] = useState(''); 
   const [imageFile, setImageFile] = useState(null);
   const [bgColor, setBgColor] = useState("#ffffff");
-  const [qrColor, setQRColor] = useState("#000000");
-  const [secondaryColor, setSecondaryColor] = useState("#FF0000"); 
+  const [primaryColor, setPrimaryColor] = useState("#000000");  // Primary color
+  const [secondaryColor, setSecondaryColor] = useState("#FF0000"); // Secondary color
   const [colorSplitOption, setColorSplitOption] = useState(''); 
-  const [showSecondaryColor, setShowSecondaryColor] = useState(false); // This state will control the visibility of the secondary color picker
+  const [showSecondaryColor, setShowSecondaryColor] = useState(false); // Controls secondary color visibility
   const [allQRCodesReady, setAllQRCodesReady] = useState(false);
 
   const hasLoggedRef = useRef(false);
@@ -76,13 +76,15 @@ const BulkQR = () => {
   const applyColorSplit = (ctx, width, height, imgData) => {
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
-        const index = (y * width + x) * 4;
-        const isDark = imgData.data[index] === 0 && imgData.data[index + 1] === 0 && imgData.data[index + 2] === 0;
+        const index = (y * width + x) * 4; // Index for the pixel
+        const isDark = imgData.data[index] === 0 && imgData.data[index + 1] === 0 && imgData.data[index + 2] === 0; // Dark pixel
 
         if (isDark) {
           let applyPrimaryColor = true;
-
+          console.log(colorSplitOption);
+          // Split color logic based on selected option
           switch (colorSplitOption) {
+         
             case 'vertical':
               applyPrimaryColor = x < width / 2;
               break;
@@ -96,14 +98,15 @@ const BulkQR = () => {
               applyPrimaryColor = x + y > width;
               break;
             default:
-              applyPrimaryColor = true;
+              applyPrimaryColor = true; // Default: apply primary color
               break;
           }
 
+          // Apply primary or secondary color depending on split logic
           if (applyPrimaryColor) {
-            imgData.data[index] = parseInt(qrColor.substring(1, 3), 16); 
-            imgData.data[index + 1] = parseInt(qrColor.substring(3, 5), 16); 
-            imgData.data[index + 2] = parseInt(qrColor.substring(5, 7), 16);
+            imgData.data[index] = parseInt(primaryColor.substring(1, 3), 16); 
+            imgData.data[index + 1] = parseInt(primaryColor.substring(3, 5), 16); 
+            imgData.data[index + 2] = parseInt(primaryColor.substring(5, 7), 16);
           } else {
             imgData.data[index] = parseInt(secondaryColor.substring(1, 3), 16);
             imgData.data[index + 1] = parseInt(secondaryColor.substring(3, 5), 16);
@@ -112,7 +115,7 @@ const BulkQR = () => {
         }
       }
     }
-    ctx.putImageData(imgData, 0, 0);
+    ctx.putImageData(imgData, 0, 0); // Draw the image data back onto the canvas
   };
 
   const generateQRCodes = async () => {
@@ -137,12 +140,13 @@ const BulkQR = () => {
         if (!qrData) continue;
 
         const qrCodeCanvas = document.createElement('canvas');
-        await QRCode.toCanvas(qrCodeCanvas, qrData, { width: 300, color: { dark: qrColor, light: bgColor } });
+        await QRCode.toCanvas(qrCodeCanvas, qrData, { width: 300, color: { dark: primaryColor, light: bgColor } });
 
         const ctx = qrCodeCanvas.getContext('2d');
         const { width, height } = qrCodeCanvas;
         const imgData = ctx.getImageData(0, 0, width, height);
 
+        // Apply color split only if an option is selected
         if (colorSplitOption) {
           applyColorSplit(ctx, width, height, imgData); 
         }
@@ -200,19 +204,22 @@ const BulkQR = () => {
           selectedColumn={selectedColumn}
           setSelectedColumn={setSelectedColumn}
         />
-        <ImageUpload setImageFile={setImageFile} />
-        <QRColorSelection
-          bgColor={bgColor}
-          setBgColor={setBgColor}
-          qrColor={qrColor}
-          setQRColor={setQRColor}
-        />
+        <div>
+          <ImageUpload setImageFile={setImageFile} />
+        </div>
 
-        {/* Option to select color split pattern */}
         <div className="mt-4">
-          <label className="block mb-2 text-lg font-semibold text-gray-700">
-            Do you want to create a two-color QR code? Select a split option:
-          </label>
+          <QRColorSelection
+            bgColor={bgColor}
+            setBgColor={setBgColor}
+            qrColor={primaryColor}
+            setQRColor={setPrimaryColor}
+            label="Choose Primary Color"
+          />
+        </div>
+
+        <div className="mt-4">
+          <label className="block text-sm">Choose a color split pattern:</label>
           <select
             value={colorSplitOption}
             onChange={(e) => handleColorSplitOptionChange(e.target.value)}
@@ -228,12 +235,13 @@ const BulkQR = () => {
 
         {/* Show secondary color picker based on selection */}
         {showSecondaryColor && (
-         <QRColorSelection
-  bgColor={bgColor}
-  setBgColor={setBgColor}
-  qrColor={qrColor}
-  setQRColor={setQRColor}
-/>
+          <QRColorSelection
+            bgColor={bgColor}
+            setBgColor={setBgColor}
+            qrColor={secondaryColor}
+            setQRColor={setSecondaryColor}
+            label="Choose Secondary Color"
+          />
         )}
 
         <div className="mt-4 flex justify-center">
