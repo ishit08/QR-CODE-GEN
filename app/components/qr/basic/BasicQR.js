@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { generateQRCodeCanvas, applyQRStyle } from "../../../utility/qr/common/qrUtils";
+import { generateQRCodeCanvas, applyQRStyle } from "../../../utility/qr/comman/qrUtils";
 import TextInput from "../common/TextInput";
 import QrStyleSelector from "../common/QrStyleSelector";
 import ColorPicker from "../common/ColorPicker";
 import GenerateButton from "../common/GenerateButton";
 import QRCodeDisplay from "../common/QRCodeDisplay";
 import QrLayout from "../QrLayout";
+import { format } from "path";
 
 export default function BasicQr() {
   const [text, setText] = useState("");
@@ -16,6 +17,14 @@ export default function BasicQr() {
   const [primaryColor, setPrimaryColor] = useState("#000000");
   const [secondaryColor, setSecondaryColor] = useState("#ffffff");
   const [qrStyle, setQrStyle] = useState("none");
+
+  const handlePrint = () => {
+      // printQRCodePDF();
+  };
+ 
+  const handleDownload = () => {
+      downloadQRCode(format, canvasRef);
+  };
 
   const generateQRCode = async () => {
     const qrCodeElement = document.getElementById("qrcode");
