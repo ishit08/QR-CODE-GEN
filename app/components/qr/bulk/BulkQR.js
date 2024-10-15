@@ -9,7 +9,7 @@ import QRCodeTable from '../QRCodeTable';
 import QrLayout from '../QrLayout';
 import { downloadQRCodePDF } from '../../../utility/qr/bulk/downloadQRCodePDF';
 import { printQRCodePDF } from '../../../utility/qr/bulk/printQRCodePDF';
-
+ 
 const BulkQR = () => {
   const [csvData, setCsvData] = useState([]);
   const [qrCodes, setQrCodes] = useState([]);
@@ -26,9 +26,9 @@ const BulkQR = () => {
   const [colorSplitOption, setColorSplitOption] = useState(''); 
   const [showSecondaryColor, setShowSecondaryColor] = useState(false); // Controls secondary color visibility
   const [allQRCodesReady, setAllQRCodesReady] = useState(false);
-
+ 
   const hasLoggedRef = useRef(false);
-
+ 
   const handlePrint = (settings) => {
     if (qrCodes && qrCodes.length > 0) {
       printQRCodePDF(qrCodes, settings);
@@ -36,7 +36,7 @@ const BulkQR = () => {
       alert('No QR codes available for printing.');
     }
   };
-
+ 
   const handleDownload = (settings) => {
     if (qrCodes && qrCodes.length > 0) {
       downloadQRCodePDF(qrCodes, settings);
@@ -68,6 +68,8 @@ const BulkQR = () => {
   };
 
   const generateLabel = (row) => {
+    const value = row[selectedColumn];
+    const label = selectedColumn.split('-')[0] + '|' + value;
     const value = row[selectedColumn];
     const label = selectedColumn.split('-')[0] + '|' + value;
     return label;
@@ -123,7 +125,7 @@ const BulkQR = () => {
       alert("Please upload a CSV file first.");
       return;
     }
-
+ 
     setIsProcessing(true);
     setProgress(0);
     setError('');
@@ -164,8 +166,9 @@ const BulkQR = () => {
             };
           });
         }
-
+ 
         const qrCode = qrCodeCanvas.toDataURL();
+        const label = generateLabel(row);      
         const label = generateLabel(row);      
         codes.push({ qrCode, label });
         setProgress(Math.floor(((i + 1) / csvData.length) * 100));
@@ -196,12 +199,14 @@ const BulkQR = () => {
       onPrint={handlePrint}
       onDownload={handleDownload}
       hasQRCodes={allQRCodesReady}
+      hasQRCodes={allQRCodesReady}
     >
       <div className="bg-white px-2">
         <FileUpload setCsvData={setCsvData} setFileName={setFileName} />
         <ColumnSelection
           csvData={csvData}
           selectedColumn={selectedColumn}
+          setSelectedColumn={setSelectedColumn}
           setSelectedColumn={setSelectedColumn}
         />
         <div>
@@ -254,20 +259,20 @@ const BulkQR = () => {
             {isProcessing ? "Generating..." : "Generate QR Codes"}
           </button>
         </div>
-
+ 
         {isProcessing && (
           <div className="mt-4 text-center">
             <span>Processing: {Math.round(progress)}%</span>
             <progress value={progress} max="100" className="w-full"></progress>
           </div>
         )}
-
+ 
         {processedRecords > 0 && !isProcessing && (
           <div className="mt-4 text-center text-green-600">
             {processedRecords} records processed from the file.
           </div>
         )}
-
+ 
         {error && (
           <div className="mt-4 text-center text-red-500">
             {error}
@@ -281,5 +286,5 @@ const BulkQR = () => {
     </QrLayout>
   );
 };
-
+ 
 export default BulkQR;
