@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import QRCode from 'qrcode';
 import DownloadDynamicQR from './DownloadDynamicQR'; // Adjust the path if necessary
-import QrLayout from './QrLayout'; // Adjust the path if necessary
+import QrLayout from '../QrLayout'; // Adjust the path if necessary
 
 export default function DynamicQR() {
   const [fields, setFields] = useState([{ caption: '', value: '' }]);
