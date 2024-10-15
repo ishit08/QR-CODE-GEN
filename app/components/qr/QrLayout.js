@@ -1,11 +1,9 @@
-// components/QrLayout.js
-
 import React, { useState } from 'react';
 import SettingsModal from './SettingsModal';
 
 export default function QrLayout({ children, title, onPrint, onDownload, hasQRCodes }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [actionType, setActionType] = useState(''); // 'print' or 'download'
+  const [actionType, setActionType] = useState(''); // 'print', 'download', or 'help'
 
   const handleIconClick = (type) => {
     setActionType(type);
@@ -17,6 +15,8 @@ export default function QrLayout({ children, title, onPrint, onDownload, hasQRCo
       onPrint(settings);
     } else if (actionType === 'download') {
       onDownload(settings);
+    } else if (actionType === 'help') {
+      // Handle help modal save if necessary
     }
     setIsModalOpen(false);
   };
@@ -32,8 +32,17 @@ export default function QrLayout({ children, title, onPrint, onDownload, hasQRCo
           className="flex flex-col items-center p-6 bg-white shadow-xl rounded-lg border border-gray-300"
           style={{ boxShadow: '5px 5px 15px rgba(0, 0, 0, 0.2)' }}
         >
-          <h2 className="text-xl font-bold mb-4">{title}</h2>
-          {childrenArray[0]} {/* This should be the file upload section */}
+          <div className="flex items-center justify-between w-full">
+            <h2 className="text-xl font-bold mb-4">{title}</h2>
+            {/* Help button in the input section */}
+            <button
+              onClick={() => handleIconClick('help')}
+              className="text-blue-600 hover:text-gray-800 cursor-pointer fa-2x"
+            >
+              <i className="fa fa-question-circle"></i>
+            </button>
+          </div>
+          {childrenArray[0]} {/* This should be the file upload/input section */}
         </div>
 
         {/* Column 2: QR Code Section */}

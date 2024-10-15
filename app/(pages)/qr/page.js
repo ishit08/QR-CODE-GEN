@@ -3,7 +3,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { CircularProgress } from '@mui/material';
 import BasicQr from '../../components/qr/basic/BasicQR.js'; // Import the QRGenerator component
 import ImageQR from '../../components/qr/withimage/ImageQR.js';
 import DynamicQR from '../../components/qr/dynamic/DynamicQR.js';

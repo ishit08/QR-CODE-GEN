@@ -1,55 +1,66 @@
-// BasicQr.js
-
-"use client";
-
 import { useState } from "react";
-import DownloadQR from "../DownloadQR";
+import { generateQRCodeCanvas, applyQRStyle } from "../../../utility/qr/common/qrUtils";
+import TextInput from "../common/TextInput";
+import QrStyleSelector from "../common/QrStyleSelector";
+import ColorPicker from "../common/ColorPicker";
+import GenerateButton from "../common/GenerateButton";
+import QRCodeDisplay from "../common/QRCodeDisplay";
 import QrLayout from "../QrLayout";
-import QRCode from 'qrcode';  // Ensure this line is present
+
 export default function BasicQr() {
   const [text, setText] = useState("");
+  const [placeholder, setPlaceholder] = useState("Enter text or URL");
+  const [className, setClassName] = useState("p-2 mb-4 border rounded w-full");
+  const [style, setStyle] = useState({ width: "300px" });
   const [canvasRef, setCanvasRef] = useState(null);
+  const [primaryColor, setPrimaryColor] = useState("#000000");
+  const [secondaryColor, setSecondaryColor] = useState("#ffffff");
+  const [qrStyle, setQrStyle] = useState("none");
 
-  const generateQRCode = () => {
+  const generateQRCode = async () => {
     const qrCodeElement = document.getElementById("qrcode");
     qrCodeElement.innerHTML = "";
 
     if (text) {
-      const canvas = document.createElement("canvas");
-      qrCodeElement.appendChild(canvas);
-      setCanvasRef(canvas);
+      const options = {
+        errorCorrectionLevel: "H",
+        margin: 1,
+        scale: 8,
+        color: {
+          dark: "#000000",
+          light: "#FFFFFF",
+        },
+      };
 
-      QRCode.toCanvas(canvas, text, (error) => {
-        if (error) {
-          console.error(error);
+      try {
+        // Generate QR code canvas
+        const canvas = await generateQRCodeCanvas(text, options);
+        qrCodeElement.appendChild(canvas);
+        setCanvasRef(canvas);
+
+        // Apply style if needed
+        if (qrStyle !== "none") {
+          applyQRStyle(canvas, qrStyle, primaryColor, secondaryColor);
         }
-      });
+      } catch (error) {
+        console.error("QR Code generation error:", error);
+      }
     } else {
       alert("Please enter some text or URL to generate the QR code.");
     }
   };
 
   return (
-    <QrLayout title="Enter Text or URL">
+    <QrLayout title="Genrate Qr">
       {/* Input Fields */}
       <>
-        <input
-          type="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Enter text or URL"
-          className="p-2 mb-4 border rounded w-full"
-          style={{ width: "300px" }}
-        />
-        <button onClick={generateQRCode} className="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">
-          Generate QR Code
-        </button>
+      <TextInput text={text} setText={setText} placeholder={placeholder} setPlaceholder={setPlaceholder} className={className} setClassName={setClassName} style={style} setStyle={setStyle} />
+      <QrStyleSelector qrStyle={qrStyle} setQrStyle={setQrStyle} />
+      <ColorPicker primaryColor={primaryColor} setPrimaryColor={setPrimaryColor} secondaryColor={secondaryColor} setSecondaryColor={setSecondaryColor} qrStyle={qrStyle} />
+      <GenerateButton generateQRCode={generateQRCode} />
       </>
-
-      {/* QR Code Display */}
       <>
-        <div id="qrcode" className="p-4 bg-white"></div>
-        {canvasRef && <DownloadQR canvasRef={canvasRef} />}
+        <QRCodeDisplay canvasRef={canvasRef} />
       </>
     </QrLayout>
   );
