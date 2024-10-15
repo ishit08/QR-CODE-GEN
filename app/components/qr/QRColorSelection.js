@@ -1,7 +1,8 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { FaPalette } from "react-icons/fa";
- 
+
 const QRColorSelection = ({ qrColor, setQRColor, bgColor, setBgColor, label }) => {
+  const [iconHoverColor, setIconHoverColor] = useState(null); // State to handle icon hover color
   const colorInputRef = useRef(null);
  
   // Function to trigger the color input click
@@ -20,11 +21,14 @@ const QRColorSelection = ({ qrColor, setQRColor, bgColor, setBgColor, label }) =
           onClick={handleIconClick}
           className="text-5xl cursor-pointer transition-colors duration-300 ease-in-out"
           style={{
-            color: qrColor,  // Set icon color to the selected color
+            color: iconHoverColor || qrColor,  // Use the hover color if exists, otherwise use the selected color
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            padding: "5px",
           }}
           // Change icon color on hover
-          onMouseEnter={(e) => e.target.style.color = "#4A90E2"}  // Blue on hover
-          onMouseLeave={(e) => e.target.style.color = qrColor}  // Revert to selected color
+          onMouseEnter={() => setIconHoverColor("#4A90E2")}  // Set hover color (blue)
+          onMouseLeave={() => setIconHoverColor(null)}  // Reset hover color to null (back to qrColor)
         />
       </div>
  
@@ -34,6 +38,7 @@ const QRColorSelection = ({ qrColor, setQRColor, bgColor, setBgColor, label }) =
         ref={colorInputRef}
         value={qrColor}
         onChange={(e) => setQRColor(e.target.value)}  // Updates QR color
+     
         className="absolute top-0 left-0 opacity-0 w-0 h-0"
         style={{ position: "absolute" }}
       />
