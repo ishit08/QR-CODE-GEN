@@ -2,7 +2,7 @@
 // app/auth/login/page.js
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { loginUser } from '../api/api';   
 import { useRouter } from 'next/navigation';
 
