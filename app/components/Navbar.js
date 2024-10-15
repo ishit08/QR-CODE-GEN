@@ -1,19 +1,44 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image'; // Import the Image component
+import Image from 'next/image';
+
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State to track if mobile menu is open
+  const [userName, setUserName] = useState(null); // State for user's name
+  const [loading, setLoading] = useState(true); // State for loading
+
 
   // Define link data for both desktop and mobile, including icons
   const links = [
     { href: "/", label: "Home", icon: "fa fa-home" },
     { href: "/prices", label: "Plans", icon: "fa fa-tags" },
     { href: "/qr", label: "QR Options", icon: "fa fa-qrcode" },
-    { href: "/login", label: "Login", icon: "fa fa-right-to-bracket" },
-    { href: "/register", label: "Register", icon: "fa fa-user-plus" },
   ];
+
+  // Fetch user name from localStorage on component mount
+  useEffect(() => {
+    // Retrieve the username from localStorage
+    const user = localStorage.getItem('username'); // Get the raw string
+    console.log(user);
+    
+    if (user) {
+      setUserName(user); // Set the userName state directly
+    }
+    setLoading(false);
+  }, []);
+
+  // Logout function
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    localStorage.removeItem('email');
+    setUserName(null);
+    setTimeout(() => {
+      window.location.reload(); 
+    }, 100);// Reset userName state
+  };
 
   return (
     <nav className="fixed top-0 left-0 w-full bg-gray-800 text-white z-50">
@@ -41,16 +66,16 @@ const Navbar = () => {
             aria-label="Toggle mobile menu"
           >
             {isOpen ? (
-              <span className="h-6 w-6">X</span> // Replace with a close icon if desired
+              <span className="h-6 w-6">X</span> // Close icon
             ) : (
-              <span className="h-6 w-6">☰</span> // Replace with a hamburger icon if desired
+              <span className="h-6 w-6">☰</span> // Hamburger icon
             )}
           </button>
         </div>
 
         {/* Menu links for desktop */}
         <div className={`hidden md:flex space-x-8`}>
-          {links.slice(0, 3).map(link => (
+          {links.map(link => (
             <Link key={link.href} href={link.href} className="flex items-center space-x-2 hover:text-gray-300">
               <i className={link.icon}></i> {/* Render the icon */}
               <span>{link.label}</span>
@@ -58,14 +83,28 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* Login/Register links for desktop */}
+        {/* User profile or login/register links */}
         <div className="hidden md:flex space-x-4">
-          {links.slice(3).map(link => (
-            <Link key={link.href} href={link.href} className="flex items-center space-x-2 hover:text-gray-300">
-              <i className={link.icon}></i> {/* Render the icon */}
-              <span>{link.label}</span>
-            </Link>
-          ))}
+          {(localStorage.getItem("token")) ? (
+            <div className="flex items-center space-x-8">
+              <span>Hello, {userName}</span> {/* Display user name */}
+              <button onClick={handleLogout} className="flex items-center space-x-2 hover:text-gray-300">
+                <i className="fa fa-right-from-bracket"></i> {/* Logout icon */}
+                <span>Logout</span>
+              </button>
+            </div>
+          ) : (
+            <>
+              <Link href="/login" className="flex items-center space-x-2 hover:text-gray-300">
+                <i className="fa fa-right-to-bracket"></i> {/* Login icon */}
+                <span>Login</span>
+              </Link>
+              <Link href="/register" className="flex items-center space-x-2 hover:text-gray-300">
+                <i className="fa fa-user-plus"></i> {/* Register icon */}
+                <span>Register</span>
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
@@ -78,6 +117,26 @@ const Navbar = () => {
               <span>{link.label}</span>
             </Link>
           ))}
+          {/* Mobile login/register links */}
+          {!userName && (
+            <>
+              <Link href="/login" className="flex items-center space-x-2 hover:text-gray-300">
+                <i className="fa fa-right-to-bracket"></i>
+                <span>Login</span>
+              </Link>
+              <Link href="/register" className="flex items-center space-x-2 hover:text-gray-300">
+                <i className="fa fa-user-plus"></i>
+                <span>Register</span>
+              </Link>
+            </>
+          )}
+          {/* Mobile logout link */}
+          {userName && (
+            <button onClick={handleLogout} className="flex items-center space-x-2 hover:text-gray-300">
+              <i className="fa fa-right-from-bracket"></i> {/* Logout icon */}
+              <span>Logout</span>
+            </button>
+          )}
         </div>
       </div>
     </nav>
