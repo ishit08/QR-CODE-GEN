@@ -1,28 +1,62 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { registerUser } from '../api/api'; // Import the function from api.js
+import { useRouter } from 'next/navigation';
+import { CircularProgress } from '@mui/material';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false); // Set loading to false after 2 seconds (simulating data fetching)
+    }, 2000);
+
+    return () => clearTimeout(timer); // Clean up the timer on component unmount
+  }, []);
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const res = await fetch('/api/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, email, password }),
-    });
-    const data = await res.json();
-    if (res.ok) {
-      alert('Registration successful!');
-    } else {
-      alert(data.message || 'Registration failed. Please try again.');
+    try {
+      // Ensure we are sending 'username' instead of 'name'
+      const userData = { username: name, email, password };
+  
+      const response = await registerUser(userData); // Call the registerUser API function
+  
+      // Check if the response contains a success message
+      if (response && response.message) {
+        alert('Registration successful!'); // Show success message
+        router.push('/login'); 
+      } else {
+        // Handle unexpected response structure
+        alert('Registration failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Registration error:', error); // Log the error for debugging
+  
+      // Check for specific error response if available
+      if (error.response) {
+        alert(`Registration failed: ${error.response.data.error || 'Please try again.'}`);
+      } else {
+        alert('Registration failed. Please try again.');
+      }
     }
   };
+  
+
+  if (isLoading) {
+    return (
+      <div className="lex justify-center items-center pt-20" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
+        <CircularProgress />
+        <h2 style={{ marginLeft: '10px' }}>Loading....</h2>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center pt-20">

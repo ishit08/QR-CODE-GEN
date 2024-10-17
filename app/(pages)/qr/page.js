@@ -42,6 +42,15 @@ const QRPage = () => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="lex justify-center items-center pt-20" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
+        <CircularProgress />
+        <h2 style={{ marginLeft: '10px' }}>Loading....</h2>
+      </div>
+    );
+  }
+
   return (
     <div>
       <h1 className="text-3xl text-center font-bold m-10">QR Code Generator</h1>
