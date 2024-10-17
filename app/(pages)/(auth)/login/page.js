@@ -1,94 +1,136 @@
+"use client"; // Ensure this is a client component
 
-// app/auth/login/page.js
-'use client';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; // Use next/navigation instead of next/router
+import { Button } from "../../../components/ui/button";
+import { Input } from "../../../components/ui/input";
+import { Label } from "../../../components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../../../components/ui/card";
 
-import { useEffect, useState } from 'react';
-import { loginUser } from '../api/api';   
-import { useRouter } from 'next/navigation';
-import { CircularProgress } from '@mui/material';
-
-const UserLogin = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  // Redirect to home if the user is already logged in
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false); // Set loading to false after 2 seconds (simulating data fetching)
-    }, 2000);
+    const token = localStorage.getItem("token");
+    if (token) {
+      router.push("/"); // Redirect to home
+    }
+  }, [router]);
 
-    return () => clearTimeout(timer); // Clean up the timer on component unmount
-  }, []);
-
+  // Handle login with email and password
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
     try {
-      const credentials = { email, password };
-      const response = await loginUser(credentials); 
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-      // Save the token and user details in localStorage
-      // localStorage.setItem('username', JSON.stringify(response.user.username));
-      // localStorage.setItem('email', JSON.stringify(response.user.email));
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('username', response.user.username);  // Save the username
-      localStorage.setItem('email', response.user.email);        // Save the email
+      const data = await response.json();
 
-      // console.log( localStorage.getItem("token"))
-      router.push('/'); // Navigate to home or dashboard
-      setTimeout(() => {
-        window.location.reload(); 
-      }, 500);
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("username", data.username);
+        localStorage.setItem("email", data.email);
+        router.push("/"); // Redirect to homepage
+      } else {
+        setErrorMessage(data.message || "Login failed.");
+      }
     } catch (error) {
-      setError('Login failed. Please check your credentials.');
+      setErrorMessage("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // If the page is loading, show the loading spinner and message
-  if (isLoading) {
-    return (
-      <div className="lex justify-center items-center pt-20" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
-        <CircularProgress />
-        <h2 style={{ marginLeft: '10px' }}>Loading....</h2>
-      </div>
-    );
-  }
+  // Handle login with Google
+  const handleGoogleLogin = () => {
+    window.open("/api/auth/google", "_self");
+  };
+
+  // Handle login with Facebook
+  const handleFacebookLogin = () => {
+    window.open("/api/auth/facebook", "_self");
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center pt-20">
-      <h1 className="text-2xl font-bold mb-6">User Login</h1>
-      <form onSubmit={handleLogin} className="bg-white p-6 rounded shadow-md w-full max-w-md">
-        <div className="mb-4">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
-        <button
-          type="submit"
-          className="w-full p-3 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Login
-        </button>
-      </form>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <Card className="w-full max-w-md p-8">
+        <CardHeader>
+          <CardTitle>Login</CardTitle>
+          <CardDescription>Sign in to your account</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
+          <form onSubmit={handleLogin}>
+            <div className="mb-4">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
+            </Button>
+          </form>
+
+          {/* Divider */}
+          <div className="my-4 flex items-center justify-center">
+            <span className="text-gray-500">or login with</span>
+          </div>
+
+          {/* Social login buttons */}
+          <div className="flex justify-between space-x-2">
+            <Button onClick={handleGoogleLogin} className="w-full bg-red-500 hover:bg-red-600">
+              Login with Google
+            </Button>
+            <Button onClick={handleFacebookLogin} className="w-full bg-blue-500 hover:bg-blue-600">
+              Login with Facebook
+            </Button>
+          </div>
+        </CardContent>
+        <CardFooter>
+          <p className="text-center w-full">
+            Don’t have an account?{" "}
+            <a href="/register" className="text-blue-500">Sign up</a>
+          </p>
+        </CardFooter>
+      </Card>
     </div>
   );
 };
 
-export default UserLogin;
+export default LoginPage;

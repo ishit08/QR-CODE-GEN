@@ -1,26 +1,38 @@
-//** Register User Endpoint:**
+import prisma from '../../lib/prisma';
+import bcrypt from 'bcryptjs';
 
-// app/api/auth/register.js
-import { openDb } from '../utility/database';
-import bcrypt from 'bcrypt';
-import { insertUserQuery } from '../queries/userQueries';
-import { ERROR_MESSAGES } from '../constants/errorMessages';
-import { handleHttpError } from '../utility/errorHandler';
+export async function POST(req) {
+  const { name, email, password } = await req.json();
 
-export default async function handler(req, res) {
-  if (req.method === 'POST') {
-    const { email, password } = req.body;
+  if (!name || !email || !password) {
+    return new Response(JSON.stringify({ message: 'Name, email, and password are required' }), { status: 400 });
+  }
+
+  try {
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return new Response(JSON.stringify({ message: 'User already exists' }), { status: 400 });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    try {
-      const db = await openDb();
-      await db.run(insertUserQuery, email, hashedPassword);
-      res.status(200).json({ message: 'User registered successfully' });
-    } catch (error) {
-      handleHttpError(res, 500, ERROR_MESSAGES.USER_EXISTS);
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+      },
+    });
+
+    return new Response(JSON.stringify({ message: 'User created successfully', userId: user.id }), { status: 201 });
+  } catch (error) {
+    console.error('Signup error:', error);
+    if (error.code === 'P2002') {
+      return new Response(JSON.stringify({ message: 'Email already in use' }), { status: 400 });
     }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(ERROR_MESSAGES.METHOD_NOT_ALLOWED(req.method));
+    return new Response(JSON.stringify({ message: 'Something went wrong' }), { status: 500 });
   }
 }
