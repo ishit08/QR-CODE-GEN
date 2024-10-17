@@ -25,23 +25,26 @@ const WithImage = () => {
   };
 
   const handleGenerate = () => {
+    // Combine all inputs into a single string, separated by a new line or any other separator
+    const combinedData = `${text}\n${url}\n${location}`.trim(); // Use \n to separate inputs
+
     const options = {
-      data: text || url || location,
-      width: 300, // Example size
-      height: 300, // Example size
-      image: image, // Include the image in the QR options
-      dotsOptions: {
-        color: colors.dark, // Dark color for dots
-        type: 'rounded', // Can customize dot type here
-      },
-      backgroundOptions: {
-        color: colors.light, // Light color for background
-      },
+        data: combinedData, // Use the combined data
+        width: 300, // Example size
+        height: 300, // Example size
+        image: image, // Include the image in the QR options
+        dotsOptions: {
+            color: colors.dark, // Dark color for dots
+            type: 'rounded', // Can customize dot type here
+        },
+        backgroundOptions: {
+            color: colors.light, // Light color for background
+        },
     };
 
     const qrCodeInstance = QRUtils.createQRCode(options);
     setQrCode(qrCodeInstance);
-  };
+};
 
   return (
     <div className="flex flex-col md:flex-row bg-gradient-to-r from-green-100 to-blue-200 rounded-lg shadow-lg p-6">
