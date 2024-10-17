@@ -1,106 +1,104 @@
-'use client';
+"use client"; // Ensure this is a client component
 
-import { useState, useEffect } from 'react';
-import { registerUser } from '../api/api'; // Import the function from api.js
-import { useRouter } from 'next/navigation';
-import { CircularProgress } from '@mui/material';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { signIn } from "next-auth/react";
+import { Button } from "../../../components/ui/button";
+import { Input } from "../../../components/ui/input";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "../../../components/ui/card";
 
-const Register = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+export default function Register() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false); // Set loading to false after 2 seconds (simulating data fetching)
-    }, 2000);
-
-    return () => clearTimeout(timer); // Clean up the timer on component unmount
-  }, []);
-
-  const handleRegister = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      // Ensure we are sending 'username' instead of 'name'
-      const userData = { username: name, email, password };
-  
-      const response = await registerUser(userData); // Call the registerUser API function
-  
-      // Check if the response contains a success message
-      if (response && response.message) {
-        alert('Registration successful!'); // Show success message
-        router.push('/login'); 
-      } else {
-        // Handle unexpected response structure
-        alert('Registration failed. Please try again.');
-      }
-    } catch (error) {
-      console.error('Registration error:', error); // Log the error for debugging
-  
-      // Check for specific error response if available
-      if (error.response) {
-        alert(`Registration failed: ${error.response.data.error || 'Please try again.'}`);
-      } else {
-        alert('Registration failed. Please try again.');
-      }
+    const response = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
+    });
+    
+    if (response.ok) {
+      router.push("/login");
+    } else {
+      console.error("Signup failed");
     }
   };
-  
-
-  if (isLoading) {
-    return (
-      <div className="lex justify-center items-center pt-20" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
-        <CircularProgress />
-        <h2 style={{ marginLeft: '10px' }}>Loading....</h2>
-      </div>
-    );
-  }
 
   return (
-    <div className="flex flex-col items-center justify-center pt-20">
-      <h1 className="text-2xl font-bold mb-6">Register</h1>
-      <form onSubmit={handleRegister} className="bg-white p-6 rounded shadow-md w-full max-w-md">
-        <div className="mb-4">
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Name"
-            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full p-3 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Register
-        </button>
-      </form>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="text-black">Sign Up</CardTitle>
+          <CardDescription className="text-black">Create a new account</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit}>
+            <div className="space-y-4">
+              <Input
+                type="text"
+                placeholder="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+              <Input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <Input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <Button
+                type="submit"
+                className="w-full bg-blue-600 text-white hover:bg-blue-700 transition duration-200"
+              >
+                Sign Up
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+        <CardFooter className="flex flex-col space-y-2">
+          <Button
+            className="w-full"
+            variant="outline"
+            onClick={() => signIn("google", { callbackUrl: "/" })}
+          >
+            Sign up with Google
+          </Button>
+          <Button
+            className="w-full"
+            variant="outline"
+            onClick={() => signIn("facebook", { callbackUrl: "/" })}
+          >
+            Sign up with Facebook
+          </Button>
+          <p className="text-sm text-center w-full text-black">
+            Already have an account?{" "}
+            <Link href="/login" className="text-blue-600 hover:underline">
+              Login here
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
     </div>
   );
-};
-
-export default Register;
+}

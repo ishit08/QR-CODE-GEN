@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { generateQRCodeCanvas, applyQRStyle } from "../../../utility/qr/common/qrUtils";
+import { generateQRCodeCanvas, applyQRStyle } from "../../../utility/qr/comman/qrUtils";
 import TextInput from "../common/TextInput";
 import QrStyleSelector from "../common/QrStyleSelector";
 import ColorPicker from "../common/ColorPicker";
 import GenerateButton from "../common/GenerateButton";
 import QRCodeDisplay from "../common/QRCodeDisplay";
 import QrLayout from "../QrLayout";
+import { format } from "path";
 
 export default function BasicQr() {
   const [text, setText] = useState("");
@@ -15,7 +16,17 @@ export default function BasicQr() {
   const [canvasRef, setCanvasRef] = useState(null);
   const [primaryColor, setPrimaryColor] = useState("#000000");
   const [secondaryColor, setSecondaryColor] = useState("#ffffff");
+  const [thirdColor, setThirdColor] = useState("#ff0000");
+  const [fourthColor, setFourthColor] = useState("#0000ff");;
   const [qrStyle, setQrStyle] = useState("none");
+
+  const handlePrint = () => {
+      // printQRCodePDF();
+  };
+ 
+  const handleDownload = () => {
+      downloadQRCode(format, canvasRef);
+  };
 
   const generateQRCode = async () => {
     const qrCodeElement = document.getElementById("qrcode");
@@ -40,7 +51,7 @@ export default function BasicQr() {
 
         // Apply style if needed
         if (qrStyle !== "none") {
-          applyQRStyle(canvas, qrStyle, primaryColor, secondaryColor);
+          applyQRStyle(canvas, qrStyle, primaryColor, secondaryColor, thirdColor, fourthColor);
         }
       } catch (error) {
         console.error("QR Code generation error:", error);
@@ -56,7 +67,7 @@ export default function BasicQr() {
       <>
       <TextInput text={text} setText={setText} placeholder={placeholder} setPlaceholder={setPlaceholder} className={className} setClassName={setClassName} style={style} setStyle={setStyle} />
       <QrStyleSelector qrStyle={qrStyle} setQrStyle={setQrStyle} />
-      <ColorPicker primaryColor={primaryColor} setPrimaryColor={setPrimaryColor} secondaryColor={secondaryColor} setSecondaryColor={setSecondaryColor} qrStyle={qrStyle} />
+      <ColorPicker primaryColor={primaryColor} setPrimaryColor={setPrimaryColor} secondaryColor={secondaryColor} setSecondaryColor={setSecondaryColor} thirdColor={thirdColor} setThirdColor={setThirdColor} fourthColor={fourthColor} setFourthColor={setFourthColor}  qrStyle={qrStyle} />
       <GenerateButton generateQRCode={generateQRCode} />
       </>
       <>

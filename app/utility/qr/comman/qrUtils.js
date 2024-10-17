@@ -15,10 +15,13 @@ export const generateQRCodeCanvas = (text, options) => {
 };
 
 // Function to modify the QR code style (color manipulation)
-export const applyQRStyle = (canvas, qrStyle, primaryColor, secondaryColor) => {
+export const applyQRStyle = (canvas, qrStyle, primaryColor, secondaryColor, thirdColor, fourthColor) => {
   const context = canvas.getContext("2d");
   const imgData = context.getImageData(0, 0, canvas.width, canvas.height);
   const data = imgData.data;
+
+  const size = canvas.width;
+  const PositionMarkerSize = size / 7;
 
   for (let y = 0; y < canvas.height; y++) {
     for (let x = 0; x < canvas.width; x++) {
@@ -49,6 +52,20 @@ export const applyQRStyle = (canvas, qrStyle, primaryColor, secondaryColor) => {
               applyColor(data, index, primaryColor);
             } else {
               applyColor(data, index, secondaryColor);
+            }
+            break;
+          case "quad":
+            if (x < canvas.width / 2 && y < canvas.height / 2) {
+              applyColor(data, index, primaryColor);
+            }
+            else if (x >= canvas.width / 2 && y < canvas.height / 2) {
+              applyColor(data, index, secondaryColor);
+            }
+            else if (x < canvas.width / 2 && y >= canvas.height / 2) {
+              applyColor(data, index, thirdColor);
+            }
+            else {
+              applyColor(data, index, fourthColor);
             }
             break;
           default:

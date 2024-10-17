@@ -11,6 +11,8 @@ export default function QrStyleSelector({ qrStyle, setQrStyle }) {
           <option value="vertical">Vertical Color</option>
           <option value="horizontal">Horizontal Color</option>
           <option value="diagonal">Diagonal Color</option>
+          <option value="quad">Quad</option>
+          
         </select>
       </div>
     );
