@@ -19,23 +19,28 @@ export const printQRCodePDF = async (qrCodes, settings) => {
 
       const margin = 10;
       const availableWidth = pageWidth - margin * 2;
-      const availableHeight = pageHeight - margin * 2;
 
       const qrSize = (availableWidth - (qrPerRow - 1) * margin) / qrPerRow;
       const baseLabelHeight = qrSize * 0.2;  // Initial label height for a single line
       const qrPlusLabelHeight = qrSize + baseLabelHeight + margin;
-      const qrPerColumn = Math.floor((availableHeight + margin) / qrPlusLabelHeight);
+      const qrPerColumn = Math.floor((pageHeight + margin) / qrPlusLabelHeight);
       const qrPerPageLimit = qrPerRow * qrPerColumn;
 
+      // Total height occupied by QR codes and labels
+      const totalContentHeight = qrPerColumn * qrPlusLabelHeight;
+
+      // Calculate top and bottom margin to center content vertically
+      const verticalPadding = (pageHeight - totalContentHeight) / 2;
+
       let x = margin;
-      let y = margin;
+      let y = verticalPadding;  // Start with the calculated padding
       let count = 0;
 
       for (let i = 0; i < qrCodes.length; i++) {
         if (count === qrPerPageLimit) {
           pdf.addPage();
           x = margin;
-          y = margin;
+          y = verticalPadding;  // Reset y to the padding for each new page
           count = 0;
         }
 
