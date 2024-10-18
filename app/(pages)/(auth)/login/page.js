@@ -71,34 +71,34 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen">
       <Card className="w-full max-w-md p-8">
-        <CardHeader>
+        <CardHeader  className="text-center">
           <CardTitle>Login</CardTitle>
           <CardDescription>Sign in to your account</CardDescription>
         </CardHeader>
         <CardContent>
           {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
           <form onSubmit={handleLogin}>
-            <div className="mb-4">
-              <Label htmlFor="email">Email</Label>
+            <div className="space-y-4">
+         
               <Input
-                id="email"
                 type="email"
+                label="email"
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
                 required
               />
             </div>
             <div className="mb-4">
-              <Label htmlFor="password">Password</Label>
+              
               <Input
-                id="password"
                 type="password"
+                label="password"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
                 required
               />
             </div>

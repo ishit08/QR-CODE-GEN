@@ -3,7 +3,7 @@ import { useState } from "react";
 
 const WelcomeComponent = () => {
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex items-center justify-center mt-20">
       <h1 className="text-black text-xl font-extrabold tracking-wide drop-shadow-lg">
         Welcome to CodeSnap!
       </h1>

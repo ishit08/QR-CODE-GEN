@@ -40,8 +40,8 @@ export default function Register() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-black">Sign Up</CardTitle>
-          <CardDescription className="text-black">Create a new account</CardDescription>
+          <CardTitle className="text-black text-center">Sign Up</CardTitle>
+          <CardDescription className="text-black text-center">Create a new account</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
@@ -49,6 +49,7 @@ export default function Register() {
               <Input
                 type="text"
                 placeholder="Name"
+                label="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -56,6 +57,7 @@ export default function Register() {
               <Input
                 type="email"
                 placeholder="Email"
+                label="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -63,6 +65,7 @@ export default function Register() {
               <Input
                 type="password"
                 placeholder="Password"
+                label="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
