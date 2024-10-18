@@ -12,8 +12,10 @@ const Navbar = () => {
   const links = [
     { href: "/", label: "Home", icon: "fa fa-home" },
     { href: "/prices", label: "Plans", icon: "fa fa-tags" },
-    { href: "/qr", label: "QR Options", icon: "fa fa-qrcode" },
-    { href: "/qrcode", label: "Qr Codes", icon: "fa fa-info-circle" },
+   // { href: "/qr", label: "QR Options", icon: "fa fa-qrcode" },
+    { href: "/qrcode", label: "Qr Codes", icon: "fa fa-qrcode" },
+    { href: "/barcode", label: "Bar Codes", icon: "fa fa-barcode" },
+      { href: "/scanner", label: "Scanner", icon: "fa fa-expand" }
   ];
 
   // Fetch user name and token from localStorage only on the client side
@@ -52,12 +54,12 @@ const Navbar = () => {
           <Link href="/" className="flex items-center">
             <Image
               src="/images/logo.png"
-              alt="CodeSnap"
+              alt="CodeSnaps"
               width={40} // Set desired width
               height={40} // Set desired height
               className="h-10 w-10"
             />
-            <span className="text-lg font-bold ml-2">CodeSnap</span>
+            <span className="text-lg font-bold ml-2">CodeSnaps</span>
           </Link>
         </div>
 

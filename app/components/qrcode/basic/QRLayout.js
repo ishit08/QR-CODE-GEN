@@ -61,7 +61,7 @@ const QRLayout = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row bg-gradient-to-r from-blue-100 to-purple-200 rounded-lg shadow-lg p-6">
+    <div className="flex flex-col md:flex-row bg-gradient-to-r gap-4 from-blue-100 to-purple-200 rounded-lg shadow-lg p-6">
       <div className="flex-1 p-6 bg-white rounded-lg shadow-md">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">QR Code Generator</h2>
         <TextInput value={text} onChange={setText} />
@@ -111,8 +111,8 @@ const QRLayout = () => {
       </div>
 
       {/* Right section for QR code display */}
-      <div className="flex-1 p-4 flex items-center justify-center">
-        <div className="flex flex-col items-center">
+      <div className="flex-1 p-6 bg-white rounded-lg shadow-md">
+        <div className="flex flex-col items-center ">
           <h2 className="text-3xl font-bold text-gray-800 mb-6">Generated QR Code</h2>
           <div className="transition-transform transform hover:scale-105">
             <QRCodeDisplay qrCode={qrCode} />

@@ -1,22 +1,30 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from 'react';
 import Basic from "../../components/qrcode/basic/basic";  // Import the Basic component
 import WithImage from "../../components/qrcode/withimage/WithImage";
 
 const QRPage = () => {
   const [activeTab, setActiveTab] = useState("basic");
-
-  // Handler to switch tabs
+  // Load active tab from localStorage on component mount
+  useEffect(() => {
+    const savedTab = localStorage.getItem('activeTab');
+    if (savedTab) {
+      setActiveTab(savedTab);
+    }
+  }, []);
+  
+  // Update localStorage whenever activeTab changes
   const handleTabChange = (tab) => {
     setActiveTab(tab);
+    localStorage.setItem('activeTab', tab);
   };
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">QR Code Generator</h1>
+     
 
       {/* Tab Navigation */}
-      <div className="flex justify-center mb-4">
+      <div className="flex justify-center gap-1 mt-10 ">
         <button
           className={`px-4 py-2 ${activeTab === "basic" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"}`}
           onClick={() => handleTabChange("basic")}
