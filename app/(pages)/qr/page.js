@@ -42,7 +42,6 @@ const QRPage = () => {
     }
   };
 
-
   return (
     <div>
       <h1 className="text-3xl text-center font-bold m-10">QR Code Generator</h1>
