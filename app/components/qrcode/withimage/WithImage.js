@@ -25,20 +25,26 @@ const WithImage = () => {
   };
 
   const handleGenerate = () => {
-    // Combine all inputs into a single string, separated by a new line or any other separator
-    const combinedData = `${text}\n${url}\n${location}`.trim(); // Use \n to separate inputs
+    const combinedData = `${text}\n${url}\n${location}`.trim();
 
     const options = {
-        data: combinedData, // Use the combined data
-        width: 300, // Example size
-        height: 300, // Example size
-        image: image, // Include the image in the QR options
+        data: combinedData, 
+        width: 300,
+        height: 300,
+        image: image,
+        imageOptions: {
+            crossOrigin: "anonymous", // For images from different origins
+            margin: 10, // Image margin
+            imageSize: 0.4, // Image size (0.4 = 40% of QR code size)
+            hideBackgroundDots: true, // Hide dots behind the image
+            backgroundOpacity: 0.8, // Opacity for the background image
+        },
         dotsOptions: {
-            color: colors.dark, // Dark color for dots
-            type: 'rounded', // Can customize dot type here
+            color: colors.dark, 
+            type: 'rounded', 
         },
         backgroundOptions: {
-            color: colors.light, // Light color for background
+            color: colors.light, 
         },
     };
 
