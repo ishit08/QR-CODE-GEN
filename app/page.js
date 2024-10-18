@@ -1,12 +1,11 @@
 "use client";
-import { useState } from "react";
+
+import ComingSoon from './components/ui/ComingSoon';
 
 const WelcomeComponent = () => {
   return (
-    <div className="flex items-center justify-center mt-20">
-      <h1 className="text-black text-xl font-extrabold tracking-wide drop-shadow-lg">
-        Welcome to CodeSnaps!
-      </h1>
+    <div>
+        <ComingSoon />
     </div>
   );
 };
