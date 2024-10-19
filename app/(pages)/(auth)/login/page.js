@@ -14,57 +14,52 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../components/ui/card";
+import { signIn, getSession } from "next-auth/react"; // Import getSession
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useSession } from "next-auth/react";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const { data: session } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      router.push("/"); 
+    if (session) {
+      router.push("/"); // Redirect to home if logged in
     }
-  }, [router]);
+  }, [session, router]);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+  const handleUserLogin = async (e) => {
+    e.preventDefault(); // Prevent page reload
+    setLoading(true); // Set loading state
 
-    try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+    const res = await signIn('credentials', {
+      redirect: false,
+      email: email,
+      password: password
+    });
+
+    setLoading(false); // Reset loading state
+
+    if (res.ok) {
+      // Retrieve the session which contains the token
+      const session = await getSession();
+      console.log("JWT Token:", session?.user?.token);
+
+      toast.success("Login Successfully done 😃!", {
+        position: "top-center",
+        autoClose: 2000,
+        onClose: () => {
+          router.push("/");
+        }
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("username", data.username);
-        localStorage.setItem("email", data.email);
-        router.push("/"); 
-      } else {
-        setErrorMessage(data.message || "Login failed.");
-      }
-    } catch (error) {
-      setErrorMessage("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
+    } else {
+      setErrorMessage(res?.error ?? "Unable to login.");
     }
-  };
-
-  const handleGoogleLogin = () => {
-    window.open("/api/auth/google", "_self");
-  };
-
-  const handleFacebookLogin = () => {
-    window.open("/api/auth/facebook", "_self");
   };
 
   return (

@@ -14,6 +14,9 @@ import {
   CardContent,
   CardFooter,
 } from "../../../components/ui/card";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -23,24 +26,31 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch("/api/auth/register", {
+    const response = await fetch("/api/auth/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password }),
     });
     
     if (response.ok) {
-      router.push("/login");
+      toast.success("Registration Successfully done 😃!", {
+        position: "top-center",
+        autoClose: 2000,
+        onClose: () => {
+          router.push("/login");
+        }
+      });
     } else {
       console.error("Signup failed");
     }
   };
 
   return (
+    // <></>
     <div className="flex items-center justify-center min-h-screen">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-black text-center">Sign Up</CardTitle>
+          <CardTitle className="text-black text-center">Sign Up gajju</CardTitle>
           <CardDescription className="text-black text-center">Create a new account</CardDescription>
         </CardHeader>
         <CardContent>
@@ -76,6 +86,7 @@ export default function Register() {
               >
                 Sign Up
               </Button>
+              <ToastContainer />
             </div>
           </form>
         </CardContent>

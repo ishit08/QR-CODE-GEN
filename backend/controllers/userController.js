@@ -1,5 +1,5 @@
 // backend/controllers/userController.js
-const User = require('../models/user');
+const User = require('../models/User');
 
 exports.getAllUsers = async (req, res) => {
   try {
