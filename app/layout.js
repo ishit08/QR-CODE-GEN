@@ -2,6 +2,7 @@
 import './globals.css'; // Add global styles if needed
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import SessionWrapper from './components/SessionWrapper'; // Import the SessionWrapper
 
 export const metadata = {
   title: "CodeSnap", // Update title as needed
@@ -9,7 +10,6 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  
   return (
     <html lang="en">
       <head>
@@ -22,17 +22,20 @@ export default function RootLayout({ children }) {
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
         />
       </head>
-      <body className="flex w-full h-screen min-h-screen">
-        {/* Navbar at the top */}
-        <Navbar />
+      <body className="flex flex-col min-h-screen">
+        {/* Wrap the main layout with the SessionWrapper */}
+        <SessionWrapper>
+          {/* Navbar at the top */}
+          <Navbar />
 
-        {/* Main content */}
-        <main className="w-full pt-[72px]">
-          {children}
-        </main>
+          {/* Main content */}
+          <main className="w-full flex-1 pt-[72px]">
+            {children}
+          </main>
 
-        {/* Footer at the bottom */}
-        <Footer />
+          {/* Footer at the bottom */}
+          <Footer />
+        </SessionWrapper>
       </body>
     </html>
   );

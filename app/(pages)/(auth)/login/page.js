@@ -12,75 +12,66 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../components/ui/card";
+import { signIn, getSession } from "next-auth/react"; // Import getSession
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useSession } from "next-auth/react";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const { data: session } = useSession();
   const router = useRouter();
 
   // Redirect to home if the user is already logged in
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      router.push("/"); // Redirect to home
+    if (session) {
+      router.push("/"); // Redirect to home if logged in
     }
-  }, [router]);
+  }, [session, router]);
 
-  // Handle login with email and password
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+  const handleUserLogin = async (e) => {
+    e.preventDefault(); // Prevent page reload
+    setLoading(true); // Set loading state
 
-    try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+    const res = await signIn('credentials', {
+      redirect: false,
+      email: email,
+      password: password
+    });
+
+    setLoading(false); // Reset loading state
+
+    if (res.ok) {
+      // Retrieve the session which contains the token
+      const session = await getSession();
+      console.log("JWT Token:", session?.user?.token);
+
+      toast.success("Login Successfully done 😃!", {
+        position: "top-center",
+        autoClose: 2000,
+        onClose: () => {
+          router.push("/");
+        }
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("username", data.username);
-        localStorage.setItem("email", data.email);
-        router.push("/"); // Redirect to homepage
-      } else {
-        setErrorMessage(data.message || "Login failed.");
-      }
-    } catch (error) {
-      setErrorMessage("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
+    } else {
+      setErrorMessage(res?.error ?? "Unable to login.");
     }
-  };
-
-  // Handle login with Google
-  const handleGoogleLogin = () => {
-    window.open("/api/auth/google", "_self");
-  };
-
-  // Handle login with Facebook
-  const handleFacebookLogin = () => {
-    window.open("/api/auth/facebook", "_self");
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen">
       <Card className="w-full max-w-md p-8">
-        <CardHeader  className="text-center">
+        <CardHeader className="text-center">
           <CardTitle>Login</CardTitle>
           <CardDescription>Sign in to your account</CardDescription>
         </CardHeader>
         <CardContent>
           {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleUserLogin}>
             <div className="space-y-4">
-         
               <Input
                 type="email"
                 label="email"
@@ -91,7 +82,6 @@ const LoginPage = () => {
               />
             </div>
             <div className="mb-4">
-              
               <Input
                 type="password"
                 label="password"
@@ -105,6 +95,7 @@ const LoginPage = () => {
               {loading ? "Logging in..." : "Login"}
             </Button>
           </form>
+          <ToastContainer />
 
           {/* Divider */}
           <div className="my-4 flex items-center justify-center">
@@ -113,10 +104,10 @@ const LoginPage = () => {
 
           {/* Social login buttons */}
           <div className="flex justify-between space-x-2">
-            <Button onClick={handleGoogleLogin} className="w-full bg-red-500 hover:bg-red-600">
+            <Button onClick={() => toast.info("Google login not implemented")} className="w-full bg-red-500 hover:bg-red-600">
               Login with Google
             </Button>
-            <Button onClick={handleFacebookLogin} className="w-full bg-blue-500 hover:bg-blue-600">
+            <Button onClick={() => toast.info("Facebook login not implemented")} className="w-full bg-blue-500 hover:bg-blue-600">
               Login with Facebook
             </Button>
           </div>

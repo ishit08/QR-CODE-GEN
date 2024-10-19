@@ -1,49 +1,27 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useSession, signOut } from "next-auth/react"; // Import signOut for logging out
 import Link from "next/link";
 import Image from "next/image";
+import { Skeleton } from "@mui/material"; // Import MUI Skeleton
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State to track if mobile menu is open
-  const [userName, setUserName] = useState(null); // State for user's name
-  const [loading, setLoading] = useState(true); // State for loading
+  const { data: session, status } = useSession(); // Get session and loading status
 
   // Define link data for both desktop and mobile, including icons
   const links = [
     { href: "/", label: "Home", icon: "fa fa-home" },
     { href: "/prices", label: "Plans", icon: "fa fa-tags" },
-   // { href: "/qr", label: "QR Options", icon: "fa fa-qrcode" },
     { href: "/qrcode", label: "Qr Codes", icon: "fa fa-qrcode" },
     { href: "/barcode", label: "Bar Codes", icon: "fa fa-barcode" },
-      { href: "/scanner", label: "Scanner", icon: "fa fa-expand" }
+    { href: "/scanner", label: "Scanner", icon: "fa fa-expand" }
   ];
-
-  // Fetch user name and token from localStorage only on the client side
-  useEffect(() => {
-    // Ensure that this runs only on the client side
-    if (typeof window !== "undefined") {
-      const user = localStorage.getItem("username"); // Get the raw string
-      const token = localStorage.getItem("token");
-
-      // Set the userName state and check token existence
-      if (user) {
-        setUserName(user);
-      }
-    }
-    setLoading(false); // Set loading to false after checking
-  }, []);
 
   // Logout function
   const handleLogout = () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("token");
-      localStorage.removeItem("username");
-      localStorage.removeItem("email");
-      setUserName(null);
-      setTimeout(() => {
-        window.location.reload(); // Reload to reflect logout
-      }, 100);
-    }
+    signOut(); // Use NextAuth's signOut function to log the user out
+    setIsOpen(false); // Close the mobile menu on logout
   };
 
   return (
@@ -95,9 +73,14 @@ const Navbar = () => {
 
         {/* User profile or login/register links */}
         <div className="hidden md:flex space-x-4">
-          {typeof window !== "undefined" && localStorage.getItem("token") ? (
+          {status === "loading" ? ( // Show loading state with MUI Skeleton
+            <>
+            <Skeleton width={100} height={30} sx={{ bgcolor: 'rgba(255, 255, 255, 0.2)' }}/>
+            <Skeleton width={100} height={30} sx={{ bgcolor: 'rgba(255, 255, 255, 0.2)' }}/>
+            </>
+          ) : status === "authenticated" ? (
             <div className="flex items-center space-x-8">
-              <span>Hello, {userName}</span> {/* Display user name */}
+              <span>Hello, {session.user.name}</span> {/* Display user name */}
               <button
                 onClick={handleLogout}
                 className="flex items-center space-x-2 hover:text-gray-300"
@@ -141,7 +124,9 @@ const Navbar = () => {
             </Link>
           ))}
           {/* Mobile login/register links */}
-          {!userName && (
+          {status === "loading" ? ( // Show loading state with MUI Skeleton
+            <Skeleton width={100} height={20} />
+          ) : status !== "authenticated" && (
             <>
               <Link
                 href="/login"
@@ -160,7 +145,7 @@ const Navbar = () => {
             </>
           )}
           {/* Mobile logout link */}
-          {userName && (
+          {status === "authenticated" && (
             <button
               onClick={handleLogout}
               className="flex items-center space-x-2 hover:text-gray-300"
