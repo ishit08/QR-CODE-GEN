@@ -8,7 +8,6 @@ import { Skeleton } from "@mui/material"; // Import MUI Skeleton
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State to track if mobile menu is open
   const { data: session, status } = useSession(); // Get session and loading status
-  const [userName, setUserName] = useState(null); // State for user's name
   const [isLoginHovered, setLoginHovered] = useState(false); // State for hover effect on login icon
   const [isRegHovered, setRegHovered] = useState(false); // State for hover effect on register icon
 
@@ -63,8 +62,16 @@ const Navbar = () => {
         <div className="hidden md:flex space-x-4">
           {status === "loading" ? ( // Show loading state with MUI Skeleton
             <>
-            <Skeleton width={100} height={30} sx={{ bgcolor: 'rgba(255, 255, 255, 0.2)' }}/>
-            <Skeleton width={100} height={30} sx={{ bgcolor: 'rgba(255, 255, 255, 0.2)' }}/>
+              <Skeleton
+                width={100}
+                height={30}
+                sx={{ bgcolor: "rgba(255, 255, 255, 0.2)" }}
+              />
+              <Skeleton
+                width={100}
+                height={30}
+                sx={{ bgcolor: "rgba(255, 255, 255, 0.2)" }}
+              />
             </>
           ) : status === "authenticated" ? (
             <div className="flex items-center space-x-8">
@@ -76,7 +83,7 @@ const Navbar = () => {
                 <i className="fa fa-right-from-bracket"></i> {/* Logout icon */}
                 <span>Logout</span>
               </button>
-            </>
+            </div>
           ) : (
             <>
               <Link
@@ -85,7 +92,14 @@ const Navbar = () => {
                 onMouseEnter={() => setLoginHovered(true)} // Set hover state for login icon
                 onMouseLeave={() => setLoginHovered(false)} // Reset hover state for login icon
               >
-                <i className={isLoginHovered ? "fa fa-person-walking-arrow-right" : "fa fa-right-from-bracket"}></i> {/* Login icon */}
+                <i
+                  className={
+                    isLoginHovered
+                      ? "fa fa-person-walking-arrow-right"
+                      : "fa fa-right-from-bracket"
+                  }
+                ></i>{" "}
+                {/* Login icon */}
                 <span className="flex-shrink-0">Login</span>
               </Link>
               <Link
@@ -94,7 +108,14 @@ const Navbar = () => {
                 onMouseEnter={() => setRegHovered(true)} // Set hover state for register icon
                 onMouseLeave={() => setRegHovered(false)} // Reset hover state for register icon
               >
-                <i className={isRegHovered ? "fa fa-person-circle-plus" : "fa fa-user-plus"}></i> {/* Register icon */}
+                <i
+                  className={
+                    isRegHovered
+                      ? "fa fa-person-circle-plus"
+                      : "fa fa-user-plus"
+                  }
+                ></i>{" "}
+                {/* Register icon */}
                 <span>Register</span>
               </Link>
             </>
