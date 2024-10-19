@@ -97,6 +97,7 @@ const QRCodeGeneration = ({
       setQrCodes([]);
 
       const codes = [];
+      console.log('QRCODE Generation:');
       for (let i = 0; i < csvData.length; i++) {
         const row = csvData[i];
         const qrCode = await generateQRCodeForRow(row);

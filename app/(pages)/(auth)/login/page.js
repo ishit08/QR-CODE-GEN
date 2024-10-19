@@ -1,9 +1,11 @@
-"use client"; // Ensure this is a client component
+"use client"; // Ensure this is a client component 
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // Use next/navigation instead of next/router
+import { useRouter } from "next/navigation"; 
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
+import { GoogleLoginButton } from '../../../components/ui/GoogleLoginButton'; 
+import { FacebookLoginButton } from '../../../components/ui/FacebookLoginButton'; 
 import {
   Card,
   CardContent,
@@ -20,15 +22,13 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Redirect to home if the user is already logged in
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      router.push("/"); // Redirect to home
+      router.push("/"); 
     }
   }, [router]);
 
-  // Handle login with email and password
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -48,7 +48,7 @@ const LoginPage = () => {
         localStorage.setItem("token", data.token);
         localStorage.setItem("username", data.username);
         localStorage.setItem("email", data.email);
-        router.push("/"); // Redirect to homepage
+        router.push("/"); 
       } else {
         setErrorMessage(data.message || "Login failed.");
       }
@@ -59,75 +59,70 @@ const LoginPage = () => {
     }
   };
 
-  // Handle login with Google
   const handleGoogleLogin = () => {
     window.open("/api/auth/google", "_self");
   };
 
-  // Handle login with Facebook
   const handleFacebookLogin = () => {
     window.open("/api/auth/facebook", "_self");
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <Card className="w-full max-w-md p-8">
-        <CardHeader  className="text-center">
-          <CardTitle>Login</CardTitle>
-          <CardDescription>Sign in to your account</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
-          <form onSubmit={handleLogin}>
-            <div className="space-y-4">
-         
-              <Input
-                type="email"
-                label="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="mb-4">
-              
-              <Input
-                type="password"
-                label="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Logging in..." : "Login"}
-            </Button>
-          </form>
-
-          {/* Divider */}
-          <div className="my-4 flex items-center justify-center">
-            <span className="text-gray-500">or login with</span>
-          </div>
-
-          {/* Social login buttons */}
-          <div className="flex justify-between space-x-2">
-            <Button onClick={handleGoogleLogin} className="w-full bg-red-500 hover:bg-red-600">
-              Login with Google
-            </Button>
-            <Button onClick={handleFacebookLogin} className="w-full bg-blue-500 hover:bg-blue-600">
-              Login with Facebook
-            </Button>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <p className="text-center w-full">
-            Don’t have an account?{" "}
-            <a href="/register" className="text-blue-500">Sign up</a>
-          </p>
-        </CardFooter>
-      </Card>
+    <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center items-center sm:py-12">
+      <div className="relative py-3 sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 mx-auto">
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-green-300 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+        <div className="relative px-6 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-12">
+          {/* Removed border here */}
+          <Card className="max-w-md mx-auto border-none shadow-none w-full">
+            <CardHeader className="text-center">
+              <CardTitle><i className="fa fa-person-walking-arrow-right fa-beat"></i> Login</CardTitle>
+              <CardDescription>Sign in to your account</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {errorMessage && (
+                <div className="text-red-500 mb-4">{errorMessage}</div>
+              )}
+              <form onSubmit={handleLogin} className="space-y-6"> {/* Adjusted spacing */}
+                <Input
+                  type="email"
+                  label="Email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full shadow-2xl p-3 h-12" // Height set
+                />
+                <Input
+                  type="password"
+                  label="Password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full shadow-2xl p-3 h-12" // Height set
+                />
+                <Button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-cyan-400 to-green-300 shadow-lg text-gray-900 rounded-md  hover:bg-gradient-to-r hover:from-green-300 hover:to-cyan-400 transition-all duration-300"
+                >
+                  Login
+                </Button>
+                 <GoogleLoginButton handleGoogleLogin={handleGoogleLogin} className="w-full h-12"/>
+                <FacebookLoginButton handleFacebookLogin={handleFacebookLogin} className="w-full h-12"/>
+              </form>
+            
+            </CardContent>
+            <CardFooter>
+              <p className="text-center w-full">
+                Don’t have an account?{" "}
+                <a href="/register" className="text-blue-500">
+                  Sign up
+                </a>
+              </p>
+            </CardFooter>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 };

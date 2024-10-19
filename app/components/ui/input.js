@@ -3,7 +3,7 @@ import { cn } from "../../lib/utils";
 
 const Input = React.forwardRef(({ className, type, placeholder, label, ...props }, ref) => {
   return (
-    <div className="bg-white p-4 rounded-lg">
+    <div className="bg-white rounded-lg">
       <div className="relative bg-inherit">
         <input
           type={type}

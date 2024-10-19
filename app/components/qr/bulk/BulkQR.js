@@ -133,7 +133,7 @@ const BulkQR = () => {
     hasLoggedRef.current = false;
 
     try {
-      const codes = [];
+      const codes = [];     
       for (let i = 0; i < csvData.length; i++) {      
         const row = csvData[i];      
         const qrData = filterQrColumns(row);

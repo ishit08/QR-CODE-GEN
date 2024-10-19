@@ -6,32 +6,18 @@ import Image from "next/image";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State to track if mobile menu is open
   const [userName, setUserName] = useState(null); // State for user's name
-  const [loading, setLoading] = useState(true); // State for loading
+  const [isLoginHovered, setLoginHovered] = useState(false); // State for hover effect on login icon
+  const [isRegHovered, setRegHovered] = useState(false); // State for hover effect on register icon
 
   // Define link data for both desktop and mobile, including icons
   const links = [
     { href: "/", label: "Home", icon: "fa fa-home" },
     { href: "/prices", label: "Plans", icon: "fa fa-tags" },
-   // { href: "/qr", label: "QR Options", icon: "fa fa-qrcode" },
+    { href: "/qr", label: "QR Options", icon: "fa fa-qrcode" },
     { href: "/qrcode", label: "Qr Codes", icon: "fa fa-qrcode" },
     { href: "/barcode", label: "Bar Codes", icon: "fa fa-barcode" },
-      { href: "/scanner", label: "Scanner", icon: "fa fa-expand" }
+    { href: "/scanner", label: "Scanner", icon: "fa fa-expand" },
   ];
-
-  // Fetch user name and token from localStorage only on the client side
-  useEffect(() => {
-    // Ensure that this runs only on the client side
-    if (typeof window !== "undefined") {
-      const user = localStorage.getItem("username"); // Get the raw string
-      const token = localStorage.getItem("token");
-
-      // Set the userName state and check token existence
-      if (user) {
-        setUserName(user);
-      }
-    }
-    setLoading(false); // Set loading to false after checking
-  }, []);
 
   // Logout function
   const handleLogout = () => {
@@ -48,9 +34,9 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 left-0 w-full bg-gray-800 text-white z-50">
-      <div className="container mx-auto flex justify-between items-center p-4">
-        {/* Logo on the left */}
-        <div className="flex items-center space-x-2">
+      <div className="container mx-auto grid grid-cols-3 md:grid-cols-[20%,50%,30%] items-center p-4">
+        {/* Logo Section - 20% */}
+        <div className="flex items-center">
           <Link href="/" className="flex items-center">
             <Image
               src="/images/logo.png"
@@ -63,8 +49,66 @@ const Navbar = () => {
           </Link>
         </div>
 
+        {/* Menu links for desktop - 50% */}
+        <div className="hidden md:flex justify-center space-x-8">
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="flex items-center space-x-2 hover:text-gray-300"
+            >
+              <i className={link.icon}></i> {/* Render the icon */}
+              <span>{link.label}</span>
+            </Link>
+          ))}
+        </div>
+
+        {/* User profile section - only for desktop - 30% */}
+        <div className="hidden md:flex justify-end items-center space-x-4">
+          {userName ? (
+            <>
+              <span>{userName}</span> {/* Display user name */}
+              <Image
+                src="/path/to/avatar.png" // Replace with the path to the user's avatar
+                alt="User Avatar"
+                width={30} // Set desired width for avatar
+                height={30} // Set desired height for avatar
+                className="rounded-full" // Make it circular
+              />
+              <button
+                onClick={handleLogout}
+                className="flex items-center space-x-2 hover:text-gray-300"
+              >
+                <i className="fa fa-right-from-bracket"></i> {/* Logout icon */}
+                <span>Logout</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="flex items-center space-x-2 hover:text-gray-300"
+                onMouseEnter={() => setLoginHovered(true)} // Set hover state for login icon
+                onMouseLeave={() => setLoginHovered(false)} // Reset hover state for login icon
+              >
+                <i className={isLoginHovered ? "fa fa-person-walking-arrow-right" : "fa fa-right-from-bracket"}></i> {/* Login icon */}
+                <span className="flex-shrink-0">Login</span>
+              </Link>
+              <Link
+                href="/register"
+                className="flex items-center space-x-2 hover:text-gray-300"
+                onMouseEnter={() => setRegHovered(true)} // Set hover state for register icon
+                onMouseLeave={() => setRegHovered(false)} // Reset hover state for register icon
+              >
+                <i className={isRegHovered ? "fa fa-person-circle-plus" : "fa fa-user-plus"}></i> {/* Register icon */}
+                <span>Register</span>
+              </Link>
+            </>
+          )}
+        </div>
+
         {/* Hamburger icon for mobile */}
-        <div className="md:hidden">
+        <div className="md:hidden col-span-full flex justify-end">
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="focus:outline-none"
@@ -78,53 +122,6 @@ const Navbar = () => {
             )}
           </button>
         </div>
-
-        {/* Menu links for desktop */}
-        <div className={`hidden md:flex space-x-8`}>
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="flex items-center space-x-2 hover:text-gray-300"
-            >
-              <i className={link.icon}></i> {/* Render the icon */}
-              <span>{link.label}</span>
-            </Link>
-          ))}
-        </div>
-
-        {/* User profile or login/register links */}
-        <div className="hidden md:flex space-x-4">
-          {typeof window !== "undefined" && localStorage.getItem("token") ? (
-            <div className="flex items-center space-x-8">
-              <span>Hello, {userName}</span> {/* Display user name */}
-              <button
-                onClick={handleLogout}
-                className="flex items-center space-x-2 hover:text-gray-300"
-              >
-                <i className="fa fa-right-from-bracket"></i> {/* Logout icon */}
-                <span>Logout</span>
-              </button>
-            </div>
-          ) : (
-            <>
-              <Link
-                href="/login"
-                className="flex items-center space-x-2 hover:text-gray-300"
-              >
-                <i className="fa fa-right-to-bracket"></i> {/* Login icon */}
-                <span>Login</span>
-              </Link>
-              <Link
-                href="/register"
-                className="flex items-center space-x-2 hover:text-gray-300"
-              >
-                <i className="fa fa-user-plus"></i> {/* Register icon */}
-                <span>Register</span>
-              </Link>
-            </>
-          )}
-        </div>
       </div>
 
       {/* Mobile menu */}
@@ -135,6 +132,7 @@ const Navbar = () => {
               key={link.href}
               href={link.href}
               className="flex items-center space-x-2 hover:text-gray-300"
+              onClick={() => setIsOpen(false)} // Close menu on link click
             >
               <i className={link.icon}></i> {/* Render the icon */}
               <span>{link.label}</span>
@@ -146,15 +144,17 @@ const Navbar = () => {
               <Link
                 href="/login"
                 className="flex items-center space-x-2 hover:text-gray-300"
+                onClick={() => setIsOpen(false)}
               >
-                <i className="fa fa-right-to-bracket"></i>
+                <i className="fa fa-right-from-bracket"></i> {/* Login icon */}
                 <span>Login</span>
               </Link>
               <Link
                 href="/register"
                 className="flex items-center space-x-2 hover:text-gray-300"
+                onClick={() => setIsOpen(false)}
               >
-                <i className="fa fa-user-plus"></i>
+                <i className="fa fa-user-plus"></i> {/* Register icon */}
                 <span>Register</span>
               </Link>
             </>
