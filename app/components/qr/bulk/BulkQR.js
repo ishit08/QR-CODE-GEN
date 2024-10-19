@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import Papa from 'papaparse';
+//import Papa from 'papaparse';
 import QRCode from 'qrcode';
 import FileUpload from '../FileUpload';
 import ColumnSelection from '../ColumnSelection';
@@ -13,7 +13,7 @@ import { printQRCodePDF } from '../../../utility/qr/bulk/printQRCodePDF';
 const BulkQR = () => {
   const [csvData, setCsvData] = useState([]);
   const [qrCodes, setQrCodes] = useState([]);
-  const [fileName, setFileName] = useState('');
+  //const [fileName, setFileName] = useState('');
   const [progress, setProgress] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [processedRecords, setProcessedRecords] = useState(0);

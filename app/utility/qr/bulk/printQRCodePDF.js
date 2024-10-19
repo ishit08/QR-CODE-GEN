@@ -3,8 +3,8 @@ import { compressQRCode } from "../compressQRCode";
 import { kokila } from '../../../utility/font/kokila';  // Base64 font file
 
 export const printQRCodePDF = async (qrCodes, settings) => {
-  const { qrPerRow, qrPerPage } = settings;  // qrPerPage is now passed as a setting
-
+  //const { qrPerRow, qrPerPage } = settings;  // qrPerPage is now passed as a setting
+    const { qrPerRow } = settings; 
   try {
     if (qrCodes && qrCodes.length > 0) {
       const pdf = new jsPDF("p", "pt", "a4");

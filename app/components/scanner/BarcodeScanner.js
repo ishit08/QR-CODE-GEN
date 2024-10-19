@@ -1,4 +1,3 @@
-// Barcode Scanner Component
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -27,7 +26,7 @@ export const BarcodeScanner = () => {
             stopCamera();
             stopBarcodeScanner();
         };
-    }, [isCameraOn, cameraFacingMode]);
+    }, [isCameraOn, cameraFacingMode, initCamera, stopBarcodeScanner]); // Include initCamera and stopBarcodeScanner
 
     const detectDeviceAndSetCamera = () => {
         const isMobile = /Mobi|Android/i.test(navigator.userAgent);

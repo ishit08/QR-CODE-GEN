@@ -1,6 +1,6 @@
 "use client";
 // Import necessary libraries
-import React, { useEffect, useRef, useState } from 'react';
+
 import { BarcodeScanner }  from "../../components/scanner/BarcodeScanner"
 import { QRCodeScanner } from "../../components/scanner/QRCodeScanner"
 

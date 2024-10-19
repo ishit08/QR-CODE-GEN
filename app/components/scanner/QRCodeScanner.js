@@ -1,7 +1,6 @@
-// QR Code Scanner Component
 "use client";
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import jsQR from 'jsqr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera, faCameraRotate } from '@fortawesome/free-solid-svg-icons';
@@ -30,14 +29,14 @@ export const QRCodeScanner = () => {
         return () => {
             stopCamera();
         };
-    }, [isCameraOn, cameraFacingMode]);
+    }, [isCameraOn, cameraFacingMode, initCamera, processQRCode]); // Include initCamera and processQRCode
 
     const detectDeviceAndSetCamera = () => {
         const isMobile = /Mobi|Android/i.test(navigator.userAgent);
         setCameraFacingMode(isMobile ? 'environment' : 'user');
     };
 
-    const initCamera = async () => {
+    const initCamera = useCallback(async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: { facingMode: cameraFacingMode }
@@ -46,7 +45,7 @@ export const QRCodeScanner = () => {
         } catch (err) {
             console.error('Error accessing camera: ', err);
         }
-    };
+    }, [cameraFacingMode]); // Add cameraFacingMode as a dependency
 
     const stopCamera = () => {
         if (videoRef.current && videoRef.current.srcObject) {
@@ -57,7 +56,7 @@ export const QRCodeScanner = () => {
         }
     };
 
-    const processQRCode = () => {
+    const processQRCode = useCallback(() => {
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
 
@@ -77,7 +76,7 @@ export const QRCodeScanner = () => {
             }
         };
         requestAnimationFrame(scan);
-    };
+    }, [isScanning]); // Add isScanning as a dependency
 
     return (
         <div className="flex flex-col items-center">
@@ -100,7 +99,7 @@ export const QRCodeScanner = () => {
                 <video ref={videoRef} autoPlay className="w-full max-w-md rounded-lg border-4 border-white" />
                 <canvas ref={canvasRef} width={640} height={480} style={{ display: 'none' }}></canvas>
                 {isCameraOn && (
-                    <button onClick={() => setCameraFacingMode(cameraFacingMode === 'user' ? 'environment' : 'user')} className="absolute top-10 right-10  text-white p-4 rounded-full">
+                    <button onClick={() => setCameraFacingMode(cameraFacingMode === 'user' ? 'environment' : 'user')} className="absolute top-10 right-10 text-white p-4 rounded-full">
                         <FontAwesomeIcon icon={faCameraRotate} />
                     </button>
                 )}

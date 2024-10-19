@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image'; // Import Image from next/image
 
 const PresetQRCode = ({ onPresetClick }) => {
   const handleClick = () => {
@@ -18,12 +19,13 @@ const PresetQRCode = ({ onPresetClick }) => {
   return (
     <div className="mb-4">
       <h3 className="text-gray-700">Choose Preset Design:</h3>
-      <img
-        src="imagesframe/facebook.png" // Replace with the path to the preset QR code image
+      <Image
+        src="/imagesframe/facebook.png" // Use the path relative to the public folder
         alt="Preset QR"
         className="cursor-pointer"
         onClick={handleClick}
-        style={{ width: '150px', height: '150px' }} // Adjust size if necessary
+        width={150} // Adjust width as necessary
+        height={150} // Adjust height as necessary
       />
     </div>
   );

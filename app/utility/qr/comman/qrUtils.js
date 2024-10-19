@@ -21,7 +21,7 @@ export const applyQRStyle = (canvas, qrStyle, primaryColor, secondaryColor, thir
   const data = imgData.data;
 
   const size = canvas.width;
-  const PositionMarkerSize = size / 7;
+  //const PositionMarkerSize = size / 7;
 
   for (let y = 0; y < canvas.height; y++) {
     for (let x = 0; x < canvas.width; x++) {
