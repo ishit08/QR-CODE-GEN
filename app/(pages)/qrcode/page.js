@@ -58,6 +58,7 @@ const QRPage = () => {
         {activeTab === "withimage" && <WithImage />}
         {activeTab === "dynamic" && <div>Dynamic Component</div>}
         {activeTab === "bulk" && <div>Bulk Component</div>}
+        {activeTab === "Encrypted" && <div>Encrypted QR</div>}
       </div>
     </div>
   );
