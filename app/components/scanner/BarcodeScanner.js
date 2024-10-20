@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Quagga from 'quagga';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera, faCameraRotate } from '@fortawesome/free-solid-svg-icons';
 import 'tailwindcss/tailwind.css';
 
-export const BarcodeScanner = () => {
+const BarcodeScanner = () =>  {
     const [isScanning, setIsScanning] = useState(false);
     const [cameraFacingMode, setCameraFacingMode] = useState('environment'); // Default to back camera on mobile
     const videoRef = useRef(null);
@@ -26,14 +26,15 @@ export const BarcodeScanner = () => {
             stopCamera();
             stopBarcodeScanner();
         };
-    }, [isCameraOn, cameraFacingMode, initCamera, stopBarcodeScanner]); // Include initCamera and stopBarcodeScanner
+    }, [isCameraOn, cameraFacingMode, initCamera, stopBarcodeScanner]);
 
     const detectDeviceAndSetCamera = () => {
         const isMobile = /Mobi|Android/i.test(navigator.userAgent);
         setCameraFacingMode(isMobile ? 'environment' : 'user');
     };
 
-    const initCamera = async () => {
+    // Wrapping initCamera in useCallback to prevent it from being redefined on each render
+    const initCamera = useCallback(async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: { facingMode: cameraFacingMode }
@@ -42,7 +43,7 @@ export const BarcodeScanner = () => {
         } catch (err) {
             console.error('Error accessing camera: ', err);
         }
-    };
+    }, [cameraFacingMode]);
 
     const stopCamera = () => {
         if (videoRef.current && videoRef.current.srcObject) {
@@ -52,6 +53,16 @@ export const BarcodeScanner = () => {
             videoRef.current.srcObject = null;
         }
     };
+
+    // Wrapping stopBarcodeScanner in useCallback to prevent it from being redefined on each render
+    const stopBarcodeScanner = useCallback(() => {
+        if (quaggaInitialized.current) {
+            Quagga.offDetected(handleDetectedBarcode);
+            Quagga.stop(() => {
+                quaggaInitialized.current = false;
+            });
+        }
+    }, []);
 
     const startBarcodeScanner = () => {
         if (!quaggaInitialized.current) {
@@ -74,15 +85,6 @@ export const BarcodeScanner = () => {
             });
         }
         Quagga.onDetected(handleDetectedBarcode);
-    };
-
-    const stopBarcodeScanner = () => {
-        if (quaggaInitialized.current) {
-            Quagga.offDetected(handleDetectedBarcode);
-            Quagga.stop(() => {
-                quaggaInitialized.current = false;
-            });
-        }
     };
 
     const handleDetectedBarcode = (result) => {
@@ -134,3 +136,4 @@ export const BarcodeScanner = () => {
         </div>
     );
 };
+export default BarcodeScanner;

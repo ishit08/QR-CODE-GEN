@@ -20,7 +20,7 @@ export const applyQRStyle = (canvas, qrStyle, primaryColor, secondaryColor, thir
   const imgData = context.getImageData(0, 0, canvas.width, canvas.height);
   const data = imgData.data;
 
-  const size = canvas.width;
+  //const size = canvas.width;
   //const PositionMarkerSize = size / 7;
 
   for (let y = 0; y < canvas.height; y++) {

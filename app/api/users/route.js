@@ -2,7 +2,7 @@ import prisma from '../../../db/db';
 import bcrypt from 'bcryptjs';
 import { NextResponse } from "next/server";
 
-export async function POST(req, _res) {
+export async function POST(req) {
 
   try {
     const { name, email, password } = await req.json(); // Parse JSON body
