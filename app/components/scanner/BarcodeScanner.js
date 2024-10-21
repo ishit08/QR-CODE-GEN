@@ -36,12 +36,6 @@ export default function BarcodeScanner() {
         }
     }, []);
 
-    const handleDetectedBarcode = useCallback((result) => {
-        setBarcodeData(result.codeResult.code); // Set barcode data to display
-        stopBarcodeScanner(); // Stop after successful scan
-        setIsScanning(false); // Reset scanning state
-    }, []); // Dependencies handled below
-
     const stopBarcodeScanner = useCallback(() => {
         if (quaggaInitialized.current) {
             Quagga.offDetected(handleDetectedBarcode);
@@ -49,15 +43,23 @@ export default function BarcodeScanner() {
                 quaggaInitialized.current = false;
             });
         }
-    }, [handleDetectedBarcode]);
+    }, []); // Dependencies will be managed to include handleDetectedBarcode if it changes
+
+    const handleDetectedBarcode = useCallback((result) => {
+        setBarcodeData(result.codeResult.code); // Set barcode data to display
+        stopBarcodeScanner(); // Stop after successful scan
+        setIsScanning(false); // Reset scanning state
+    }, [stopBarcodeScanner]); // Include stopBarcodeScanner in the dependency array
 
     useEffect(() => {
         detectDeviceAndSetCamera();
+
         if (isCameraOn) {
             initCamera();
         } else {
             stopCamera();
         }
+
         return () => {
             stopCamera();
             stopBarcodeScanner();
@@ -88,37 +90,12 @@ export default function BarcodeScanner() {
     };
 
     const handleStartStopScanning = () => {
-        if (isCameraOn) {
-            if (isScanning) {
-                stopBarcodeScanner();
-            } else {
-                startBarcodeScanner();
-            }
-            setIsScanning(!isScanning);
+        setIsCameraOn(!isCameraOn);
+        setIsScanning(!isScanning);
+        if (!isScanning) {
+            startBarcodeScanner();
         } else {
-            alert('Please start the camera first.');
-        }
-    };
-
-    const handleFileUpload = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                Quagga.decodeSingle({
-                    src: e.target.result,
-                    decoder: {
-                        readers: ['ean_reader', 'code_128_reader', 'upc_reader']
-                    }
-                }, (result) => {
-                    if (result && result.codeResult) {
-                        setBarcodeData(result.codeResult.code); // Set barcode data to display
-                    } else {
-                        alert('No barcode found in the image.');
-                    }
-                });
-            };
-            reader.readAsDataURL(file);
+            stopBarcodeScanner();
         }
     };
 
@@ -135,34 +112,15 @@ export default function BarcodeScanner() {
             )}
 
             <div className="scanner-controls">
-                <button onClick={() => {
-                    setIsCameraOn(!isCameraOn);
-                    if (isCameraOn) stopCamera();
-                }} className="scanner-button">
-                    <FontAwesomeIcon icon={faCamera} /> {isCameraOn ? 'Stop Camera' : 'Start Camera'}
+                <button onClick={handleStartStopScanning} className="scanner-button">
+                    <FontAwesomeIcon icon={faCamera} /> {isScanning ? 'Stop Scanning' : 'Start Scanning'}
                 </button>
-                {isCameraOn && (
-                    <button onClick={() => setCameraFacingMode(cameraFacingMode === 'user' ? 'environment' : 'user')} className="scanner-button scanner-button-yellow">
-                        <FontAwesomeIcon icon={faCameraRotate} /> Switch to {cameraFacingMode === 'user' ? 'Back' : 'Front'} Camera
-                    </button>
-                )}
-                {isCameraOn && (
-                    <button onClick={handleStartStopScanning} className="scanner-button scanner-button-green">
-                        {isScanning ? 'Stop Scanning' : 'Start Scanning'}
-                    </button>
-                )}
+                <button onClick={() => setCameraFacingMode(cameraFacingMode === 'user' ? 'environment' : 'user')} className="scanner-button scanner-button-yellow">
+                    <FontAwesomeIcon icon={faCameraRotate} /> Switch Camera
+                </button>
             </div>
 
-            <div className="scanner-file-upload">
-                <input type="file" accept="image/*" onChange={handleFileUpload} className="scanner-input" />
-            </div>
-
-            {isCameraOn && (
-                <div className="scanner-video-container">
-                    <video ref={videoRef} autoPlay className="scanner-video" />
-                    <div className="scanner-video-overlay"></div>
-                </div>
-            )}
+            <video ref={videoRef} style={{ width: '100%' }} autoPlay hidden />
         </div>
     );
 }

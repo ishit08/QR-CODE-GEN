@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Input } from "../../components/ui/input";
 import '../../styles/authpage.css'; // Import the shared CSS file
 
