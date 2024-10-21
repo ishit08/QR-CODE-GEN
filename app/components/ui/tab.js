@@ -5,16 +5,11 @@ import { useState, useEffect } from 'react';
 const Tab = ({ tabs, defaultTab, onTabChange, className }) => {
   const [activeTab, setActiveTab] = useState(defaultTab);
 
-  // Load active tab from localStorage on component mount if necessary
+  // Load active tab from localStorage on component mount
   useEffect(() => {
-    const savedTab = localStorage.getItem('activeTab');
-    if (savedTab) {
-      setActiveTab(savedTab);
-      onTabChange(savedTab);
-    } else {
-      setActiveTab(defaultTab);
-      onTabChange(defaultTab);
-    }
+    const savedTab = localStorage.getItem('activeTab') || defaultTab;
+    setActiveTab(savedTab);
+    onTabChange(savedTab);
   }, [defaultTab, onTabChange]);
 
   // Handle tab change and store in localStorage
