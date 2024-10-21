@@ -7,7 +7,7 @@ import { startBarcodeScanner, stopBarcodeScanner } from '../../utility/barcode/b
 const CameraScanner = ({ type, handleFileUpload }) => {
     const [isScanning, setIsScanning] = useState(false);
     const [cameraFacingMode, setCameraFacingMode] = useState('environment');
-    const [videoLoaded, setVideoLoaded] = useState(false); // New state to track video loading
+    const [videoLoaded, setVideoLoaded] = useState(false);
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const quaggaInitialized = useRef(false);
@@ -21,7 +21,6 @@ const CameraScanner = ({ type, handleFileUpload }) => {
         memoizedDetectDeviceAndSetCamera();
         initCamera(videoRef, cameraFacingMode);
 
-        // Start processing QR codes or bar codes based on the type
         if (type === 'QR Code') {
             processQRCode(videoRef, canvasRef, setData, setIsScanning);
         } else if (type === 'Bar Code') {
@@ -29,19 +28,16 @@ const CameraScanner = ({ type, handleFileUpload }) => {
         }
 
         const videoElement = videoRef.current;
-        
-        // Set videoLoaded to true when the video is playing
+
         const onLoadedData = () => {
             setVideoLoaded(true);
         };
-        
+
         if (videoElement) {
             videoElement.addEventListener('loadeddata', onLoadedData);
         }
 
         return () => {
-            // Cleanup function to stop the camera and barcode scanner
-            console.log("Stopping camera and barcode scanner");
             stopCamera(videoRef);
             stopBarcodeScanner(quaggaInitialized);
             if (videoElement) {
@@ -70,19 +66,24 @@ const CameraScanner = ({ type, handleFileUpload }) => {
                 )}
             </div>
 
-            <div className="scanner-file-upload">
-                <input type="file" accept="image/*" onChange={handleFileUpload} className="scanner-input" />
-            </div>
-
             <div className="scanner-video-container">
                 <video ref={videoRef} autoPlay className="scanner-video" />
                 <canvas ref={canvasRef} className="hidden" />
-                {videoLoaded && ( // Render the square and line only after the video is loaded
+
+                {videoLoaded && ( 
                     <>
                         <div className="scanner-square-overlay"></div>
                         <div className="scanner-line"></div>
+                       {/* Upload Button Icon with Caption */}
+                <label htmlFor="file-upload" className="upload-icon">
+                    <i className="fa-solid fa-upload"></i>
+                    <input id="file-upload" type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
+                </label>
+                <span className="upload-caption">Scan<br/>from<br/>Gallery</span>
                     </>
                 )}
+
+               
             </div>
         </div>
     );

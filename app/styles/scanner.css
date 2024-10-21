@@ -198,31 +198,48 @@
         top: calc(50% - 100px); /* Move back to the top of the square */
     }
 }
-
-@keyframes trail {
-    0% {
-        opacity: 0; /* Start hidden */
-        transform: translateY(-20px); /* Move up for trail effect */
-    }
-    20% {
-        opacity: 1; /* Fully visible */
-    }
-    80% {
-        opacity: 1; /* Fully visible */
-    }
-    100% {
-        opacity: 0; /* Fade out */
-        transform: translateY(20px); /* Move down for trail effect */
-    }
+.upload-icon {
+    position: absolute;
+    top: 10px;
+    /* Adjust this value as needed */
+    right: 10px;
+    /* Position it on the right side */
+    background: transparent;
+    /* Set background to transparent */
+    color: white;
+    /* Change icon color to white */
+    font-size: 20px;
+    /* Adjust font size for visibility */
+    cursor: pointer;
+    /* Pointer cursor */
+    z-index: 20;
+    /* Ensure it's above the video */
+    text-align: center;
+    /* Center align text */
 }
 
-/* Animation for top and bottom trails */
-.scanner-trail-top {
-    top: calc(50% - 100px); /* Position at the top of the square */
-    animation: trail 2s infinite; /* Trail animation */
+.upload-caption {
+    position: absolute;
+    top: 40px;
+    /* Adjust this value to position caption below the icon */
+    right: 10px;
+    /* Align with the icon */
+    color: white;
+    /* Caption color */
+    font-size: 8px;
+    /* Set font size to extra extra small */
+    z-index: 20;
+    /* Ensure it's above the video */
+    text-align: center;
+    /* Center align text */
+    background-color: rgba(0, 0, 0, 0.4);
+            /* 70% transparent black background */
 }
 
-.scanner-trail-bottom {
-    top: calc(50% + 100px); /* Position at the bottom of the square */
-    animation: trail 2s infinite; /* Trail animation */
+
+.navbar {
+    position: relative;
+    /* or absolute/fixed as needed */
+    z-index: 100;
+    /* Higher than the overlay or other components */
 }

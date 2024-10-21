@@ -25,28 +25,40 @@ export const stopCamera = (videoRef) => {
     }
 };
 
+
 export const processQRCode = (videoRef, canvasRef, setData, setIsScanning) => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
+    const context = canvasRef.current?.getContext('2d', { willReadFrequently: true }); // Ensure canvasRef is not null
 
     const scanFrame = () => {
-        if (!setIsScanning) return;
+        if (!setIsScanning) return; // Exit if scanning is not enabled
 
-        if (videoRef.current && videoRef.current.readyState === 4) { // Check if video is ready
-            context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-            const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
-
-            if (qrCode) {
-                setData(qrCode.data);
-            }
+        // Check if context is available
+        if (!context || !videoRef.current || !canvasRef.current) {
+            console.error("Video or canvas is not ready");
+            return; // Exit if context or video or canvas is not available
         }
 
-        requestAnimationFrame(scanFrame); // Keep scanning
+        // Set canvas dimensions if not already set
+        if (!canvasRef.current.width || !canvasRef.current.height) {
+            canvasRef.current.width = videoRef.current.videoWidth; // Use video width
+            canvasRef.current.height = videoRef.current.videoHeight; // Use video height
+        }
+
+        // Draw the video frame to the canvas
+        context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+        const imageData = context.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height);
+        const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
+
+        if (qrCode) {
+            setData(qrCode.data); // Set QR code data
+        }
+
+        requestAnimationFrame(scanFrame); // Continue scanning
     };
 
-    requestAnimationFrame(scanFrame);
+    requestAnimationFrame(scanFrame); // Start the scanning process
 };
+
 
 export const handleFileUpload = (event, canvasRef, setQrData) => {
     const file = event.target.files[0];
