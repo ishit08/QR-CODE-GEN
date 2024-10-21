@@ -27,9 +27,9 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 left-0 w-full bg-gray-800 text-white z-50">
-      <div className="container mx-auto flex items-center justify-between p-4">
+      <div className="w-full mx-auto flex items-center justify-between pt-4 pb-4">
         {/* Logo Section */}
-        <div className="flex items-center">
+        <div className="flex items-center pl-10 pr-10">
           <Link href="/" className="flex items-center">
             <Image
               src="/images/logo.png"
@@ -50,14 +50,14 @@ const Navbar = () => {
               href={link.href}
               className="flex items-center space-x-2 hover:text-gray-300"
             >
-              <i className={link.icon}></i> {/* Render the icon */}
+              <i className={link.icon} style={{ width: "1.25rem" }}></i> {/* Render the icon with fixed width */}
               <span>{link.label}</span>
             </Link>
           ))}
         </div>
 
         {/* User profile or login/register links - Move to right */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-6">
           {status === "authenticated" ? (
             <div className="flex items-center space-x-2">
               <span>Hello, {session.user.name}</span> {/* Display user name */}
@@ -65,12 +65,12 @@ const Navbar = () => {
                 onClick={handleLogout}
                 className="flex items-center space-x-2 hover:text-gray-300"
               >
-                <i className="fa fa-right-from-bracket"></i> {/* Logout icon */}
+                <i className="fa fa-right-from-bracket" style={{ width: "1.25rem" }}></i> {/* Logout icon with fixed width */}
                 <span>Logout</span>
               </button>
             </div>
           ) : (
-            <div className="hidden md:flex space-x-4">
+            <div className="hidden md:flex space-x-4 px-20">
               <Link
                 href="/login"
                 className="flex items-center space-x-2 hover:text-gray-300"
@@ -83,7 +83,8 @@ const Navbar = () => {
                       ? "fa fa-person-walking-arrow-right"
                       : "fa fa-right-from-bracket"
                   }
-                ></i>{" "}
+                  style={{ width: "1.25rem" }} // Fixed width for the icon
+                ></i>
                 <span className="flex-shrink-0">Login</span>
               </Link>
               <Link
@@ -98,7 +99,8 @@ const Navbar = () => {
                       ? "fa fa-person-circle-plus"
                       : "fa fa-user-plus"
                   }
-                ></i>{" "}
+                  style={{ width: "1.25rem" }} // Fixed width for the icon
+                ></i>
                 <span>Register</span>
               </Link>
             </div>
@@ -132,7 +134,7 @@ const Navbar = () => {
               className="flex items-center space-x-2 hover:text-gray-300"
               onClick={() => setIsOpen(false)} // Close the menu on link click
             >
-              <i className={link.icon}></i>
+              <i className={link.icon} style={{ width: "1.25rem" }}></i>
               <span>{link.label}</span>
             </Link>
           ))}
@@ -144,7 +146,7 @@ const Navbar = () => {
                 className="flex items-center space-x-2 hover:text-gray-300"
                 onClick={() => setIsOpen(false)}
               >
-                <i className="fa fa-right-from-bracket"></i>
+                <i className="fa fa-right-from-bracket" style={{ width: "1.25rem" }}></i>
                 <span>Login</span>
               </Link>
               <Link
@@ -152,7 +154,7 @@ const Navbar = () => {
                 className="flex items-center space-x-2 hover:text-gray-300"
                 onClick={() => setIsOpen(false)}
               >
-                <i className="fa fa-user-plus"></i>
+                <i className="fa fa-user-plus" style={{ width: "1.25rem" }}></i>
                 <span>Register</span>
               </Link>
             </>
