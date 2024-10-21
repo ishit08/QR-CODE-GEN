@@ -1,0 +1,159 @@
+.login-container {
+    min-height: 100vh;
+    /* Equivalent to min-h-screen */
+    background-color: #f3f4f6;
+    /* Equivalent to bg-gray-100 */
+    padding-top: 1.5rem;
+    /* Equivalent to py-6 */
+    padding-bottom: 1.5rem;
+    /* Equivalent to py-6 */
+    display: flex;
+    /* Equivalent to flex */
+    flex-direction: column;
+    /* Equivalent to flex-col */
+    justify-content: center;
+    /* Equivalent to justify-center */
+    align-items: center;
+    /* Ensures content is centered horizontally */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Media query for small screens (equivalent to sm:py-12) */
+@media (min-width: 640px) {
+    .login-container {
+        padding-top: 3rem;
+        /* Equivalent to sm:py-12 */
+        padding-bottom: 3rem;
+        /* Equivalent to sm:py-12 */
+    }
+}
+.card-container {
+    position: relative;
+    /* Equivalent to relative */
+    padding-top: 0.75rem;
+    /* Equivalent to py-3 (padding top) */
+    padding-bottom: 0.75rem;
+    /* Equivalent to py-3 (padding bottom) */
+    width: 100%;
+    max-width: 30rem;
+    /* Equivalent to sm:max-w-xl (which is 36rem or 576px) */
+    margin: 0 auto;
+    /* Equivalent to sm:mx-auto (centers horizontally) */
+    z-index: 2;
+    /* Ensures content stays above the gradient */
+}
+/* Media query for small screens (equivalent to sm:max-w-xl) */
+@media (min-width: 640px) {
+    .card-container {
+        max-width: 30rem;
+        /* 576px equivalent to sm:max-w-xl */
+    }
+}
+.gradient-bg {
+    position: absolute;
+    /* Equivalent to absolute */
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    /* Equivalent to inset-0 (in Tailwind, this sets all sides to 0) */
+    background: linear-gradient(to right, #06b6d4,#34d399);
+    /* Equivalent to bg-gradient-to-r from-cyan-400 to-sky-500 */
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    /* Equivalent to shadow-lg */
+    transform: skewY(-6deg);
+    /* Equivalent to -skew-y-6 */
+    border-radius: 1.5rem;
+    /* Equivalent to rounded-3xl */
+    z-index: 1;
+    /* Ensures the gradient stays behind the content */
+}
+
+/* Media query for small screens (equivalent to sm:skew-y-0 and sm:-rotate-6) */
+@media (min-width: 640px) {
+    .gradient-bg {
+        transform: skewY(0) rotate(-6deg);
+        /* Equivalent to sm:skew-y-0 and sm:-rotate-6 */
+        border-radius: 1.5rem;
+        /* Equivalent to sm:rounded-3xl */
+    }
+}
+
+.card-content {
+    position: relative;
+    /* Equivalent to relative */
+    padding-top: 2.5rem;
+    /* Equivalent to py-10 (10 * 0.25rem = 2.5rem) */
+    padding-bottom: 2.5rem;
+    /* Equivalent to py-10 */
+    padding-left: 1rem;
+    /* Equivalent to px-4 (4 * 0.25rem = 1rem) */
+    padding-right: 1rem;
+    /* Equivalent to px-4 */
+    background-color: white;
+    /* Equivalent to bg-white */
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    /* Equivalent to shadow-lg */
+    border-radius: 0;
+    /* Default, no rounded corners */
+    z-index: 2;
+    /* Ensures content stays above gradient */
+}
+
+/* Media query for small screens (equivalent to sm:rounded-3xl and sm:p-20) */
+@media (min-width: 640px) {
+    .card-content {
+        border-radius: 1.5rem;
+        /* Equivalent to sm:rounded-3xl */
+        padding: 2.5rem;
+        /* Equivalent to sm:p-20 (20 * 0.25rem = 5rem) */
+    }
+}
+.login-card {
+    max-width: 100%;
+    margin: 0 auto;
+    border: none;
+    box-shadow: none;
+}
+
+.error-message {
+    color: #ef4444;
+    margin-bottom: 1rem;
+}
+
+
+
+.login-button {
+    width: 100%;
+    background: linear-gradient(to right, #06b6d4, #34d399);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    color: white;
+    border-radius: 0.375rem;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+.login-button:hover {
+    background: linear-gradient(to right, #34d399, #06b6d4);
+}
+
+.social-login-button {
+    width: 100%;
+    height: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 0.375rem;
+    margin-top: 1rem;
+}
+
+.signup-link {
+    color: #3b82f6;
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.875rem;
+}

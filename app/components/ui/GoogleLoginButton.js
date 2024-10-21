@@ -1,11 +1,12 @@
+/* GoogleLoginButton.js */
 import React from "react";
+import '../../styles/SocialLoginButton.css';
 
-// GoogleLoginButton component
 export const GoogleLoginButton = ({ handleGoogleLogin }) => {
   return (
     <button
       onClick={handleGoogleLogin}
-      className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-full h-12"
+      className="social-login-button"
     >
       <svg
         className="h-6 w-6 mr-2"

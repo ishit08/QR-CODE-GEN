@@ -17,6 +17,7 @@ const Navbar = () => {
     { href: "/qrcode", label: "Qr Codes", icon: "fa fa-qrcode" },
     { href: "/barcode", label: "Bar Codes", icon: "fa fa-barcode" },
     { href: "/scanner", label: "Scanner", icon: "fa fa-expand" },
+     { href: "/contactus", label: "Contact Us", icon: "fa fa-envelope" },
   ];
 
   // Logout function

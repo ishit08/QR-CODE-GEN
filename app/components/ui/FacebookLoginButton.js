@@ -1,10 +1,12 @@
+/* FacebookLoginButton.js */
 import React from 'react';
+import '../../styles/SocialLoginButton.css';
 
 export const FacebookLoginButton = ({ handleFacebookLogin }) => {
   return (
     <button
       onClick={handleFacebookLogin}
-      className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-full h-12"
+      className="social-login-button"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

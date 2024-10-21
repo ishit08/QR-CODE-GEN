@@ -128,46 +128,46 @@ export default function BarcodeScanner() {
     };
 
     return (
-        <div className="flex flex-col items-center">
-            <h1 className="text-2xl font-bold mb-4">Barcode Scanner</h1>
+        <div className="scanner-component">
+            <h1 className="scanner-title">Barcode Scanner</h1>
 
             {barcodeData && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg">
-                        <h2 className="text-lg font-bold mb-4">Barcode Data</h2>
+                <div className="scanner-overlay">
+                    <div className="scanner-overlay-content">
+                        <h2 className="scanner-overlay-title">Barcode Data</h2>
                         <p>{barcodeData}</p>
-                        <button onClick={() => setBarcodeData(null)} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-full">Close</button>
+                        <button onClick={() => setBarcodeData(null)} className="scanner-close-button">Close</button>
                     </div>
                 </div>
             )}
 
-            <div className="flex items-center mb-4">
+            <div className="scanner-controls">
                 <button onClick={() => {
                     setIsCameraOn(!isCameraOn);
                     if (isCameraOn) stopCamera();
-                }} className="bg-blue-500 text-white py-2 px-4 rounded-full mr-2">
+                }} className="scanner-button">
                     <FontAwesomeIcon icon={faCamera} /> {isCameraOn ? 'Stop Camera' : 'Start Camera'}
                 </button>
                 {isCameraOn && (
-                    <button onClick={() => setCameraFacingMode(cameraFacingMode === 'user' ? 'environment' : 'user')} className="bg-yellow-500 text-white py-2 px-4 rounded-full mr-2">
+                    <button onClick={() => setCameraFacingMode(cameraFacingMode === 'user' ? 'environment' : 'user')} className="scanner-button scanner-button-yellow">
                         <FontAwesomeIcon icon={faCameraRotate} /> Switch to {cameraFacingMode === 'user' ? 'Back' : 'Front'} Camera
                     </button>
                 )}
                 {isCameraOn && (
-                    <button onClick={handleStartStopScanning} className="bg-green-500 text-white py-2 px-4 rounded-full">
+                    <button onClick={handleStartStopScanning} className="scanner-button scanner-button-green">
                         {isScanning ? 'Stop Scanning' : 'Start Scanning'}
                     </button>
                 )}
             </div>
 
-            <div className="mb-4">
-                <input type="file" accept="image/*" onChange={handleFileUpload} className="border-2 border-blue-500 rounded-lg py-2 px-4 cursor-pointer" />
+            <div className="scanner-file-upload">
+                <input type="file" accept="image/*" onChange={handleFileUpload} className="scanner-input" />
             </div>
 
             {isCameraOn && (
-                <div className="relative mb-4">
-                    <video ref={videoRef} autoPlay className="w-full max-w-md rounded-lg border-4 border-white" />
-                    <div className="absolute top-0 left-0 w-full h-full border-4 border-white box-border" style={{ pointerEvents: 'none', borderRadius: '8px' }}></div>
+                <div className="scanner-video-container">
+                    <video ref={videoRef} autoPlay className="scanner-video" />
+                    <div className="scanner-video-overlay"></div>
                 </div>
             )}
         </div>

@@ -3,18 +3,19 @@
 
 import 'tailwindcss/tailwind.css';
 import BarcodeScanner from '../../components/scanner/BarcodeScanner';
-import { QRCodeScanner } from '../../components/scanner/QRCodeScanner';
+import QRCodeScanner from '../../components/scanner/QRCodeScanner';
+import '../../styles/scanner.css';
 
 const Scanner = () => {
     return (
-        <div className="flex flex-col items-center p-8">
-            <h1 className="text-4xl font-bold mb-8 text-center">Barcode and QR Code Scanner</h1>
-            <div className="w-full max-w-4xl">
+        <div className="scanner-container">
+            <h1 className="scanner-title">Barcode and QR Code Scanner</h1>
+            <div className="scanner-content">
                 {/* Barcode Scanner */}
                 <BarcodeScanner />
 
                 {/* Divider between Barcode and QR Code Scanner */}
-                <div className="my-8 border-t-2 border-gray-300"></div>
+                <div className="scanner-divider"></div>
 
                 {/* QR Code Scanner */}
                 <QRCodeScanner />
@@ -22,5 +23,4 @@ const Scanner = () => {
         </div>
     );
 };
-
 export default Scanner;

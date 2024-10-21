@@ -1,4 +1,3 @@
-
 // File 3: app/components/scanner/QRCodeScanner.js
 "use client";
 
@@ -7,7 +6,7 @@ import jsQR from 'jsqr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera, faCameraRotate } from '@fortawesome/free-solid-svg-icons';
 
-export function QRCodeScanner() {
+export default function QRCodeScanner() {
     const [isScanning, setIsScanning] = useState(false);
     const [cameraFacingMode, setCameraFacingMode] = useState('environment');
     const videoRef = useRef(null);
@@ -42,7 +41,15 @@ export function QRCodeScanner() {
 
     const processQRCode = useCallback(() => {
         const canvas = canvasRef.current;
+        if (!canvas) {
+            console.error('Canvas element is not available');
+            return;
+        }
         const context = canvas.getContext('2d');
+        if (!context) {
+            console.error('Failed to get canvas context');
+            return;
+        }
 
         const scan = () => {
             if (!isScanning) return;
@@ -88,7 +95,15 @@ export function QRCodeScanner() {
                 const img = new Image();
                 img.onload = () => {
                     const canvas = canvasRef.current;
+                    if (!canvas) {
+                        console.error('Canvas element is not available');
+                        return;
+                    }
                     const context = canvas.getContext('2d');
+                    if (!context) {
+                        console.error('Failed to get canvas context');
+                        return;
+                    }
                     context.drawImage(img, 0, 0, canvas.width, canvas.height);
                     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
                     const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
@@ -105,44 +120,44 @@ export function QRCodeScanner() {
     };
 
     return (
-        <div className="flex flex-col items-center">
-            <h1 className="text-2xl font-bold mb-4">QR Code Scanner</h1>
+        <div className="scanner-component">
+            <h1 className="scanner-title">QR Code Scanner</h1>
 
             {qrData && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg">
-                        <h2 className="text-lg font-bold mb-4">QR Code Data</h2>
+                <div className="scanner-overlay">
+                    <div className="scanner-overlay-content">
+                        <h2 className="scanner-overlay-title">QR Code Data</h2>
                         <p>{qrData}</p>
-                        <button onClick={() => setQrData(null)} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-full">Close</button>
+                        <button onClick={() => setQrData(null)} className="scanner-close-button">Close</button>
                     </div>
                 </div>
             )}
 
-            <div className="relative mb-4">
-                {isCameraOn && (
-                    <div className="absolute top-10 left-0 w-full h-full border-4 border-white box-border" style={{ pointerEvents: 'none', borderRadius: '8px' }}></div>
-                )}
-                <video ref={videoRef} autoPlay className="w-full max-w-md rounded-lg border-4 border-white mb-4" />
-                <canvas ref={canvasRef} className="hidden" />
-            </div>
-
-            <div className="flex items-center mb-4">
+            <div className="scanner-controls">
                 <button onClick={() => {
                     setIsCameraOn(!isCameraOn);
                     if (isCameraOn) stopCamera();
-                }} className="bg-blue-500 text-white py-2 px-4 rounded-full mr-2">
+                }} className="scanner-button">
                     <FontAwesomeIcon icon={faCamera} /> {isCameraOn ? 'Stop Camera' : 'Start Camera'}
                 </button>
                 {isCameraOn && (
-                    <button onClick={() => setCameraFacingMode(cameraFacingMode === 'user' ? 'environment' : 'user')} className="bg-yellow-500 text-white py-2 px-4 rounded-full mr-2">
+                    <button onClick={() => setCameraFacingMode(cameraFacingMode === 'user' ? 'environment' : 'user')} className="scanner-button scanner-button-yellow">
                         <FontAwesomeIcon icon={faCameraRotate} /> Switch to {cameraFacingMode === 'user' ? 'Back' : 'Front'} Camera
                     </button>
                 )}
             </div>
 
-            <div className="mb-4">
-                <input type="file" accept="image/*" onChange={handleFileUpload} className="border-2 border-blue-500 rounded-lg py-2 px-4 cursor-pointer" />
+            <div className="scanner-file-upload">
+                <input type="file" accept="image/*" onChange={handleFileUpload} className="scanner-input" />
             </div>
+
+            {isCameraOn && (
+                <div className="scanner-video-container">
+                    <video ref={videoRef} autoPlay className="scanner-video" />
+                    <canvas ref={canvasRef} className="hidden" />
+                    <div className="scanner-video-overlay"></div>
+                </div>
+            )}
         </div>
     );
 }
