@@ -27,14 +27,14 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch("/api/auth/users", {
+    const response = await fetch("/api/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password }),
     });
     
     if (response.ok) {
-      toast.success("Registration Successfully done 😃!", {
+       toast.success("Registration Successfully done 😃!", {
         position: "top-center",
         autoClose: 2000,
         onClose: () => {

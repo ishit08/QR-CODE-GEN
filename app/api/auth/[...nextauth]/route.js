@@ -2,6 +2,8 @@ import NextAuth from "next-auth";
 import prisma from '../../../../db/db';
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import FacebookProvider from "next-auth/providers/facebook";
 import bcrypt from "bcryptjs";
 
 const handler = NextAuth({
@@ -33,6 +35,18 @@ const handler = NextAuth({
                     name: user.name,
                 };
             }
+        }),
+
+         // Google provider
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        }),
+
+        // Facebook provider
+        FacebookProvider({
+            clientId: process.env.FACEBOOK_CLIENT_ID,
+            clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
         })
     ],
     session: { strategy: "jwt", maxAge: 24 * 60 * 60 },
@@ -54,7 +68,7 @@ const handler = NextAuth({
         async session({ session, token }) {
             session.user.token = token; // Attach the JWT token to the session object
             return session;
-          }
+        }
     }
 });
 
