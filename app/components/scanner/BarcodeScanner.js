@@ -1,6 +1,3 @@
-// File 2: app/components/scanner/BarcodeScanner.js
-"use client";
-
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Quagga from 'quagga';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -39,6 +36,12 @@ export default function BarcodeScanner() {
         }
     }, []);
 
+    const handleDetectedBarcode = useCallback((result) => {
+        setBarcodeData(result.codeResult.code); // Set barcode data to display
+        stopBarcodeScanner(); // Stop after successful scan
+        setIsScanning(false); // Reset scanning state
+    }, []); // Dependencies handled below
+
     const stopBarcodeScanner = useCallback(() => {
         if (quaggaInitialized.current) {
             Quagga.offDetected(handleDetectedBarcode);
@@ -46,22 +49,20 @@ export default function BarcodeScanner() {
                 quaggaInitialized.current = false;
             });
         }
-    }, []);
+    }, [handleDetectedBarcode]);
 
     useEffect(() => {
         detectDeviceAndSetCamera();
-
         if (isCameraOn) {
             initCamera();
         } else {
             stopCamera();
         }
-
         return () => {
             stopCamera();
             stopBarcodeScanner();
         };
-    }, [isCameraOn, cameraFacingMode, initCamera, stopBarcodeScanner, detectDeviceAndSetCamera]);
+    }, [isCameraOn, cameraFacingMode, initCamera, stopCamera, stopBarcodeScanner, detectDeviceAndSetCamera]);
 
     const startBarcodeScanner = () => {
         if (!quaggaInitialized.current) {
@@ -84,12 +85,6 @@ export default function BarcodeScanner() {
             });
         }
         Quagga.onDetected(handleDetectedBarcode);
-    };
-
-    const handleDetectedBarcode = (result) => {
-        setBarcodeData(result.codeResult.code); // Set barcode data to display
-        stopBarcodeScanner(); // Stop after successful scan
-        setIsScanning(false); // Reset scanning state
     };
 
     const handleStartStopScanning = () => {
@@ -129,7 +124,6 @@ export default function BarcodeScanner() {
 
     return (
         <div className="scanner-component">
-           
             {barcodeData && (
                 <div className="scanner-overlay">
                     <div className="scanner-overlay-content">

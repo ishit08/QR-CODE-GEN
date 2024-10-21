@@ -10,7 +10,7 @@ export default function ContactUs() {
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
-  const router = useRouter();
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();

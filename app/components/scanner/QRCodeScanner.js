@@ -1,6 +1,3 @@
-// File 3: app/components/scanner/QRCodeScanner.js
-"use client";
-
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import jsQR from 'jsqr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -83,9 +80,9 @@ export default function QRCodeScanner() {
         }
 
         return () => {
-            stopCamera();
+            stopCamera(); // Cleanup function that stops the camera
         };
-    }, [isCameraOn, cameraFacingMode, initCamera, processQRCode, detectDeviceAndSetCamera]);
+    }, [isCameraOn, cameraFacingMode, initCamera, processQRCode, detectDeviceAndSetCamera, stopCamera]);
 
     const handleFileUpload = (event) => {
         const file = event.target.files[0];
@@ -120,7 +117,7 @@ export default function QRCodeScanner() {
     };
 
     return (
-        <div className="scanner-component">       
+        <div className="scanner-component">
 
             {qrData && (
                 <div className="scanner-overlay">
