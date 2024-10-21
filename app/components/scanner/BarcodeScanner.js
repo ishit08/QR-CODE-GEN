@@ -8,10 +8,11 @@ import 'tailwindcss/tailwind.css';
 
 const BarcodeScanner = () =>  {
     const [isScanning, setIsScanning] = useState(false);
-    const [cameraFacingMode, setCameraFacingMode] = useState('environment'); // Default to back camera on mobile
+    const [cameraFacingMode, setCameraFacingMode] = useState('environment');
     const videoRef = useRef(null);
-    const quaggaInitialized = useRef(false); // Flag to track Quagga initialization
-    const [isCameraOn, setIsCameraOn] = useState(false); // Track camera state
+    const quaggaInitialized = useRef(false);
+    const [isCameraOn, setIsCameraOn] = useState(false);
+    const [barcodeData, setBarcodeData] = useState(null); // To store detected barcode data
 
     useEffect(() => {
         detectDeviceAndSetCamera();
@@ -88,7 +89,9 @@ const BarcodeScanner = () =>  {
     };
 
     const handleDetectedBarcode = (result) => {
-        alert(`Barcode detected: ${result.codeResult.code}`);
+        setBarcodeData(result.codeResult.code); // Set barcode data to display
+        stopBarcodeScanner(); // Stop after successful scan
+        setIsScanning(false); // Reset scanning state
     };
 
     const handleStartStopScanning = () => {
@@ -104,9 +107,41 @@ const BarcodeScanner = () =>  {
         }
     };
 
+    const handleFileUpload = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                Quagga.decodeSingle({
+                    src: e.target.result,
+                    decoder: {
+                        readers: ['ean_reader', 'code_128_reader', 'upc_reader']
+                    }
+                }, (result) => {
+                    if (result && result.codeResult) {
+                        setBarcodeData(result.codeResult.code); // Set barcode data to display
+                    } else {
+                        alert('No barcode found in the image.');
+                    }
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     return (
         <div className="flex flex-col items-center">
             <h1 className="text-2xl font-bold mb-4">Barcode Scanner</h1>
+
+            {barcodeData && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg">
+                        <h2 className="text-lg font-bold mb-4">Barcode Data</h2>
+                        <p>{barcodeData}</p>
+                        <button onClick={() => setBarcodeData(null)} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-full">Close</button>
+                    </div>
+                </div>
+            )}
 
             <div className="flex items-center mb-4">
                 <button onClick={() => {
@@ -127,6 +162,10 @@ const BarcodeScanner = () =>  {
                 )}
             </div>
 
+            <div className="mb-4">
+                <input type="file" accept="image/*" onChange={handleFileUpload} className="border-2 border-blue-500 rounded-lg py-2 px-4 cursor-pointer" />
+            </div>
+
             {isCameraOn && (
                 <div className="relative mb-4">
                     <video ref={videoRef} autoPlay className="w-full max-w-md rounded-lg border-4 border-white" />
@@ -136,4 +175,3 @@ const BarcodeScanner = () =>  {
         </div>
     );
 };
-export default BarcodeScanner;

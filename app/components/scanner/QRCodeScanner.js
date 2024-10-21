@@ -8,11 +8,11 @@ import 'tailwindcss/tailwind.css';
 
 export const QRCodeScanner = () => {
     const [isScanning, setIsScanning] = useState(false);
-    const [cameraFacingMode, setCameraFacingMode] = useState('environment'); // Default to back camera on mobile
+    const [cameraFacingMode, setCameraFacingMode] = useState('environment');
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
-    const [isCameraOn, setIsCameraOn] = useState(false); // Track camera state
-    const [qrData, setQrData] = useState(null); // Track QR Code data
+    const [isCameraOn, setIsCameraOn] = useState(false);
+    const [qrData, setQrData] = useState(null);
 
     useEffect(() => {
         detectDeviceAndSetCamera();
@@ -71,12 +71,37 @@ export const QRCodeScanner = () => {
                 new Audio('/beep.mp3').play(); // Play beep sound
                 setQrData(qrCode.data); // Store QR Code data
                 setIsScanning(false);
+                setIsCameraOn(false);
             } else {
                 requestAnimationFrame(scan);
             }
         };
         requestAnimationFrame(scan);
-    }, [isScanning]); // Add isScanning as a dependency
+    };
+
+    const handleFileUpload = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = canvasRef.current;
+                    const context = canvas.getContext('2d');
+                    context.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                    const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
+                    if (qrCode) {
+                        setQrData(qrCode.data); // Store QR Code data
+                    } else {
+                        alert("No QR Code found in the image.");
+                    }
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     return (
         <div className="flex flex-col items-center">
@@ -94,23 +119,29 @@ export const QRCodeScanner = () => {
 
             <div className="relative mb-4">
                 {isCameraOn && (
-                    <div className="absolute top-10 left-10 right-10 bottom-10 border-4 border-white rounded-lg box-border pointer-events-none"></div>
+                    <div className="absolute top-10 left-0 w-full h-full border-4 border-white box-border" style={{ pointerEvents: 'none', borderRadius: '8px' }}></div>
                 )}
-                <video ref={videoRef} autoPlay className="w-full max-w-md rounded-lg border-4 border-white" />
-                <canvas ref={canvasRef} width={640} height={480} style={{ display: 'none' }}></canvas>
+                <video ref={videoRef} autoPlay className="w-full max-w-md rounded-lg border-4 border-white mb-4" />
+                <canvas ref={canvasRef} className="hidden" />
+            </div>
+
+            <div className="flex items-center mb-4">
+                <button onClick={() => {
+                    setIsCameraOn(!isCameraOn);
+                    if (isCameraOn) stopCamera();
+                }} className="bg-blue-500 text-white py-2 px-4 rounded-full mr-2">
+                    <FontAwesomeIcon icon={faCamera} /> {isCameraOn ? 'Stop Camera' : 'Start Camera'}
+                </button>
                 {isCameraOn && (
-                    <button onClick={() => setCameraFacingMode(cameraFacingMode === 'user' ? 'environment' : 'user')} className="absolute top-10 right-10 text-white p-4 rounded-full">
-                        <FontAwesomeIcon icon={faCameraRotate} />
+                    <button onClick={() => setCameraFacingMode(cameraFacingMode === 'user' ? 'environment' : 'user')} className="bg-yellow-500 text-white py-2 px-4 rounded-full mr-2">
+                        <FontAwesomeIcon icon={faCameraRotate} /> Switch to {cameraFacingMode === 'user' ? 'Back' : 'Front'} Camera
                     </button>
                 )}
             </div>
 
-            <button onClick={() => {
-                setIsCameraOn(!isCameraOn);
-                if (isCameraOn) stopCamera();
-            }} className="bg-blue-500 text-white p-4 rounded-full">
-                <FontAwesomeIcon icon={faCamera} /> {isCameraOn ? 'Stop Camera' : 'Start Camera'}
-            </button>
+            <div className="mb-4">
+                <input type="file" accept="image/*" onChange={handleFileUpload} className="border-2 border-blue-500 rounded-lg py-2 px-4 cursor-pointer" />
+            </div>
         </div>
     );
 };
