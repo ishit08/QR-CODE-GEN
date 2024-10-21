@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Input } from "../../components/ui/input";
 import '../../styles/authpage.css'; // Import the shared CSS file
 
@@ -10,7 +9,6 @@ export default function ContactUs() {
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
-  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,65 +29,65 @@ export default function ContactUs() {
               Fill up the form below to send us a message.
             </p>
           </div>
-         <form onSubmit={handleSubmit} className="space-y-6">
-  <Input
-    type="text"
-    label="Name"
-    placeholder="Enter your name"
-    value={name}
-    onChange={(e) => setName(e.target.value)}
-    required
-    className="input-field"
-  />
-  <Input
-    type="email"
-    label="Email"
-    placeholder="Enter your email"
-    value={email}
-    onChange={(e) => setEmail(e.target.value)}
-    required
-    className="input-field"
-  />
-  <Input
-    type="text"
-    label="Subject"
-    placeholder="Enter subject"
-    value={subject}
-    onChange={(e) => setSubject(e.target.value)}
-    required
-    className="input-field"
-  />
-  <textarea
-    className="input-field"
-    placeholder="Type your message here..."
-    value={message}
-    onChange={(e) => setMessage(e.target.value)}
-    required
-    style={{ height: "121px" }}
-  ></textarea>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <Input
+              type="text"
+              label="Name"
+              placeholder="Enter your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="input-field"
+            />
+            <Input
+              type="email"
+              label="Email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="input-field"
+            />
+            <Input
+              type="text"
+              label="Subject"
+              placeholder="Enter subject"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              required
+              className="input-field"
+            />
+            <textarea
+              className="input-field"
+              placeholder="Type your message here..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              required
+              style={{ height: "121px" }}
+            ></textarea>
 
-  {/* Updated buttons section */}
-  <div className="flex flex-col space-y-4">
-    <button
-      type="submit"
-      className="login-button"
-    >
-      Send
-    </button>
-    <button
-      type="reset"
-      className="login-button"
-      onClick={() => {
-        setName("");
-        setEmail("");
-        setSubject("");
-        setMessage("");
-      }}
-    >
-      Reset
-    </button>
-  </div>
-</form>
+            {/* Updated buttons section */}
+            <div className="flex flex-col space-y-4">
+              <button
+                type="submit"
+                className="login-button"
+              >
+                Send
+              </button>
+              <button
+                type="reset"
+                className="login-button"
+                onClick={() => {
+                  setName("");
+                  setEmail("");
+                  setSubject("");
+                  setMessage("");
+                }}
+              >
+                Reset
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
