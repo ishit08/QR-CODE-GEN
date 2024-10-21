@@ -47,8 +47,8 @@ const LoginPage = () => {
     if (res.ok) {
       // Retrieve the session which contains the token
       const session = await getSession();
-      console.log("JWT Token:", session?.user?.token);
-
+      // console.log("JWT Token:", session?.user?.token);
+      
       toast.success("Login Successfully done 😃!", {
         position: "top-center",
         autoClose: 2000,
