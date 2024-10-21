@@ -24,6 +24,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  
 
   const { data: session } = useSession();
   const router = useRouter();
@@ -36,7 +37,6 @@ const LoginPage = () => {
 
   const handleUserLogin = async (e) => {
     e.preventDefault(); // Prevent page reload
-    setLoading(true); // Set loading state
 
     const res = await signIn('credentials', {
       redirect: false,
@@ -44,7 +44,6 @@ const LoginPage = () => {
       password: password
     });
 
-    setLoading(false); // Reset loading state
 
     if (res.ok) {
       // Retrieve the session which contains the token
