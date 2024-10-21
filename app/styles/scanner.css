@@ -218,6 +218,26 @@
     /* Center align text */
 }
 
+.switch-cam-icon {
+    position: absolute;
+    top: 100px;
+    /* Adjust this value as needed */
+    right: 10px;
+    /* Position it on the right side */
+    background: transparent;
+    /* Set background to transparent */
+    color: white;
+    /* Change icon color to white */
+    font-size: 20px;
+    /* Adjust font size for visibility */
+    cursor: pointer;
+    /* Pointer cursor */
+    z-index: 20;
+    /* Ensure it's above the video */
+    text-align: center;
+    /* Center align text */
+}
+
 .upload-caption {
     position: absolute;
     top: 40px;
@@ -235,7 +255,28 @@
     background-color: rgba(0, 0, 0, 0.4);
             /* 70% transparent black background */
 }
+.flash-icon {
+    position: absolute;
+    /* Position over the video */
+    top: 150px;
+    /* Adjust position */
+    right: 10px;
+    /* Align to the right side */
+    color: white;
+    /* Match the theme color */
+    font-size: 24px;
+    /* Adjust icon size */
+    cursor: pointer;
+    transition: color 0.3s;
+    /* Smooth transition on hover */
+    z-index: 20;
+    /* Ensure it appears above the video */
+}
 
+.flash-icon.active {
+    color: #ffcc00;
+    /* Color change when active */
+}
 
 .navbar {
     position: relative;
