@@ -12,7 +12,6 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
 } from "../../../components/ui/card";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -92,20 +91,21 @@ export default function Register() {
                 >
                   Sign Up
                 </Button>
-                <ToastContainer />
               </form>
+              {/* Added the Google and Facebook login buttons outside the CardFooter */}
+              <div className="flex flex-col space-y-4 mt-2">
+                <GoogleLoginButton handleGoogleLogin={() => signIn("google", { callbackUrl: "/" })} />
+                <FacebookLoginButton handleFacebookLogin={() => signIn("facebook", { callbackUrl: "/" })} />
+              </div>
             </CardContent>
-            <CardFooter className="flex flex-col space-y-2">
-              <GoogleLoginButton handleGoogleLogin={() => signIn("google", { callbackUrl: "/" })} />
-              <FacebookLoginButton handleFacebookLogin={() => signIn("facebook", { callbackUrl: "/" })} />
-              <p className="text-sm text-center w-full signup-link">
-                Already have an account?{" "}
-                <Link href="/login" className="signup-link">
-                  Login here
-                </Link>
-              </p>
-            </CardFooter>
           </Card>
+          <ToastContainer />
+          <p className="text-sm text-center w-full signup-link mt-4">
+            Already have an account?{" "}
+            <Link href="/login" className="signup-link">
+              Login here
+            </Link>
+          </p>
         </div>
       </div>
     </div>
