@@ -1,11 +1,8 @@
-"use client";
-
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { detectDeviceAndSetCamera, initCamera, stopCamera, processQRCode } from '../../utility/qrcode/qrCodeScan';
 import { startBarcodeScanner, stopBarcodeScanner } from '../../utility/barcode/barCodeScan';
 
 const CameraScanner = ({ type, handleFileUpload }) => {
-    const [isScanning, setIsScanning] = useState(false);
     const [cameraFacingMode, setCameraFacingMode] = useState('environment');
     const [videoLoaded, setVideoLoaded] = useState(false);
     const [availableCameras, setAvailableCameras] = useState([]); // To store available cameras
@@ -39,10 +36,11 @@ const CameraScanner = ({ type, handleFileUpload }) => {
 
         initCamera(videoRef, cameraFacingMode);
 
+        // Automatically start scanning based on the type
         if (type === 'QR Code') {
-            processQRCode(videoRef, canvasRef, setData, setIsScanning);
+            processQRCode(videoRef, canvasRef, setData);
         } else if (type === 'Bar Code') {
-            startBarcodeScanner(videoRef, quaggaInitialized, setData, setIsScanning);
+            startBarcodeScanner(videoRef, quaggaInitialized, setData);
         }
 
         const videoElement = videoRef.current;
@@ -100,30 +98,33 @@ const CameraScanner = ({ type, handleFileUpload }) => {
                 </div>
             )}
 
-            <div className="scanner-controls">
-                {type === 'Bar Code' && (
-                    <button onClick={() => setIsScanning(!isScanning)} className="scanner-button scanner-button-green">
-                        {isScanning ? 'Stop Scanning' : 'Start Scanning'}
-                    </button>
-                )}
-            </div>
-
             <div className="scanner-video-container">
                 <video ref={videoRef} autoPlay className="scanner-video" />
                 <canvas ref={canvasRef} className="hidden" />
 
-                {videoLoaded && ( 
+                {videoLoaded && (
                     <>
-                        <div className="scanner-square-overlay"></div>
-                        <div className="scanner-line"></div>
-                        
+                        {/* Conditional Overlay: Square for QR Code, Rectangle for Bar Code */}
+                        {type === 'QR Code' ? (
+                            <div className="scanner-square-overlay"></div>
+                        ) : (
+                            <div className="scanner-rectangle-overlay"></div>
+                        )}
+
+                        {/* Scanner Line: Conditional animation for QR Code or Bar Code */}
+                        {type === 'QR Code' ? (
+                            <div className="scanner-line"></div>  // Vertical for QR Code
+                        ) : (
+                            <div className="scanner-line-horizontal"></div>  // Horizontal for Bar Code
+                        )}
+
                         {/* Upload Button Icon with Caption */}
                         <label htmlFor="file-upload" className="upload-icon">
                             <i className="fa-solid fa-upload"></i>
                             <input id="file-upload" type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
                         </label>
                         <span className="upload-caption">Scan<br />from<br />Gallery</span>
-                        
+
                         {/* Camera Switch Icon */}
                         <i 
                             className="fa-solid fa-camera-rotate switch-cam-icon" 
