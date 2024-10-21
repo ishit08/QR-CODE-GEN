@@ -1,3 +1,4 @@
+
 // app/layout.js
 import './globals.css'; // Add global styles if needed
 import Navbar from './components/Navbar';

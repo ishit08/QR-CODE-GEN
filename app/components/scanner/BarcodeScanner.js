@@ -1,18 +1,52 @@
+// File 2: app/components/scanner/BarcodeScanner.js
 "use client";
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Quagga from 'quagga';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera, faCameraRotate } from '@fortawesome/free-solid-svg-icons';
-import 'tailwindcss/tailwind.css';
 
-const BarcodeScanner = () =>  {
+export default function BarcodeScanner() {
     const [isScanning, setIsScanning] = useState(false);
     const [cameraFacingMode, setCameraFacingMode] = useState('environment');
     const videoRef = useRef(null);
     const quaggaInitialized = useRef(false);
     const [isCameraOn, setIsCameraOn] = useState(false);
     const [barcodeData, setBarcodeData] = useState(null); // To store detected barcode data
+
+    const detectDeviceAndSetCamera = useCallback(() => {
+        const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+        setCameraFacingMode(isMobile ? 'environment' : 'user');
+    }, []);
+
+    const initCamera = useCallback(async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: cameraFacingMode }
+            });
+            videoRef.current.srcObject = stream;
+        } catch (err) {
+            console.error('Error accessing camera: ', err);
+        }
+    }, [cameraFacingMode]);
+
+    const stopCamera = useCallback(() => {
+        if (videoRef.current && videoRef.current.srcObject) {
+            const stream = videoRef.current.srcObject;
+            const tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
+            videoRef.current.srcObject = null;
+        }
+    }, []);
+
+    const stopBarcodeScanner = useCallback(() => {
+        if (quaggaInitialized.current) {
+            Quagga.offDetected(handleDetectedBarcode);
+            Quagga.stop(() => {
+                quaggaInitialized.current = false;
+            });
+        }
+    }, []);
 
     useEffect(() => {
         detectDeviceAndSetCamera();
@@ -27,43 +61,7 @@ const BarcodeScanner = () =>  {
             stopCamera();
             stopBarcodeScanner();
         };
-    }, [isCameraOn, cameraFacingMode, initCamera, stopBarcodeScanner]);
-
-    const detectDeviceAndSetCamera = () => {
-        const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-        setCameraFacingMode(isMobile ? 'environment' : 'user');
-    };
-
-    // Wrapping initCamera in useCallback to prevent it from being redefined on each render
-    const initCamera = useCallback(async () => {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: cameraFacingMode }
-            });
-            videoRef.current.srcObject = stream;
-        } catch (err) {
-            console.error('Error accessing camera: ', err);
-        }
-    }, [cameraFacingMode]);
-
-    const stopCamera = () => {
-        if (videoRef.current && videoRef.current.srcObject) {
-            const stream = videoRef.current.srcObject;
-            const tracks = stream.getTracks();
-            tracks.forEach(track => track.stop());
-            videoRef.current.srcObject = null;
-        }
-    };
-
-    // Wrapping stopBarcodeScanner in useCallback to prevent it from being redefined on each render
-    const stopBarcodeScanner = useCallback(() => {
-        if (quaggaInitialized.current) {
-            Quagga.offDetected(handleDetectedBarcode);
-            Quagga.stop(() => {
-                quaggaInitialized.current = false;
-            });
-        }
-    }, []);
+    }, [isCameraOn, cameraFacingMode, initCamera, stopBarcodeScanner, detectDeviceAndSetCamera]);
 
     const startBarcodeScanner = () => {
         if (!quaggaInitialized.current) {
@@ -174,4 +172,4 @@ const BarcodeScanner = () =>  {
             )}
         </div>
     );
-};
+}

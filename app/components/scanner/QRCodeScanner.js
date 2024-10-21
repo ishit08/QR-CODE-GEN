@@ -1,12 +1,13 @@
+
+// File 3: app/components/scanner/QRCodeScanner.js
 "use client";
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import jsQR from 'jsqr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera, faCameraRotate } from '@fortawesome/free-solid-svg-icons';
-import 'tailwindcss/tailwind.css';
 
-export const QRCodeScanner = () => {
+export function QRCodeScanner() {
     const [isScanning, setIsScanning] = useState(false);
     const [cameraFacingMode, setCameraFacingMode] = useState('environment');
     const videoRef = useRef(null);
@@ -14,27 +15,10 @@ export const QRCodeScanner = () => {
     const [isCameraOn, setIsCameraOn] = useState(false);
     const [qrData, setQrData] = useState(null);
 
-    useEffect(() => {
-        detectDeviceAndSetCamera();
-
-        if (isCameraOn) {
-            initCamera();
-            setIsScanning(true);
-            processQRCode();
-        } else {
-            stopCamera();
-            setIsScanning(false);
-        }
-
-        return () => {
-            stopCamera();
-        };
-    }, [isCameraOn, cameraFacingMode, initCamera, processQRCode]); // Include initCamera and processQRCode
-
-    const detectDeviceAndSetCamera = () => {
+    const detectDeviceAndSetCamera = useCallback(() => {
         const isMobile = /Mobi|Android/i.test(navigator.userAgent);
         setCameraFacingMode(isMobile ? 'environment' : 'user');
-    };
+    }, []);
 
     const initCamera = useCallback(async () => {
         try {
@@ -45,16 +29,16 @@ export const QRCodeScanner = () => {
         } catch (err) {
             console.error('Error accessing camera: ', err);
         }
-    }, [cameraFacingMode]); // Add cameraFacingMode as a dependency
+    }, [cameraFacingMode]);
 
-    const stopCamera = () => {
+    const stopCamera = useCallback(() => {
         if (videoRef.current && videoRef.current.srcObject) {
             const stream = videoRef.current.srcObject;
             const tracks = stream.getTracks();
             tracks.forEach(track => track.stop());
             videoRef.current.srcObject = null;
         }
-    };
+    }, []);
 
     const processQRCode = useCallback(() => {
         const canvas = canvasRef.current;
@@ -77,7 +61,24 @@ export const QRCodeScanner = () => {
             }
         };
         requestAnimationFrame(scan);
-    };
+    }, [isScanning]);
+
+    useEffect(() => {
+        detectDeviceAndSetCamera();
+
+        if (isCameraOn) {
+            initCamera();
+            setIsScanning(true);
+            processQRCode();
+        } else {
+            stopCamera();
+            setIsScanning(false);
+        }
+
+        return () => {
+            stopCamera();
+        };
+    }, [isCameraOn, cameraFacingMode, initCamera, processQRCode, detectDeviceAndSetCamera]);
 
     const handleFileUpload = (event) => {
         const file = event.target.files[0];
@@ -144,4 +145,4 @@ export const QRCodeScanner = () => {
             </div>
         </div>
     );
-};
+}
