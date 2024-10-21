@@ -32,11 +32,11 @@ export default function ComingSoon() {
 
     return (
         <div className="flex flex-col justify-center items-center h-screen bg-gray-100 text-gray-800">
-             <h1 className="text-black text-5xl font-extrabold tracking-wide drop-shadow-lg animate-bounce">
-                         Welcome to CodeSnaps!
-                                    </h1>
+            <h1 className="text-black text-5xl font-extrabold tracking-wide drop-shadow-lg animate-bounce">
+                Welcome to CodeSnaps!
+            </h1>
             <h1 className="text-5xl font-bold mb-6 animate-pulse">Coming Soon</h1>
-            <p className="text-xl mb-4">We're working hard to bring you something amazing. Stay tuned!</p>
+            <p className="text-xl mb-4">We&#39;re working hard to bring you something amazing. Stay tuned!</p>
             <div className="text-3xl text-red-500 font-mono animate-pulse">{countdown}</div>
         </div>
     );

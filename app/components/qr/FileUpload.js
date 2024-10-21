@@ -14,8 +14,9 @@ const FileUpload = ({ setCsvData, setFileName }) => {
       setFileName(file.name);
       Papa.parse(file, {
         header: true,
-        complete: (results) => {
-          setCsvData(results.data.slice(0, -1));
+        complete: (results) => {        
+          results.data = results.data.slice(0, -1);        
+          setCsvData(results.data);
         },
       });
     }

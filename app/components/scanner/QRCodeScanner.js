@@ -1,19 +1,74 @@
-// QR Code Scanner Component
+// File 3: app/components/scanner/QRCodeScanner.js
 "use client";
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import jsQR from 'jsqr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera, faCameraRotate } from '@fortawesome/free-solid-svg-icons';
-import 'tailwindcss/tailwind.css';
 
-export const QRCodeScanner = () => {
+export default function QRCodeScanner() {
     const [isScanning, setIsScanning] = useState(false);
-    const [cameraFacingMode, setCameraFacingMode] = useState('environment'); // Default to back camera on mobile
+    const [cameraFacingMode, setCameraFacingMode] = useState('environment');
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
-    const [isCameraOn, setIsCameraOn] = useState(false); // Track camera state
-    const [qrData, setQrData] = useState(null); // Track QR Code data
+    const [isCameraOn, setIsCameraOn] = useState(false);
+    const [qrData, setQrData] = useState(null);
+
+    const detectDeviceAndSetCamera = useCallback(() => {
+        const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+        setCameraFacingMode(isMobile ? 'environment' : 'user');
+    }, []);
+
+    const initCamera = useCallback(async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: cameraFacingMode }
+            });
+            videoRef.current.srcObject = stream;
+        } catch (err) {
+            console.error('Error accessing camera: ', err);
+        }
+    }, [cameraFacingMode]);
+
+    const stopCamera = useCallback(() => {
+        if (videoRef.current && videoRef.current.srcObject) {
+            const stream = videoRef.current.srcObject;
+            const tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
+            videoRef.current.srcObject = null;
+        }
+    }, []);
+
+    const processQRCode = useCallback(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) {
+            console.error('Canvas element is not available');
+            return;
+        }
+        const context = canvas.getContext('2d');
+        if (!context) {
+            console.error('Failed to get canvas context');
+            return;
+        }
+
+        const scan = () => {
+            if (!isScanning) return;
+
+            context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
+
+            if (qrCode) {
+                new Audio('/beep.mp3').play(); // Play beep sound
+                setQrData(qrCode.data); // Store QR Code data
+                setIsScanning(false);
+                setIsCameraOn(false);
+            } else {
+                requestAnimationFrame(scan);
+            }
+        };
+        requestAnimationFrame(scan);
+    }, [isScanning]);
 
     useEffect(() => {
         detectDeviceAndSetCamera();
@@ -30,88 +85,79 @@ export const QRCodeScanner = () => {
         return () => {
             stopCamera();
         };
-    }, [isCameraOn, cameraFacingMode]);
+    }, [isCameraOn, cameraFacingMode, initCamera, processQRCode, detectDeviceAndSetCamera]);
 
-    const detectDeviceAndSetCamera = () => {
-        const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-        setCameraFacingMode(isMobile ? 'environment' : 'user');
-    };
-
-    const initCamera = async () => {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: cameraFacingMode }
-            });
-            videoRef.current.srcObject = stream;
-        } catch (err) {
-            console.error('Error accessing camera: ', err);
+    const handleFileUpload = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = canvasRef.current;
+                    if (!canvas) {
+                        console.error('Canvas element is not available');
+                        return;
+                    }
+                    const context = canvas.getContext('2d');
+                    if (!context) {
+                        console.error('Failed to get canvas context');
+                        return;
+                    }
+                    context.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                    const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
+                    if (qrCode) {
+                        setQrData(qrCode.data); // Store QR Code data
+                    } else {
+                        alert("No QR Code found in the image.");
+                    }
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         }
-    };
-
-    const stopCamera = () => {
-        if (videoRef.current && videoRef.current.srcObject) {
-            const stream = videoRef.current.srcObject;
-            const tracks = stream.getTracks();
-            tracks.forEach(track => track.stop());
-            videoRef.current.srcObject = null;
-        }
-    };
-
-    const processQRCode = () => {
-        const canvas = canvasRef.current;
-        const context = canvas.getContext('2d');
-
-        const scan = () => {
-            if (!isScanning) return;
-
-            context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-            const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
-
-            if (qrCode) {
-                new Audio('/beep.mp3').play(); // Play beep sound
-                setQrData(qrCode.data); // Store QR Code data
-                setIsScanning(false);
-            } else {
-                requestAnimationFrame(scan);
-            }
-        };
-        requestAnimationFrame(scan);
     };
 
     return (
-        <div className="flex flex-col items-center">
-            <h1 className="text-2xl font-bold mb-4">QR Code Scanner</h1>
+        <div className="scanner-component">
+            <h1 className="scanner-title">QR Code Scanner</h1>
 
             {qrData && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg">
-                        <h2 className="text-lg font-bold mb-4">QR Code Data</h2>
+                <div className="scanner-overlay">
+                    <div className="scanner-overlay-content">
+                        <h2 className="scanner-overlay-title">QR Code Data</h2>
                         <p>{qrData}</p>
-                        <button onClick={() => setQrData(null)} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-full">Close</button>
+                        <button onClick={() => setQrData(null)} className="scanner-close-button">Close</button>
                     </div>
                 </div>
             )}
 
-            <div className="relative mb-4">
+            <div className="scanner-controls">
+                <button onClick={() => {
+                    setIsCameraOn(!isCameraOn);
+                    if (isCameraOn) stopCamera();
+                }} className="scanner-button">
+                    <FontAwesomeIcon icon={faCamera} /> {isCameraOn ? 'Stop Camera' : 'Start Camera'}
+                </button>
                 {isCameraOn && (
-                    <div className="absolute top-10 left-10 right-10 bottom-10 border-4 border-white rounded-lg box-border pointer-events-none"></div>
-                )}
-                <video ref={videoRef} autoPlay className="w-full max-w-md rounded-lg border-4 border-white" />
-                <canvas ref={canvasRef} width={640} height={480} style={{ display: 'none' }}></canvas>
-                {isCameraOn && (
-                    <button onClick={() => setCameraFacingMode(cameraFacingMode === 'user' ? 'environment' : 'user')} className="absolute top-10 right-10  text-white p-4 rounded-full">
-                        <FontAwesomeIcon icon={faCameraRotate} />
+                    <button onClick={() => setCameraFacingMode(cameraFacingMode === 'user' ? 'environment' : 'user')} className="scanner-button scanner-button-yellow">
+                        <FontAwesomeIcon icon={faCameraRotate} /> Switch to {cameraFacingMode === 'user' ? 'Back' : 'Front'} Camera
                     </button>
                 )}
             </div>
 
-            <button onClick={() => {
-                setIsCameraOn(!isCameraOn);
-                if (isCameraOn) stopCamera();
-            }} className="bg-blue-500 text-white p-4 rounded-full">
-                <FontAwesomeIcon icon={faCamera} /> {isCameraOn ? 'Stop Camera' : 'Start Camera'}
-            </button>
+            <div className="scanner-file-upload">
+                <input type="file" accept="image/*" onChange={handleFileUpload} className="scanner-input" />
+            </div>
+
+            {isCameraOn && (
+                <div className="scanner-video-container">
+                    <video ref={videoRef} autoPlay className="scanner-video" />
+                    <canvas ref={canvasRef} className="hidden" />
+                    <div className="scanner-video-overlay"></div>
+                </div>
+            )}
         </div>
     );
-};
+}

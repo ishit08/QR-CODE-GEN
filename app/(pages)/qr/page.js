@@ -37,6 +37,8 @@ const QRPage = () => {
         return <BulkQR />;
       case 'invitation':
         return <div>Invitation - coming soon</div>;
+        case 'Encrypted':
+          return <div>Invitation - coming soon</div>;
       default:
         return null;
     }

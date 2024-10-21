@@ -99,3 +99,42 @@ button {
     text-wrap: balance;
   }
 }
+@media (max-width: 1028px) {
+  nav {
+    padding: 1rem;
+    /* Adjust padding */
+  }
+
+  .container {
+    flex-direction: column;
+    /* Stack logo and menu vertically */
+    align-items: center;
+    /* Center the content */
+  }
+
+  .container .flex-grow {
+    justify-content: center;
+    /* Center menu items */
+  }
+
+  .space-x-6>* {
+    margin-right: 0;
+    /* Remove right margin on small screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .space-x-4>* {
+    margin-right: 0;
+    /* Remove right margin on smaller screens */
+  }
+}
+
+.navbar-link {
+  white-space: nowrap;
+  /* Prevent text from wrapping */
+  overflow: hidden;
+  /* Hide overflow */
+  text-overflow: ellipsis;
+  /* Show ellipsis for overflow */
+}

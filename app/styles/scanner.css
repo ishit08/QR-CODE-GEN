@@ -1,0 +1,120 @@
+.scanner-container {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.scanner-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.scanner-content {
+    width: 100%;
+    max-width: 800px;
+}
+
+.scanner-divider {
+    margin: 2rem 0;
+    border-top: 2px solid #ccc;
+}
+
+.scanner-component {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.scanner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.scanner-overlay-content {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.scanner-overlay-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.scanner-close-button {
+    margin-top: 1rem;
+    background: #007bff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    border: none;
+    cursor: pointer;
+}
+
+.scanner-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.scanner-button {
+    background: #007bff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    border: none;
+    cursor: pointer;
+}
+
+.scanner-button-yellow {
+    background: #ffc107;
+}
+
+.scanner-button-green {
+    background: #28a745;
+}
+
+.scanner-file-upload {
+    margin-bottom: 1rem;
+}
+
+.scanner-input {
+    border: 2px solid #007bff;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+.scanner-video-container {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.scanner-video {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 0.5rem;
+    border: 4px solid white;
+}
+
+.scanner-video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 4px solid white;
+    border-radius: 0.5rem;
+    pointer-events: none;
+}

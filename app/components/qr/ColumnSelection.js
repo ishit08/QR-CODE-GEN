@@ -1,4 +1,3 @@
-import { useState } from "react";
 
 // ColumnSelection.js
 const ColumnSelection = ({ csvData, selectedColumn, setSelectedColumn }) => {
@@ -6,7 +5,8 @@ const ColumnSelection = ({ csvData, selectedColumn, setSelectedColumn }) => {
   // Function to filter columns based on 'IncludeInDropDown' flag
   const getDropdownColumns = (csvHeaders) => {
     return csvHeaders.filter((header) => {
-      const [columnName, includeInDropDown] = header.split("-");
+      //const [columnName, includeInDropDown] = header.split("-");
+      const [includeInDropDown] = header.split("-");
       return includeInDropDown === "Y"; // Only include columns where IncludeInDropDown is 'Y'
     });
   };

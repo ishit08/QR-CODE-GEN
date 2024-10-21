@@ -1,3 +1,4 @@
+
 // app/layout.js
 import './globals.css'; // Add global styles if needed
 import Navbar from './components/Navbar';
@@ -19,7 +20,7 @@ export default function RootLayout({ children }) {
         {/* Font Awesome Stylesheet */}
         <link
           rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         />
       </head>
       <body className="flex flex-col min-h-screen">

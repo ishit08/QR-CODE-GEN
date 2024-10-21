@@ -6,7 +6,7 @@ import ColorPicker from "../common/ColorPicker";
 import GenerateButton from "../common/GenerateButton";
 import QRCodeDisplay from "../common/QRCodeDisplay";
 import QrLayout from "../QrLayout";
-import { format } from "path";
+//import { format } from "path";
 
 export default function BasicQr() {
   const [text, setText] = useState("");
@@ -20,13 +20,13 @@ export default function BasicQr() {
   const [fourthColor, setFourthColor] = useState("#0000ff");;
   const [qrStyle, setQrStyle] = useState("none");
 
-  const handlePrint = () => {
-      // printQRCodePDF();
-  };
+  //const handlePrint = () => {
+    //   printQRCodePDF();
+  //};
  
-  const handleDownload = () => {
-      downloadQRCode(format, canvasRef);
-  };
+ // const handleDownload = () => {
+   //   downloadQRCode(format, canvasRef);
+  //};
 
   const generateQRCode = async () => {
     const qrCodeElement = document.getElementById("qrcode");

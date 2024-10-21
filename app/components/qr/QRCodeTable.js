@@ -1,4 +1,5 @@
-// QRCodeTable.js
+import Image from 'next/image'; // Import Image from next/image
+
 const QRCodeTable = ({ qrCodes }) => {
   return (
     qrCodes.length > 0 && (
@@ -10,10 +11,12 @@ const QRCodeTable = ({ qrCodes }) => {
                 <tr key={index} className="border border-black">
                   {qrCodes.slice(index, index + 3).map((innerCode, innerIndex) => (
                     <td key={innerIndex} className="border border-black p-4 text-center">
-                      <img
+                      <Image
                         src={innerCode.qrCode}
                         alt={`QR Code ${index + innerIndex + 1}`}
                         className="border mb-2"
+                        width={200} // Set a specific width for the image
+                        height={200} // Set a specific height for the image
                       />
                       
                       {/* Conditional rendering based on whether label contains '|' */}
