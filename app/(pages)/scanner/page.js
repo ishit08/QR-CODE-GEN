@@ -8,22 +8,21 @@ import Tab from '../../components/ui/tab'; // Import the reusable Tab component
 import '../../styles/scanner.css';
 
 const ScannerPage = () => {
-    const [activeTab, setActiveTab] = useState('qr'); // Default to 'qr' tab
+    // Initialize activeTab as 'qr' and check localStorage for previously saved value
+    const [activeTab, setActiveTab] = useState(() => {
+        // Only check localStorage in the client-side environment
+        if (typeof window !== 'undefined') {
+            const savedTab = localStorage.getItem('activeTab');
+            // Return saved tab or 'qr' if none is found
+            return savedTab ? savedTab : 'qr'; // Default to 'qr' if nothing is saved
+        }
+        return 'qr'; // Fallback for server-side rendering
+    });
 
     const tabs = [
         { value: 'qr', label: 'QR Code' },
         { value: 'barcode', label: 'Bar Code' },
     ];
-
-    useEffect(() => {
-        // Check if localStorage is available
-        if (typeof window !== 'undefined') {
-            const savedTab = localStorage.getItem('activeTab');
-            if (savedTab) {
-                setActiveTab(savedTab);
-            }
-        }
-    }, []);
 
     // Update localStorage whenever activeTab changes
     useEffect(() => {
@@ -38,7 +37,7 @@ const ScannerPage = () => {
 
             <Tab
                 tabs={tabs}
-                defaultTab="qr" // Set the default tab to 'qr'
+                // You can remove defaultTab as activeTab is being managed already
                 onTabChange={setActiveTab}
                 className="mb-6"
             />

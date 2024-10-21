@@ -25,35 +25,27 @@ export const stopCamera = (videoRef) => {
     }
 };
 
-export const processQRCode = (videoRef, canvasRef, setQrData, setIsScanning, setIsCameraOn) => {
+export const processQRCode = (videoRef, canvasRef, setData, setIsScanning) => {
     const canvas = canvasRef.current;
-    if (!canvas) {
-        console.error('Canvas element is not available');
-        return;
-    }
-    const context = canvas.getContext('2d');
-    if (!context) {
-        console.error('Failed to get canvas context');
-        return;
-    }
+    const context = canvas.getContext("2d");
 
-    const scan = () => {
+    const scanFrame = () => {
         if (!setIsScanning) return;
 
-        context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-        const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-        const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
+        if (videoRef.current && videoRef.current.readyState === 4) { // Check if video is ready
+            context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
 
-        if (qrCode) {
-            new Audio('/beep.mp3').play(); // Play beep sound
-            setQrData(qrCode.data); // Store QR Code data
-            setIsScanning(false);
-            setIsCameraOn(false);
-        } else {
-            requestAnimationFrame(scan);
+            if (qrCode) {
+                setData(qrCode.data);
+            }
         }
+
+        requestAnimationFrame(scanFrame); // Keep scanning
     };
-    requestAnimationFrame(scan);
+
+    requestAnimationFrame(scanFrame);
 };
 
 export const handleFileUpload = (event, canvasRef, setQrData) => {
