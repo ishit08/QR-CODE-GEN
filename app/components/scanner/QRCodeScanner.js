@@ -120,8 +120,7 @@ export default function QRCodeScanner() {
     };
 
     return (
-        <div className="scanner-component">
-            <h1 className="scanner-title">QR Code Scanner</h1>
+        <div className="scanner-component">       
 
             {qrData && (
                 <div className="scanner-overlay">

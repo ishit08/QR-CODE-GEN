@@ -129,8 +129,7 @@ export default function BarcodeScanner() {
 
     return (
         <div className="scanner-component">
-            <h1 className="scanner-title">Barcode Scanner</h1>
-
+           
             {barcodeData && (
                 <div className="scanner-overlay">
                     <div className="scanner-overlay-content">
