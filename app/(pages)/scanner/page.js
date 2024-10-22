@@ -10,10 +10,8 @@ import '../../styles/scanner.css';
 const ScannerPage = () => {
     // Initialize activeTab as 'qr' and check localStorage for previously saved value
     const [activeTab, setActiveTab] = useState(() => {
-        // Only check localStorage in the client-side environment
         if (typeof window !== 'undefined') {
             const savedTab = localStorage.getItem('activeTab');
-            // Return saved tab or 'qr' if none is found
             return savedTab ? savedTab : 'qr'; // Default to 'qr' if nothing is saved
         }
         return 'qr'; // Fallback for server-side rendering
@@ -31,13 +29,25 @@ const ScannerPage = () => {
         }
     }, [activeTab]);
 
+    // Function to close the camera
+    const closeCamera = () => {
+        console.log("Camera closed"); // Placeholder for actual camera closing logic
+        // Add logic to close the camera in the CameraScanner component
+    };
+
+    // Close camera when the component is unmounted or when activeTab changes
+    useEffect(() => {
+        return () => {
+            closeCamera(); // Close camera on unmount
+        };
+    }, []);
+
     return (
         <div className="scanner-container">
             <h1 className="scanner-title">Barcode and QR Code Scanner</h1>
 
             <Tab
                 tabs={tabs}
-                // You can remove defaultTab as activeTab is being managed already
                 onTabChange={setActiveTab}
                 className="mb-6"
             />

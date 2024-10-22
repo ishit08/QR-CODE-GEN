@@ -5,15 +5,16 @@ import { startBarcodeScanner, stopBarcodeScanner } from '../../utility/barcode/b
 const CameraScanner = ({ type, handleFileUpload }) => {
     const [cameraFacingMode, setCameraFacingMode] = useState('environment');
     const [videoLoaded, setVideoLoaded] = useState(false);
-    const [availableCameras, setAvailableCameras] = useState([]); // To store available cameras
-    const [currentCameraIndex, setCurrentCameraIndex] = useState(0); // Index of the current camera
-    const [isFlashOn, setIsFlashOn] = useState(false); // State to track flashlight status
-    const [hasFlash, setHasFlash] = useState(false); // State to track if device has a flashlight
+    const [availableCameras, setAvailableCameras] = useState([]);
+    const [currentCameraIndex, setCurrentCameraIndex] = useState(0);
+    const [isFlashOn, setIsFlashOn] = useState(false);
+    const [hasFlash, setHasFlash] = useState(false);
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const quaggaInitialized = useRef(false);
     const [data, setData] = useState(null);
 
+    // Callback to detect device and set camera
     const memoizedDetectDeviceAndSetCamera = useCallback(() => {
         detectDeviceAndSetCamera(setCameraFacingMode);
     }, []);
@@ -31,12 +32,11 @@ const CameraScanner = ({ type, handleFileUpload }) => {
             setHasFlash(hasFlashlight);
         };
 
-        getCameras(); // Detect available cameras
-        checkFlashlight(); // Check for flashlight availability
-
+        getCameras();
+        checkFlashlight();
         initCamera(videoRef, cameraFacingMode);
 
-        // Automatically start scanning based on the type
+        // Start scanning based on type
         if (type === 'QR Code') {
             processQRCode(videoRef, canvasRef, setData);
         } else if (type === 'Bar Code') {
@@ -53,6 +53,7 @@ const CameraScanner = ({ type, handleFileUpload }) => {
             videoElement.addEventListener('loadeddata', onLoadedData);
         }
 
+        // Cleanup function to stop camera and scanning
         return () => {
             stopCamera(videoRef);
             stopBarcodeScanner(quaggaInitialized);
@@ -62,27 +63,29 @@ const CameraScanner = ({ type, handleFileUpload }) => {
         };
     }, [cameraFacingMode, type, memoizedDetectDeviceAndSetCamera]);
 
+    // Switch camera function
     const switchCamera = () => {
         if (availableCameras.length > 1) {
-            const nextIndex = (currentCameraIndex + 1) % availableCameras.length; // Cycle through available cameras
+            const nextIndex = (currentCameraIndex + 1) % availableCameras.length;
             setCurrentCameraIndex(nextIndex);
-            setCameraFacingMode(availableCameras[nextIndex].facingMode); // Update camera facing mode
-            initCamera(videoRef, availableCameras[nextIndex].facingMode); // Reinitialize camera
+            const newCamera = availableCameras[nextIndex];
+            setCameraFacingMode(newCamera.facingMode);
+            initCamera(videoRef, newCamera.facingMode);
         }
     };
 
+    // Toggle flashlight function
     const toggleFlashlight = async () => {
-        if (!hasFlash) return; // Exit if device doesn't have flash
+        if (!hasFlash) return;
 
-        const stream = videoRef.current.srcObject; // Get current video stream
-        const videoTrack = stream.getVideoTracks()[0]; // Get the video track
-
-        const capabilities = videoTrack.getCapabilities(); // Get the track capabilities
+        const stream = videoRef.current.srcObject;
+        const videoTrack = stream.getVideoTracks()[0];
+        const capabilities = videoTrack.getCapabilities();
 
         if (capabilities.torch) {
-            const torchState = !isFlashOn; // Determine the new state
-            await videoTrack.applyConstraints({ advanced: [{ torch: torchState }] }); // Toggle the torch
-            setIsFlashOn(torchState); // Update state
+            const torchState = !isFlashOn;
+            await videoTrack.applyConstraints({ advanced: [{ torch: torchState }] });
+            setIsFlashOn(torchState);
         }
     };
 
@@ -104,21 +107,21 @@ const CameraScanner = ({ type, handleFileUpload }) => {
 
                 {videoLoaded && (
                     <>
-                        {/* Conditional Overlay: Square for QR Code, Rectangle for Bar Code */}
+                        {/* Conditional Overlay */}
                         {type === 'QR Code' ? (
                             <div className="scanner-square-overlay"></div>
                         ) : (
                             <div className="scanner-rectangle-overlay"></div>
                         )}
 
-                        {/* Scanner Line: Conditional animation for QR Code or Bar Code */}
+                        {/* Scanner Line */}
                         {type === 'QR Code' ? (
-                            <div className="scanner-line"></div>  // Vertical for QR Code
+                            <div className="scanner-line"></div>
                         ) : (
-                            <div className="scanner-line-horizontal"></div>  // Horizontal for Bar Code
+                            <div className="scanner-line-horizontal"></div>
                         )}
 
-                        {/* Upload Button Icon with Caption */}
+                        {/* Upload Button */}
                         <label htmlFor="file-upload" className="upload-icon">
                             <i className="fa-solid fa-upload"></i>
                             <input id="file-upload" type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />

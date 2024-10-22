@@ -24,7 +24,11 @@ const Tab = ({ tabs, defaultTab, onTabChange, className }) => {
       {tabs.map((tab) => (
         <button
           key={tab.value}
-          className={`px-4 py-2 ${activeTab === tab.value ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"}`}
+          className={`px-4 py-2 rounded transition-colors duration-300 ${
+            activeTab === tab.value
+              ? "bg-blue-500 text-white" // Active tab theme
+              : "bg-gray-200 text-gray-700"
+          }`}
           onClick={() => handleTabChange(tab.value)}
         >
           {tab.label}

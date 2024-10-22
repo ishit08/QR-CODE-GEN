@@ -1,12 +1,23 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Basic from "../../components/qrcode/basic/basic";
 import WithImage from "../../components/qrcode/withimage/WithImage";
-import Tab from '../../components/ui/tab'; // Import the reusable Tab component  // Import the reusable Tab component
+import TabComponent from '../../components/ui/tab'; // Rename the reusable Tab component
 
 const QRPage = () => {
   const [activeTab, setActiveTab] = useState('basic');
+
+  useEffect(() => {
+    const savedTab = localStorage.getItem('selectedTab');
+    if (savedTab) {
+      setActiveTab(savedTab);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('selectedTab', activeTab);
+  }, [activeTab]);
 
   const tabs = [
     { value: 'basic', label: 'Basic' },
@@ -19,9 +30,9 @@ const QRPage = () => {
   return (
     <div>
       {/* Tab Navigation */}
-      <Tab
+      <TabComponent
         tabs={tabs}
-        defaultTab="basic"
+        activeTab={activeTab}  // Pass the activeTab to the Tab component
         onTabChange={setActiveTab}
         className="mt-10"
       />
