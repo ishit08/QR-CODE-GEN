@@ -1,11 +1,11 @@
-"use client"; // Ensure this is a client component 
+"use client"; // Ensure this is a client component
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
-import { GoogleLoginButton } from '../../../components/ui/GoogleLoginButton'; 
-import { FacebookLoginButton } from '../../../components/ui/FacebookLoginButton'; 
+import { GoogleLoginButton } from "../../../components/ui/GoogleLoginButton";
+import { FacebookLoginButton } from "../../../components/ui/FacebookLoginButton";
 import {
   Card,
   CardContent,
@@ -14,11 +14,11 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../components/ui/card";
-import { signIn, getSession } from "next-auth/react"; // Import getSession
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { signIn, getSession } from "next-auth/react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useSession } from "next-auth/react";
-import '../../../styles/authpage.css'; // Import the shared CSS file
+import "../../../styles/authpage.css"; // Import the shared CSS file
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -28,35 +28,32 @@ const LoginPage = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
+  // Redirect if the user is already logged in
   useEffect(() => {
     if (session) {
-      router.push("/"); // Redirect to home if logged in
+      const timer = setTimeout(() => {
+        router.push("/");
+      }, 2000);
+
+      return () => clearTimeout(timer);
     }
   }, [session, router]);
 
+  // Handle credentials login
   const handleUserLogin = async (e) => {
-    e.preventDefault(); // Prevent page reload
-    setLoading(true); // Set loading state
+    e.preventDefault();
 
-    const res = await signIn('credentials', {
+    const res = await signIn("credentials", {
       redirect: false,
       email: email,
-      password: password
+      password: password,
     });
 
-    setLoading(false); // Reset loading state
-
     if (res.ok) {
-      // Retrieve the session which contains the token
-      const session = await getSession();
-      console.log("JWT Token:", session?.user?.token);
-
-      toast.success("Login Successfully done 😃!", {
+      toast.success("Login successful 😃!", {
         position: "top-center",
         autoClose: 2000,
-        onClose: () => {
-          router.push("/");
-        }
+        onClose: () => router.push("/"),
       });
     } else {
       setErrorMessage(res?.error ?? "Unable to login.");
@@ -65,38 +62,31 @@ const LoginPage = () => {
 
   // Handle Google login
   const handleGoogleLogin = async () => {
-    const res = await signIn("google", { redirect: false });
-    if (res.ok) {
-      toast.success("Google login successful!", {
-        position: "top-center",
-        autoClose: 2000,
-        onClose: () => {
-          router.push("/");
-        }
-      });
-    } else {
-      setErrorMessage(res?.error ?? "Unable to login with Google.");
-    }
+    toast.info("Redirecting to Google...", {
+      position: "top-center",
+      autoClose: 2000,
+    });
+
+    setTimeout(() => {
+      signIn("google", { callbackUrl: "/" }); // Trigger Google sign-in after the toast
+    }, 2000); // Wait for 2 seconds before redirecting
   };
 
   // Handle Facebook login
   const handleFacebookLogin = async () => {
-    const res = await signIn("facebook", { redirect: false });
-    if (res.ok) {
-      toast.success("Facebook login successful!", {
-        position: "top-center",
-        autoClose: 2000,
-        onClose: () => {
-          router.push("/");
-        }
-      });
-    } else {
-      setErrorMessage(res?.error ?? "Unable to login with Facebook.");
-    }
+    toast.info("Redirecting to Facebook...", {
+      position: "top-center",
+      autoClose: 2000,
+    });
+
+    setTimeout(() => {
+      signIn("facebook", { callbackUrl: "/"});
+    }, 2000); // Wait for 2 seconds before redirecting
   };
 
   return (
     <div className="login-container">
+      <ToastContainer />
       <div className="card-container">
         <div className="gradient-bg"></div>
         <div className="card-content">
@@ -106,13 +96,10 @@ const LoginPage = () => {
               <CardDescription>Sign in to your account</CardDescription>
             </CardHeader>
             <CardContent>
-              {errorMessage && (
-                <div className="error-message">{errorMessage}</div>
-              )}
+              {errorMessage && <div className="error-message">{errorMessage}</div>}
               <form onSubmit={handleUserLogin} className="space-y-6">
                 <Input
                   type="email"
-                  label="Email"
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -121,21 +108,23 @@ const LoginPage = () => {
                 />
                 <Input
                   type="password"
-                  label="Password"
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   className="input-field"
                 />
-                <Button
-                  type="submit"
-                  className="login-button"
-                >
+                <Button type="submit" className="login-button">
                   Login
                 </Button>
-                <GoogleLoginButton handleGoogleLogin={handleGoogleLogin} className="social-login-button"/>
-                <FacebookLoginButton handleFacebookLogin={handleFacebookLogin} className="social-login-button"/>
+                <GoogleLoginButton
+                  handleGoogleLogin={handleGoogleLogin}
+                  className="social-login-button"
+                />
+                <FacebookLoginButton
+                  handleFacebookLogin={handleFacebookLogin}
+                  className="social-login-button"
+                />
               </form>
             </CardContent>
             <CardFooter>
@@ -149,7 +138,6 @@ const LoginPage = () => {
           </Card>
         </div>
       </div>
-      <ToastContainer /> {/* Ensure this is added to show notifications */}
     </div>
   );
 };

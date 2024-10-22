@@ -138,3 +138,7 @@ button {
   text-overflow: ellipsis;
   /* Show ellipsis for overflow */
 }
+
+.Toastify__toast-container {
+  z-index: 999 !important; /* Ensure the toast is above everything */
+}
