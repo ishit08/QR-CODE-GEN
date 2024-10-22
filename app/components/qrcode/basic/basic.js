@@ -25,10 +25,10 @@ const Basic = () => {
 
   return (
     <QRLayout
-      title="QR Code Generator"
+      title="Inputs"
       onPrint={() => console.log("Print")}
       onDownload={() => console.log("Download")}
-      hasQRCodes={!!qrCode}
+      hasQRCodes={!qrCode}
     >
       {/* Pass child components to QRLayout */}
       <div>

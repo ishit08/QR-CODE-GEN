@@ -1,48 +1,58 @@
 const QRStyleSelector = ({ value, onChange }) => {
-    return (
-      <div className="mb-4">
-        <label className="block text-gray-700">QR Code Style:</label>
-        <select
-          value={value.dotsType}
-          onChange={(e) => onChange({ ...value, dotsType: e.target.value })}
-          className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-        >
-          <option value="square">Square</option>
-          <option value="dots">Dots</option>
-          <option value="rounded">Rounded</option>
-        </select>
-  
-        {/* Flex container for corner styles */}
-        <div className="flex justify-between mt-4">
-          {/* Corner Square Style Dropdown */}
-          <div className="flex-1 pr-2">
-            <label className="block text-gray-700">Corner Square Style:</label>
-            <select
-              value={value.cornersSquareType}
-              onChange={(e) => onChange({ ...value, cornersSquareType: e.target.value })}
-              className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-            >
-              <option value="square">Square</option>
-              <option value="extra-rounded">Extra Rounded</option>
-            </select>
-          </div>
-  
-          {/* Corner Dot Style Dropdown */}
-          <div className="flex-1 pl-2">
-            <label className="block text-gray-700">Corner Dot Style:</label>
-            <select
-              value={value.cornersDotType}
-              onChange={(e) => onChange({ ...value, cornersDotType: e.target.value })}
-              className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-            >
-              <option value="square">Square</option>
-              <option value="dot">Dot</option>
-            </select>
-          </div>
+  return (
+    <div className="mb-4">
+      <label className="block text-gray-700 mb-2">QR Code Style:</label>
+      <div className="flex gap-4">
+        {/* QR Code Dots Style Dropdown */}
+        <div className="flex-1">
+          <label className="block text-gray-700 mb-1">Dots Style:</label>
+          <select defaultValue='square' onChange={(e) => onChange({ ...value, dotsType: e.target.value })}
+            className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          >
+            <option value="square">
+           &#9724; Square
+            </option>
+            <option value="dots">
+             &#11044; Dots
+            </option>
+            <option value="rounded">
+          &#x25A2; Extra Rounded
+            </option>
+          </select>
+        </div>
+
+        {/* Corner Square Style Dropdown */}
+        <div className="flex-1">
+          <label className="block text-gray-700 mb-1">Corner Square Style:</label>
+          <select defaultValue='square' onChange={(e) => onChange({ ...value, cornersSquareType: e.target.value })}
+            className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          >
+            <option value="square">
+            &#9724; Square
+            </option>
+            <option value="extra-rounded">
+             &#x25A2; Extra Rounded
+            </option>
+          </select>
+        </div>
+
+        {/* Corner Dot Style Dropdown */}
+        <div className="flex-1">
+          <label className="block text-gray-700 mb-1">Corner Dot Style:</label>
+          <select defaultValue='square' onChange={(e) => onChange({ ...value, cornersDotType: e.target.value })}
+            className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          >
+            <option value="square">
+             &#9724; Square
+            </option>
+            <option value="dot">
+           &#11044; Dot
+            </option>
+          </select>
         </div>
       </div>
-    );
-  };
-  
-  export default QRStyleSelector;
-  
+    </div>
+  );
+};
+
+export default QRStyleSelector;
