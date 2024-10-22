@@ -1,113 +1,95 @@
 "use client";
 import { useState } from "react";
-import { useSession, signOut } from "next-auth/react"; // Import signOut for logging out
+import { useSession, signOut } from "next-auth/react"; 
 import Link from "next/link";
 import Image from "next/image";
-import { Skeleton } from "@mui/material"; // Import MUI Skeleton
+import styles from '../styles/Navbar.module.css'; // Import the CSS module
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false); // State to track if mobile menu is open
-  const { data: session, status } = useSession(); // Get session and loading status
-  const [isLoginHovered, setLoginHovered] = useState(false); // State for hover effect on login icon
-  const [isRegHovered, setRegHovered] = useState(false); // State for hover effect on register icon
+  const [isOpen, setIsOpen] = useState(false);
+  const { data: session, status } = useSession();
+  const [isLoginHovered, setLoginHovered] = useState(false);
+  const [isRegHovered, setRegHovered] = useState(false);
 
-  // Define link data for both desktop and mobile, including icons
   const links = [
     { href: "/", label: "Home", icon: "fa fa-home" },
     { href: "/prices", label: "Plans", icon: "fa fa-tags" },
-    //{ href: "/qr", label: "Qr", icon: "fa fa-qrcode" },
     { href: "/qrcode", label: "Qr Codes", icon: "fa fa-qrcode" },
     { href: "/barcode", label: "Bar Codes", icon: "fa fa-barcode" },
     { href: "/scanner", label: "Scanner", icon: "fa fa-expand" },
-     { href: "/contactus", label: "Contact Us", icon: "fa fa-envelope" },
+    { href: "/contactus", label: "Contact Us", icon: "fa fa-envelope" },
   ];
 
-  // Logout function
   const handleLogout = () => {
-    signOut(); // Use NextAuth's signOut function to log the user out
-    setIsOpen(false); // Close the mobile menu on logout
+    signOut();
+    setIsOpen(false);
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-gray-800 text-white z-50">
-      <div className="w-full mx-auto flex items-center justify-between pt-4 pb-4">
+    <nav className={styles.navbar}>
+      <div className={styles['navbar-container']}>
         {/* Logo Section */}
-        <div className="flex items-center pl-10 pr-10">
+        <div className={styles['logo-container']}>
           <Link href="/" className="flex items-center">
             <Image
               src="/images/logo.png"
               alt="CodeSnaps"
               width={40}
               height={40}
-              className="h-10 w-10"
+              className={styles['logo-image']}
             />
-            <span className="text-lg font-bold ml-2">CodeSnaps</span>
+            <span className={styles['logo-text']}>CodeSnaps</span>
           </Link>
         </div>
 
         {/* Menu links for desktop */}
-        <div className="hidden md:flex flex-grow justify-center space-x-6">
+        <div className={`${styles['menu-links']} hidden md:flex`}>
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="flex items-center space-x-2 hover:text-gray-300"
+              className={styles['menu-link']}
             >
-              <i className={link.icon} style={{ width: "1.25rem" }}></i> {/* Render the icon with fixed width */}
+              <i className={`${link.icon} ${styles.icon}`}></i>
               <span>{link.label}</span>
             </Link>
           ))}
         </div>
 
-        {/* User profile or login/register links - Move to right */}
-        <div className="flex items-center space-x-6">
-          {status === "loading" ? ( // Show loading state with MUI Skeleton
-            <>
-            <Skeleton width={100} height={35} sx={{ bgcolor: 'rgba(255, 255, 255, 0.2)' }}/>
-            <Skeleton width={100} height={35} sx={{ bgcolor: 'rgba(255, 255, 255, 0.2)' }}/>
-            </>
-          ) : status === "authenticated" ? (
+        {/* User profile or login/register links */}
+        <div className={styles['user-section']}>
+          {status === "authenticated" ? (
             <div className="flex items-center space-x-2">
-              <span>Hello, {session.user.name}</span> {/* Display user name */}
+              <span>Hello, {session.user.name}</span>
               <button
                 onClick={handleLogout}
-                className="flex items-center space-x-2 hover:text-gray-300"
+                className={`${styles['menu-link']} hover:text-gray-300`}
               >
-                <i className="fa fa-right-from-bracket" style={{ width: "1.25rem" }}></i> {/* Logout icon with fixed width */}
+                <i className={`fa fa-right-from-bracket ${styles.icon}`}></i>
                 <span>Logout</span>
               </button>
             </div>
           ) : (
-            <div className="hidden md:flex space-x-4 px-20">
+            <div className={`${styles['login-section']} hidden md:flex`}>
               <Link
                 href="/login"
-                className="flex items-center space-x-2 hover:text-gray-300"
+                className={styles['menu-link']}
                 onMouseEnter={() => setLoginHovered(true)}
                 onMouseLeave={() => setLoginHovered(false)}
               >
                 <i
-                  className={
-                    isLoginHovered
-                      ? "fa fa-person-walking-arrow-right"
-                      : "fa fa-right-from-bracket"
-                  }
-                  style={{ width: "1.25rem" }} // Fixed width for the icon
+                  className={`${isLoginHovered ? "fa fa-person-walking-arrow-right" : "fa fa-right-from-bracket"} ${styles.icon}`}
                 ></i>
                 <span className="flex-shrink-0">Login</span>
               </Link>
               <Link
                 href="/register"
-                className="flex items-center space-x-2 hover:text-gray-300"
+                className={styles['menu-link']}
                 onMouseEnter={() => setRegHovered(true)}
                 onMouseLeave={() => setRegHovered(false)}
               >
                 <i
-                  className={
-                    isRegHovered
-                      ? "fa fa-person-circle-plus"
-                      : "fa fa-user-plus"
-                  }
-                  style={{ width: "1.25rem" }} // Fixed width for the icon
+                  className={`${isRegHovered ? "fa fa-person-circle-plus" : "fa fa-user-plus"} ${styles.icon}`}
                 ></i>
                 <span>Register</span>
               </Link>
@@ -116,58 +98,53 @@ const Navbar = () => {
         </div>
 
         {/* Hamburger icon for mobile */}
-        <div className="md:hidden flex justify-end">
+        <div className="md:hidden">
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="focus:outline-none"
+            className={styles['hamburger-menu']}
             aria-expanded={isOpen}
             aria-label="Toggle mobile menu"
           >
-            {isOpen ? (
-              <span className="h-6 w-6">X</span> // Close icon
-            ) : (
-              <span className="h-6 w-6">☰</span> // Hamburger icon
-            )}
+            {isOpen ? <span className="h-6 w-6">X</span> : <span className="h-6 w-6">☰</span>}
           </button>
         </div>
       </div>
 
       {/* Mobile menu */}
-      <div className={`${isOpen ? "block" : "hidden"} md:hidden bg-gray-800`}>
-        <div className="flex flex-col items-center space-y-4 py-4">
-          {links.map((link) => (
+      <div
+        className={`${isOpen ? styles['mobile-menu-visible'] : styles['mobile-menu-hidden']} ${styles['mobile-menu']}`}
+      >
+        {links.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className={styles['menu-link']}
+            onClick={() => setIsOpen(false)}
+          >
+            <i className={link.icon}></i>
+            <span>{link.label}</span>
+          </Link>
+        ))}
+        {status !== "authenticated" && (
+          <>
             <Link
-              key={link.href}
-              href={link.href}
-              className="flex items-center space-x-2 hover:text-gray-300"
-              onClick={() => setIsOpen(false)} // Close the menu on link click
+              href="/login"
+              className={styles['menu-link']}
+              onClick={() => setIsOpen(false)}
             >
-              <i className={link.icon} style={{ width: "1.25rem" }}></i>
-              <span>{link.label}</span>
+              <i className="fa fa-right-from-bracket"></i>
+              <span>Login</span>
             </Link>
-          ))}
-          {/* Show login/register links only in mobile menu if not authenticated */}
-          {status !== "authenticated" && (
-            <>
-              <Link
-                href="/login"
-                className="flex items-center space-x-2 hover:text-gray-300"
-                onClick={() => setIsOpen(false)}
-              >
-                <i className="fa fa-right-from-bracket" style={{ width: "1.25rem" }}></i>
-                <span>Login</span>
-              </Link>
-              <Link
-                href="/register"
-                className="flex items-center space-x-2 hover:text-gray-300"
-                onClick={() => setIsOpen(false)}
-              >
-                <i className="fa fa-user-plus" style={{ width: "1.25rem" }}></i>
-                <span>Register</span>
-              </Link>
-            </>
-          )}
-        </div>
+            <Link
+              href="/register"
+              className={styles['menu-link']}
+              onClick={() => setIsOpen(false)}
+            >
+              <i className="fa fa-user-plus"></i>
+              <span>Register</span>
+            </Link>
+          </>
+        )}
       </div>
     </nav>
   );

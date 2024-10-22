@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         />
       </head>
-      <body className="flex flex-col min-h-screen">
+      <body className="">
         {/* Wrap the main layout with the SessionWrapper */}
         <SessionWrapper>
           {/* Navbar at the top */}

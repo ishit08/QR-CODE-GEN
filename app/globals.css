@@ -28,8 +28,7 @@ body {
 body {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  /* Ensure body is at least the height of the viewport */
+  
 }
 
 main {
@@ -66,20 +65,6 @@ button {
   cursor: pointer;
 }
 
-.navbar {
-  background-color: #ffffff; /* White background for navbar */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
-  padding: 16px; /* Padding for navbar */
-}
-
-.navbar a {
-  color: #333; /* Dark color for links */
-  transition: color 0.3s ease; /* Smooth transition for link color */
-}
-
-.navbar a:hover {
-  color: var(--link-hover); /* Change link color on hover */
-}
 
 @layer utilities {
   .text-balance {
@@ -128,15 +113,6 @@ button {
     margin-right: 0;
     /* Remove right margin on smaller screens */
   }
-}
-
-.navbar-link {
-  white-space: nowrap;
-  /* Prevent text from wrapping */
-  overflow: hidden;
-  /* Hide overflow */
-  text-overflow: ellipsis;
-  /* Show ellipsis for overflow */
 }
 
 .Toastify__toast-container {

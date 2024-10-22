@@ -1,3 +1,4 @@
+// utility/qr/QRUtils.js
 import QRCodeStyling from "qr-code-styling";
 
 const QRUtils = {

@@ -266,9 +266,3 @@
     box-sizing: border-box;
     z-index: 2;
 }
-.navbar {
-    position: relative;
-    /* or absolute/fixed as needed */
-    z-index: 100;
-    /* Higher than the overlay or other components */
-}

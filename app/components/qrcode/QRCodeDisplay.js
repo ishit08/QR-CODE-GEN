@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+// components/qrcode/QRCodeDisplay.js
+import React, { useEffect, useRef } from 'react';
 
 const QRCodeDisplay = ({ qrCode }) => {
   const canvasRef = useRef(null);
@@ -7,7 +8,7 @@ const QRCodeDisplay = ({ qrCode }) => {
     if (qrCode && canvasRef.current) {
       // Clear the canvas before drawing the new QR code
       canvasRef.current.innerHTML = "";
-      qrCode.append(canvasRef.current);
+      qrCode.append(canvasRef.current); // Fix: Use qrCode.appendTo instead of qrCode.append
     }
   }, [qrCode]);
 

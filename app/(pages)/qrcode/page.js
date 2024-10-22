@@ -9,22 +9,24 @@ const QRPage = () => {
   const [activeTab, setActiveTab] = useState('basic');
 
   useEffect(() => {
-    const savedTab = localStorage.getItem('selectedTab');
+    const savedTab = localStorage.getItem('QrTab');
     if (savedTab) {
       setActiveTab(savedTab);
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('selectedTab', activeTab);
+    localStorage.setItem('QrTab', activeTab);
   }, [activeTab]);
 
   const tabs = [
     { value: 'basic', label: 'Basic' },
-    { value: 'withimage', label: 'With Image' },
+    { value: 'withimage', label: 'Include Image' },
     { value: 'dynamic', label: 'Dynamic' },
     { value: 'bulk', label: 'Bulk' },
-    { value: 'encrypted', label: 'Encrypted' }
+    { value: 'encrypted', label: 'Encrypted' },
+     { value: 'visiting', label: 'Visiting Cards' },
+    { value: 'invitation', label: 'Invitation Cards' }
   ];
 
   return (
