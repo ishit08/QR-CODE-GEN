@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useSession, signOut } from "next-auth/react"; // Import signOut for logging out
 import Link from "next/link";
 import Image from "next/image";
+import { Skeleton } from "@mui/material"; // Import MUI Skeleton
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State to track if mobile menu is open
@@ -59,7 +60,12 @@ const Navbar = () => {
 
         {/* User profile or login/register links - Move to right */}
         <div className="flex items-center space-x-6">
-          {status === "authenticated" ? (
+          {status === "loading" ? ( // Show loading state with MUI Skeleton
+            <>
+            <Skeleton width={100} height={35} sx={{ bgcolor: 'rgba(255, 255, 255, 0.2)' }}/>
+            <Skeleton width={100} height={35} sx={{ bgcolor: 'rgba(255, 255, 255, 0.2)' }}/>
+            </>
+          ) : status === "authenticated" ? (
             <div className="flex items-center space-x-2">
               <span>Hello, {session.user.name}</span> {/* Display user name */}
               <button
