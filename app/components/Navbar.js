@@ -15,7 +15,7 @@ const Navbar = () => {
   const links = [
     { href: "/", label: "Home", icon: "fa fa-home" },
     { href: "/prices", label: "Plans", icon: "fa fa-tags" },
-    { href: "/qr", label: "Qr", icon: "fa fa-qrcode" },
+    //{ href: "/qr", label: "Qr", icon: "fa fa-qrcode" },
     { href: "/qrcode", label: "Qr Codes", icon: "fa fa-qrcode" },
     { href: "/barcode", label: "Bar Codes", icon: "fa fa-barcode" },
     { href: "/scanner", label: "Scanner", icon: "fa fa-expand" },
