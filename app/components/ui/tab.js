@@ -26,7 +26,7 @@ const Tab = ({ tabs, defaultTab, onTabChange, className }) => {
           key={tab.value}
           className={`px-4 py-2 rounded transition-colors duration-300 ${
             activeTab === tab.value
-              ? "bg-blue-500 text-white" // Active tab theme
+              ? "bg-blue-600 text-white" // Active tab theme
               : "bg-gray-200 text-gray-700"
           }`}
           onClick={() => handleTabChange(tab.value)}

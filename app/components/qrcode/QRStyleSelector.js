@@ -1,11 +1,11 @@
 const QRStyleSelector = ({ value, onChange }) => {
   return (
-    <div className="mb-4">
-      <label className="block text-gray-700 mb-2">QR Code Style:</label>
+    <div>
+      <label className="block text-gray-700 mb-2">Select QR Style:</label>
       <div className="flex gap-4">
         {/* QR Code Dots Style Dropdown */}
         <div className="flex-1">
-          <label className="block text-gray-700 mb-1">Dots Style:</label>
+          <label className="block text-gray-700 mb-1">Inside Style:</label>
           <select defaultValue='square' onChange={(e) => onChange({ ...value, dotsType: e.target.value })}
             className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           >
@@ -23,7 +23,7 @@ const QRStyleSelector = ({ value, onChange }) => {
 
         {/* Corner Square Style Dropdown */}
         <div className="flex-1">
-          <label className="block text-gray-700 mb-1">Corner Square Style:</label>
+          <label className="block text-gray-700 mb-1">Corner Style:</label>
           <select defaultValue='square' onChange={(e) => onChange({ ...value, cornersSquareType: e.target.value })}
             className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           >
@@ -38,7 +38,7 @@ const QRStyleSelector = ({ value, onChange }) => {
 
         {/* Corner Dot Style Dropdown */}
         <div className="flex-1">
-          <label className="block text-gray-700 mb-1">Corner Dot Style:</label>
+          <label className="block text-gray-700 mb-1">Corner Inside Style:</label>
           <select defaultValue='square' onChange={(e) => onChange({ ...value, cornersDotType: e.target.value })}
             className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           >

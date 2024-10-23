@@ -2,11 +2,10 @@
 import React, { useState } from 'react';
 import QRLayout from '../QRLayout'; // Adjust path as per your project structure
 import QRCodeDisplay from '../QRCodeDisplay';
-import TextInput from '../TextInput';
+import { Input } from '../../../components/ui/input';
 import QRStyleSelector from '../QRStyleSelector';
 import ColorPicker from '../ColorPicker';
-import GenerateButton from '../GenerateButton';
-import { handleGenerate, handleReset } from "../../../utility/qrcode/handleQrFunctions";
+import { handleGenerate, handleReset } from '../../../utility/qrcode/handleQrFunctions';
 
 const Basic = () => {
   const [text, setText] = useState("");
@@ -23,21 +22,53 @@ const Basic = () => {
   const [height, setHeight] = useState(300);
   const [qrCode, setQrCode] = useState(null);
 
+  const handleGenerateClick = () => {
+    handleGenerate({
+      data: text,
+      width,
+      height,
+      dotsType: qrStyle.dotsType,
+      darkColor: colors.dark,
+      lightColor: colors.light,
+      cornersSquareType: qrStyle.cornersSquareType,
+      cornersDotType: qrStyle.cornersDotType,
+      setQrCode,
+    });
+  };
+
+  const handleResetClick = () => {
+    handleReset({
+      setText,
+      setQrStyle,
+      setColors,
+      setWidth,
+      setHeight,
+      setQrCode,
+    });
+  };
+
   return (
     <QRLayout
-      title="Inputs"
+      title="Create QR Code"
+      onGenerate={handleGenerateClick}
+      onReset={handleResetClick}
       onPrint={() => console.log("Print")}
       onDownload={() => console.log("Download")}
-      hasQRCodes={!qrCode}
+      hasQRCodes={!!qrCode}
     >
-      {/* Pass child components to QRLayout */}
-      <div>
-        <TextInput value={text} onChange={setText} />
-        <div className="mb-4">
+     
+        
+        <div className="p-4 space-y-4">
+          <Input
+          type="text"
+          placeholder="Enter text or Url"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
           <QRStyleSelector value={qrStyle} onChange={setQrStyle} />
-          <ColorPicker colors={colors} onChange={setColors} />
-        </div>
-        <div className="flex justify-between mb-6">
+        <ColorPicker colors={colors} onChange={setColors} />
+        
+         <div className="flex justify-between mb-6">
           <div className="flex-1 pr-2">
             <label className="slider-label">Width: {width}px</label>
             <input
@@ -60,33 +91,8 @@ const Basic = () => {
               className="w-full h-2 bg-blue-200 rounded-lg appearance-none focus:outline-none"
             />
           </div>
-        </div>
-        <div className="flex justify-between mt-6">
-          <GenerateButton onClick={() => handleGenerate({
-            data: text,
-            width,
-            height,
-            dotsType: qrStyle.dotsType,
-            darkColor: colors.dark,
-            lightColor: colors.light,
-            cornersSquareType: qrStyle.cornersSquareType,
-            cornersDotType: qrStyle.cornersDotType,
-            setQrCode
-          })} />
-          <button onClick={() => handleReset({
-            setText,
-            setQrStyle,
-            setColors,
-            setWidth,
-            setHeight,
-            setQrCode
-          })} className="reset-button">
-            Reset
-          </button>
-        </div>
-      </div>
-
-      {/* QR Code display section */}
+         </div>
+        </div>   
       <div>
         <QRCodeDisplay qrCode={qrCode} />
       </div>

@@ -8,10 +8,10 @@ const ColorPicker = ({ colors, onChange }) => {
   
     return (
       <div className="mb-4">
-        <label className="block text-gray-700">Select Colors:</label>
+        <label className="block text-gray-700">Select Colors:(Please choose colors carefully to ensure the QR code remains easily scannable.)</label>
         <div className="flex space-x-4">
           <div>
-            <label>Dark Color:</label>
+            <label>QR Color:</label>
             <input
               type="color"
               value={colors.dark}
@@ -19,7 +19,7 @@ const ColorPicker = ({ colors, onChange }) => {
             />
           </div>
           <div>
-            <label>Light Color:</label>
+            <label>QR Background Color:</label>
             <input
               type="color"
               value={colors.light}

@@ -1,9 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import '../../styles/qrlayout.css'; // Import the CSS file
+// components/QRLayout.js
+import React, { useState } from 'react';
+import '../../styles/qrlayout.css';
+import GenerateButton from '../../components/ui/GenerateButton';
+import ResetButton from '../../components/ui/ResetButton';
 
-const QRLayout = ({ children, title, onPrint, onDownload, hasQRCodes }) => {
+const QRLayout = ({ children, title, onGenerate, onReset, onPrint, onDownload, hasQRCodes }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [actionType, setActionType] = useState(''); // 'print', 'download', or 'help'
+  const [actionType, setActionType] = useState('');
 
   const handleIconClick = (type) => {
     setActionType(type);
@@ -15,8 +18,6 @@ const QRLayout = ({ children, title, onPrint, onDownload, hasQRCodes }) => {
       onPrint(settings);
     } else if (actionType === 'download') {
       onDownload(settings);
-    } else if (actionType === 'help') {
-      // Handle help modal save if necessary
     }
     setIsModalOpen(false);
   };
@@ -25,7 +26,6 @@ const QRLayout = ({ children, title, onPrint, onDownload, hasQRCodes }) => {
 
   return (
     <div className="container">
-      {/* Input Section */}
       <div className="left-section">
         <div className="header">
           <h2 className="title">{title}</h2>
@@ -33,10 +33,12 @@ const QRLayout = ({ children, title, onPrint, onDownload, hasQRCodes }) => {
             <i className="fa fa-question-circle"></i>
           </button>
         </div>
-        {childrenArray[0]} {/* Input, Styles, Colors */}
+        {childrenArray[0]}
+        <div className="flex justify-between mt-6 space-x-6">
+          <GenerateButton onClick={onGenerate} />
+          <ResetButton onClick={onReset} />
+        </div>
       </div>
-
-      {/* QR Code Section */}
       <div className="right-section">
         <div className="header">
           <h2 className="title">QR Code</h2>
@@ -57,15 +59,8 @@ const QRLayout = ({ children, title, onPrint, onDownload, hasQRCodes }) => {
             </button>
           </div>
         </div>
-        {childrenArray[1]} {/* QR Code Display */}
+        {childrenArray[1]}
       </div>
-
-      {/* Uncomment the Modal if needed */}
-      {/* <SettingsModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleModalSave}
-      /> */}
     </div>
   );
 };
