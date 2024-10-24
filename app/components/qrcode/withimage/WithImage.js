@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import TextInput from "../TextInput";
+import QRLayout from '../QRLayout';
 import GenerateButton from "../GenerateButton";
 import QRCodeDisplay from "../QRCodeDisplay";
 import QRUtils from "../QRUtils";

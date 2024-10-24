@@ -13,6 +13,7 @@ const CameraScanner = ({ type, handleFileUpload }) => {
     const canvasRef = useRef(null);
     const quaggaInitialized = useRef(false);
     const [data, setData] = useState(null);
+    const [isScanning, setIsScanning] = useState(true);
 
     // Callback to detect device and set camera
     const memoizedDetectDeviceAndSetCamera = useCallback(() => {
@@ -38,7 +39,7 @@ const CameraScanner = ({ type, handleFileUpload }) => {
 
         // Start scanning based on type
         if (type === 'QR Code') {
-            processQRCode(videoRef, canvasRef, setData);
+            processQRCode(videoRef, canvasRef, setData, isScanning);
         } else if (type === 'Bar Code') {
             startBarcodeScanner(videoRef, quaggaInitialized, setData);
         }
@@ -61,7 +62,15 @@ const CameraScanner = ({ type, handleFileUpload }) => {
                 videoElement.removeEventListener('loadeddata', onLoadedData);
             }
         };
-    }, [cameraFacingMode, type, memoizedDetectDeviceAndSetCamera]);
+    }, [cameraFacingMode, type, memoizedDetectDeviceAndSetCamera, isScanning]);
+
+
+    // Function to stop scanning and camera
+    const stopScanning = () => {
+        setIsScanning(false); // Set scanning to false
+        stopCamera(videoRef); // Stop the camera
+        setData(null); // Clear the detected data
+    };
 
     // Switch camera function
     const switchCamera = () => {

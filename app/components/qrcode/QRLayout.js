@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import '../../styles/qrlayout.css'; // Import the CSS file
 
 const QRLayout = ({ children, title, onPrint, onDownload, hasQRCodes }) => {
@@ -57,7 +57,11 @@ const QRLayout = ({ children, title, onPrint, onDownload, hasQRCodes }) => {
             </button>
           </div>
         </div>
-        {childrenArray[1]} {/* QR Code Display */}
+
+        {/* QR Code Display */}
+        <div className="flex justify-center items-center mt-6"> {/* Tailwind to center QR code */}
+          {childrenArray[1]} {/* QR Code Display */}
+        </div>
       </div>
 
       {/* Uncomment the Modal if needed */}
