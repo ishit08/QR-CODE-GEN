@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import bcrypt from 'bcryptjs';
+import React, { useEffect } from 'react';
+import CryptoJS from 'crypto-js';
 
 const Encryptor = ({ text, onEncrypt }) => {
-  const [encryptedText, setEncryptedText] = useState('');
-
   useEffect(() => {
     if (text) {
-      const salt = bcrypt.genSaltSync(5);
-      const hashed = bcrypt.hashSync(text, salt);
-      setEncryptedText(hashed);
-      onEncrypt(hashed);  // Send the encrypted text to the parent component for QR generation
+      const secretKey = 'MySecretKey123'; // Secret key for encryption
+      const encryptedText = CryptoJS.AES.encrypt(text, secretKey).toString(); // Encrypt the text
+      onEncrypt(encryptedText);  // Send the encrypted text to the parent component for QR generation
     }
   }, [text, onEncrypt]);
 
