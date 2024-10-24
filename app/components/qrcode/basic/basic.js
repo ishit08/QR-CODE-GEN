@@ -66,33 +66,34 @@ const Basic = () => {
           onChange={(e) => setText(e.target.value)}
         />
           <QRStyleSelector value={qrStyle} onChange={setQrStyle} />
-        <ColorPicker colors={colors} onChange={setColors} />
-        
-         <div className="flex justify-between mb-6">
-          <div className="flex-1 pr-2">
-            <label className="slider-label">Width: {width}px</label>
-            <input
-              type="range"
-              min="100"
-              max="600"
-              value={width}
-              onChange={(e) => setWidth(e.target.value)}
-              className="w-full h-2 bg-blue-200 rounded-lg appearance-none focus:outline-none"
-            />
-          </div>
-          <div className="flex-1 pl-2">
-            <label className="slider-label">Height: {height}px</label>
-            <input
-              type="range"
-              min="100"
-              max="600"
-              value={height}
-              onChange={(e) => setHeight(e.target.value)}
-              className="w-full h-2 bg-blue-200 rounded-lg appearance-none focus:outline-none"
-            />
-          </div>
-         </div>
-        </div>   
+          <ColorPicker colors={colors} onChange={setColors} />
+        </div>
+        <div className="flex justify-between mt-6">
+          <GenerateButton onClick={() => handleGenerate({
+            data: text,
+            width,
+            height,
+            dotsType: qrStyle.dotsType,
+            darkColor: colors.dark,
+            lightColor: colors.light,
+            cornersSquareType: qrStyle.cornersSquareType,
+            cornersDotType: qrStyle.cornersDotType,
+            setQrCode
+          })} />
+          <button onClick={() => handleReset({
+            setText,
+            setQrStyle,
+            setColors,
+            setWidth,
+            setHeight,
+            setQrCode
+          })} className="reset-button">
+            Reset
+          </button>
+        </div>
+      </div>
+
+      {/* QR Code display section */}
       <div>
         <QRCodeDisplay qrCode={qrCode} />
       </div>

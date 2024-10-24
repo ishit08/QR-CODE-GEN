@@ -59,7 +59,11 @@ const QRLayout = ({ children, title, onGenerate, onReset, onPrint, onDownload, h
             </button>
           </div>
         </div>
-        {childrenArray[1]}
+
+        {/* QR Code Display */}
+        <div className="flex justify-center items-center mt-6"> {/* Tailwind to center QR code */}
+          {childrenArray[1]} {/* QR Code Display */}
+        </div>
       </div>
     </div>
   );
