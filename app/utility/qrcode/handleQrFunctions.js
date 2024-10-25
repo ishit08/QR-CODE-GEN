@@ -3,8 +3,7 @@ import QRUtils from '../../components/qrcode/QRUtils';
 
 export const handleGenerate = ({
   data,
-  width,
-  height,
+  size,
   dotsType,
   darkColor,
   lightColor,
@@ -14,8 +13,8 @@ export const handleGenerate = ({
 }) => {
   const options = {
     data,
-    width: parseInt(width),
-    height: parseInt(height),
+    width: parseInt(size),
+    height: parseInt(size),
     dotsOptions: {
       color: darkColor,
       type: dotsType,
@@ -33,6 +32,7 @@ export const handleGenerate = ({
     },
   };
 
+  console.log("QR Code options:", options);
   const qrCodeInstance = QRUtils.createQRCode(options);
   setQrCode(qrCodeInstance);
 };
@@ -41,18 +41,17 @@ export const handleReset = ({
   setText,
   setQrStyle,
   setColors,
-  setWidth,
-  setHeight,
+  setSize,
   setQrCode
 }) => {
+  console.log("Resetting QR code state");
   setText("");
   setQrStyle({
-    dotsType: "rounded",
+    dotsType: "square",
     cornersSquareType: "square",
-    cornersDotType: "dot",
+    cornersDotType: "square",
   });
   setColors({ dark: "#000000", light: "#ffffff" });
-  setWidth(300);
-  setHeight(300);
+  setSize(300);
   setQrCode(null);
 };

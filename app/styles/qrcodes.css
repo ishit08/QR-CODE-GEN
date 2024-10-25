@@ -1,0 +1,46 @@
+/* styles/qrcode.css */
+.frame-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    min-width: 300px;
+    min-height: 300px;
+}
+
+.frame-with-label {
+    position: relative;
+    padding: 20px;
+    background: #f8f8f8;
+    border: 10px solid #2b2b6f;
+    /* Dark border color similar to the one in the image */
+    border-radius: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    /* Frame shadow */
+    text-align: center;
+}
+
+.qr-code-content {
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.qr-label {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background-color: #2b2b6f;
+    /* Dark color matching the border */
+    color: #ffffff;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+}

@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from "next/navigation";
 import Basic from "../../components/qrcode/basic/basic";
 import WithImage from "../../components/qrcode/withimage/WithImage";
-import EncryptedQR from '../../components/qrcode/encrypted/EncryptedQR';
+import Encrypted from '../../components/qrcode/encrypted/Encrypted';
 import TabComponent from '../../components/ui/tab'; // Rename the reusable Tab component
 
 const QRPage = () => {
@@ -15,14 +15,17 @@ const QRPage = () => {
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push("/login") 
+      router.push("/login");
     }
   }, [status, router]);
 
   useEffect(() => {
     const savedTab = localStorage.getItem('QrTab');
-    if (savedTab) {
+    if (savedTab && tabs.some(tab => tab.value === savedTab)) {
       setActiveTab(savedTab);
+    } else {
+      setActiveTab(tabs[0].value);
+      localStorage.setItem('QrTab', tabs[0].value);
     }
   }, []);
 
@@ -36,10 +39,9 @@ const QRPage = () => {
     { value: 'dynamic', label: 'Dynamic' },
     { value: 'bulk', label: 'Bulk' },
     { value: 'encrypted', label: 'Encrypted' },
-     { value: 'visiting', label: 'Visiting Cards' },
+    { value: 'visiting', label: 'Visiting Cards' },
     { value: 'invitation', label: 'Invitation Cards' }
   ];
-
 
   if (status === 'authenticated') {
     return (
@@ -53,13 +55,13 @@ const QRPage = () => {
         />
 
         {/* Tab Content */}
-        <div className="p-4 bg-white rounded shadow min-h-[50] overflow-auto mx-4 bg-cyan-50 mb-10">
-          {activeTab === "basic" && <Basic />}
+        
+          {activeTab === "basic" && <Basic/>}
           {activeTab === "withimage" && <WithImage />}
           {activeTab === "dynamic" && <div>Dynamic Component</div>}
           {activeTab === "bulk" && <div>Bulk Component</div>}
-          {activeTab === "encrypted" && <EncryptedQR />}
-        </div>
+          {activeTab === "encrypted" && <Encrypted/>}
+      
       </div>
     );
   }
@@ -67,6 +69,5 @@ const QRPage = () => {
   // Return null or a loader while waiting for redirection
   return null;
 };
-
 
 export default QRPage;

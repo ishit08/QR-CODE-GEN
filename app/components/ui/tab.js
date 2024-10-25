@@ -20,7 +20,7 @@ const Tab = ({ tabs, defaultTab, onTabChange, className }) => {
   };
 
   return (
-    <div className={`flex justify-center gap-1 ${className || ''}`}>
+    <div className={`flex justify-center pb-5 w-full  gap-1 ${className || ''}`}>
       {tabs.map((tab) => (
         <button
           key={tab.value}

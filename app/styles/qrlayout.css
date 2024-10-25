@@ -2,13 +2,14 @@
 .container {
     display: flex;
     flex-direction: row;
-    gap: 1rem;
-    width: 100%;
-    max-width: 100%;
+    gap: 2rem;
+    width: calc(100% - 4rem);
+    max-width: calc(100% - 4rem);
     background: linear-gradient(to right, #ebf8ff, #e9d8fd);
     border-radius: 0.5rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
+    padding: 2rem;
+    margin: 2rem;
     align-items: stretch;
     /* Ensure equal height for left and right sections */
 }
@@ -22,7 +23,7 @@
 }
 
 .left-section {
-    flex: 0 0 64%;
+    flex: 0 0 63.5%;
 }
 
 .right-section {
@@ -36,11 +37,14 @@
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
+        width: calc(100% - 2rem);
+        max-width: calc(100% - 2rem);
     }
 
     .left-section,
     .right-section {
         flex: 0 0 100%;
+        width: 100%;
     }
 }
 
@@ -59,7 +63,6 @@
 
 .left-section .flex {
     justify-content: center;
-   
 }
 
 .right-section .icon-group {
@@ -122,7 +125,6 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     cursor: pointer;
-   
 }
 
 .reset-button-background {
@@ -179,7 +181,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-   
 }
 
 /* Styling for the button */
@@ -225,7 +226,6 @@
     color: #005cc8;
     transition: all 0.3s ease;
     transform: translateX(0);
-    
 }
 
 .generate-button:hover .generate-button-text {

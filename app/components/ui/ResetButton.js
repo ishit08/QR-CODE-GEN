@@ -8,8 +8,7 @@ const ResetButton = ({ onClick }) => (
       <span className="reset-button-background">
         <i className="fa-solid fa-rotate-left reset-button-icon"></i>
       </span>
-      <span className="reset-button-text">Reset</span>
-     
+      <span className="reset-button-text">Reset</span>     
     </button>
   </div>
 );

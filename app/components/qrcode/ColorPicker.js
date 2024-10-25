@@ -30,7 +30,7 @@ const ColorPicker = ({ colors = { dark: '#000000', light: '#ffffff' }, onChange 
       <label className="block text-gray-700">
         Select Colors: (Please choose colors carefully to ensure the QR code remains easily scannable.)
       </label>
-      <div className="flex mt-5 p-5 space-x-8 items-center rounded-lg shadow-md" style={{ background: 'linear-gradient(to right, #FFEEEE, #FFF5E1, #FFFFE0, #E0FFE0, #E0FFFF, #E1F5FF, #F5E1FF)' }}>
+      <div className="flex mt-5 p-5 space-x-8 items-center rounded-lg shadow-md" style={{ background: 'linear-gradient(to right, #FFA0A0, #FFD1A0, #FFF0A0, #C1FFA0, #70C0FF, #7060FF, #9060FF)' }}>
         {/* QR Color Picker */}
         <div className="flex items-center space-x-4 mt-0">
           <label className="text-lg font-semibold text-gray-700">QR Color:</label>

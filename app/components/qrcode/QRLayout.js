@@ -1,4 +1,3 @@
-// components/QRLayout.js
 import React, { useState } from 'react';
 import '../../styles/qrlayout.css';
 import GenerateButton from '../../components/ui/GenerateButton';
@@ -61,8 +60,8 @@ const QRLayout = ({ children, title, onGenerate, onReset, onPrint, onDownload, h
         </div>
 
         {/* QR Code Display */}
-        <div className="flex justify-center items-center mt-6"> {/* Tailwind to center QR code */}
-          {childrenArray[1]} {/* QR Code Display */}
+        <div className="flex justify-center items-center h-full">
+          {childrenArray[1]}
         </div>
       </div>
     </div>

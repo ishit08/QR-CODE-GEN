@@ -7,7 +7,7 @@ import GenerateButton from '../GenerateButton';
 import { handleGenerate, handleReset } from "../../../utility/qrcode/handleQrFunctions";
 import Encryptor from '../Encryptor';
 
-const Basic = () => {
+const Encrypted = () => {
   const [text, setText] = useState("");
   const [encryptedText, setEncryptedText] = useState("");
   const [isEncrypt, setIsEncrypt] = useState(false);
@@ -99,4 +99,4 @@ const Basic = () => {
   );
 };
 
-export default Basic;
+export default Encrypted;
