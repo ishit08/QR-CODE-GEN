@@ -3,13 +3,23 @@ import { useState } from "react";
 import { useSession, signOut } from "next-auth/react"; // Import signOut for logging out
 import Link from "next/link";
 import Image from "next/image";
-import { Skeleton } from "@mui/material"; // Import MUI Skeleton
+import { Skeleton, Avatar, Menu, MenuItem, Divider, ListItemText } from "@mui/material"; // Import MUI Skeleton
+
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State to track if mobile menu is open
   const { data: session, status } = useSession(); // Get session and loading status
   const [isLoginHovered, setLoginHovered] = useState(false); // State for hover effect on login icon
   const [isRegHovered, setRegHovered] = useState(false); // State for hover effect on register icon
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleAvatarClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   // Define link data for both desktop and mobile, including icons
   const links = [
@@ -26,6 +36,10 @@ const Navbar = () => {
   const handleLogout = () => {
     signOut(); // Use NextAuth's signOut function to log the user out
     setIsOpen(false); // Close the mobile menu on logout
+  };
+
+  const getInitials = (email) => {
+    return email.slice(0, 2).toUpperCase();
   };
 
   return (
@@ -47,7 +61,9 @@ const Navbar = () => {
 
         {/* Menu links for desktop */}
         <div className="hidden md:flex flex-grow justify-center space-x-6">
-          {links.map((link) => (
+          {status === "loading" ? ( // Show loading state with MUI Skeleton
+            <></>
+          ) : links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -60,25 +76,49 @@ const Navbar = () => {
         </div>
 
         {/* User profile or login/register links - Move to right */}
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-6 ">
           {status === "loading" ? ( // Show loading state with MUI Skeleton
-            <>
-            <Skeleton width={100} height={35} sx={{ bgcolor: 'rgba(255, 255, 255, 0.2)' }}/>
-            <Skeleton width={100} height={35} sx={{ bgcolor: 'rgba(255, 255, 255, 0.2)' }}/>
-            </>
+            <></>
           ) : status === "authenticated" ? (
-            <div className="flex items-center space-x-2">
-              <span>Hello, {session.user.name}</span> {/* Display user name */}
-              <button
-                onClick={handleLogout}
-                className="flex items-center space-x-2 hover:text-gray-300"
-              >
-                <i className="fa fa-right-from-bracket" style={{ width: "1.25rem" }}></i> {/* Logout icon with fixed width */}
-                <span>Logout</span>
-              </button>
+            <div className="flex items-center space-x-2 pl-10 pr-10">
+            <Avatar
+              sx={{ bgcolor: '#54cb5a82', cursor: 'pointer',  fontSize: '1rem' }}
+              onClick={handleAvatarClick} 
+            >
+              {getInitials(session.user.email)}
+            </Avatar>
+            {/* Dropdown Menu */}
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              PaperProps={{
+                style: {
+                  marginTop: '22px',
+                  minWidth: '200px',
+                  borderRadius: '10px'
+                },
+              }}
+            >
+              <MenuItem>
+                <ListItemText>
+                  <Link href="/profile"><i class="fa-solid fa-user" style={{ width: "1.25rem" }}></i> Profile</Link>
+                </ListItemText>
+              </MenuItem>
+              <Divider />
+              <MenuItem>
+                <ListItemText>
+                  <Link href="/settings"><i class="fa-solid fa-gear" style={{ width: "1.25rem" }}></i> Settings</Link>
+                </ListItemText>
+              </MenuItem>
+              <Divider />
+              <MenuItem onClick={handleLogout}>
+                <ListItemText><i className="fa fa-right-from-bracket" style={{ width: "1.25rem" }}></i> Log out</ListItemText>
+              </MenuItem>
+            </Menu>
             </div>
           ) : (
-            <div className="hidden md:flex space-x-4 px-20">
+            <div className="hidden md:flex space-x-4 pl-10 pr-10">
               <Link
                 href="/login"
                 className="flex items-center space-x-2 hover:text-gray-300"
