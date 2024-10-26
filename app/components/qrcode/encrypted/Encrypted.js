@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import QRLayout from '../QRLayout';
-import QRCodeDisplay from '../QRCodeDisplay';
+import QRLayout from '../common/QRLayout';
+import QRCodeDisplay from '../common/QRCodeDisplay';
 import QRStyleSelector from '../QRStyleSelector';
 import ColorPicker from '../ColorPicker';
 import GenerateButton from '../GenerateButton';

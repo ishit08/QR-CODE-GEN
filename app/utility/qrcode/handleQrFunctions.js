@@ -1,5 +1,5 @@
 // utility/qr/handleQrFunctions.js
-import QRUtils from '../../components/qrcode/QRUtils';
+import { GenerateQRStyle } from './QRUtils'; // Correct import statement
 
 export const handleGenerate = ({
   data,
@@ -33,8 +33,10 @@ export const handleGenerate = ({
   };
 
   console.log("QR Code options:", options);
-  const qrCodeInstance = QRUtils.createQRCode(options);
-  setQrCode(qrCodeInstance);
+
+  // Create an instance of QRCodeStyling
+  const qrCodeInstance = GenerateQRStyle(options);
+  setQrCode(qrCodeInstance); // Assuming setQrCode is a function to handle the QR code instance
 };
 
 export const handleReset = ({

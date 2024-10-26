@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import TextInput from "../TextInput";
-import QRLayout from '../QRLayout';
+import QRLayout from '../common/QRLayout';
 import GenerateButton from "../GenerateButton";
-import QRCodeDisplay from "../QRCodeDisplay";
-import QRUtils from "../QRUtils";
+import QRCodeDisplay from "../common/QRCodeDisplay";
+import { GenerateQRStyle } from "../../../utility/qrcode/QRUtils";
 import ColorPicker from "./ColorPicker";
 import PresetQRCode from "./PresetQRCode"; // Importing the PresetQRCode component
 

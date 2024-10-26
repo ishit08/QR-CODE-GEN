@@ -3,13 +3,13 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import BasicQr from '../../components/qr/basic/BasicQR.js'; // Import the QRGenerator component
+//import BasicQr from '../../components/qr/basic/BasicQR.js'; // Import the QRGenerator component
 import ImageQR from '../../components/qr/withimage/ImageQR.js';
 import DynamicQR from '../../components/qr/dynamic/DynamicQR.js';
 import BulkQR from '../../components/qr/bulk/BulkQR.js';
 
 const QRPage = () => {
-  const [activeTab, setActiveTab] = useState('basic');
+  const [activeTab, setActiveTab] = useState('withImage');
 
   // Load active tab from localStorage on component mount
   useEffect(() => {
@@ -27,8 +27,7 @@ const QRPage = () => {
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case 'basic':
-        return <BasicQr />; // Render the Basic QR code generator
+     
       case 'withImage':
         return <ImageQR />; // Use the ImageQR component here
       case 'dynamic':
@@ -50,13 +49,7 @@ const QRPage = () => {
 
       {/* Tabs - Make the layout mobile responsive */}
       <div className="flex flex-wrap justify-center space-y-2 md:space-y-0 md:space-x-4 mb-8 px-4">
-        <button
-          className={`py-2 px-4 w-full md:w-auto ${activeTab === 'basic' ? 'bg-blue-500 text-white' : 'bg-gray-300'} rounded`}
-          onClick={() => handleTabChange('basic')}
-        >
-          Basic
-        </button>
-        <button
+              <button
           className={`py-2 px-4 w-full md:w-auto ${activeTab === 'withImage' ? 'bg-blue-500 text-white' : 'bg-gray-300'} rounded`}
           onClick={() => handleTabChange('withImage')}
         >

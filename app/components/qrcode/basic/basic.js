@@ -1,11 +1,12 @@
 // components/qrcode/Basic.js
 import React, { useState } from 'react';
-import QRLayout from '../QRLayout'; // Adjust path as per your project structure
-import QRCodeDisplay from '../QRCodeDisplay';
+import QRLayout from '../common/QRLayout'; // Adjust path as per your project structure
+import QRCodeDisplay from '../common/QRCodeDisplay';
 import { Input } from '../../../components/ui/input';
 import QRStyleSelector from '../QRStyleSelector';
 import ColorPicker from '../ColorPicker';
 import { handleGenerate, handleReset } from '../../../utility/qrcode/handleQrFunctions';
+
 
 const Basic = () => {
   const [text, setText] = useState("");
@@ -78,7 +79,7 @@ const Basic = () => {
           <input
             type="range"
             min="100"
-            max="400"
+            max="300"
             value={size}
             onChange={(e) => setSize(parseInt(e.target.value))}
             className="w-full h-2 bg-blue-200 rounded-lg appearance-none focus:outline-none"
