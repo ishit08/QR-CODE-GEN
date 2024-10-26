@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from "next/navigation";
-import Basic from "../../components/qrcode/basic/basic";
+import Main from "../../components/qrcode/basic/main";
 import WithImage from "../../components/qrcode/withimage/WithImage";
 import Encrypted from '../../components/qrcode/encrypted/Encrypted';
 import TabComponent from '../../components/ui/tab'; // Rename the reusable Tab component
@@ -34,7 +34,7 @@ const QRPage = () => {
   }, [activeTab]);
 
   const tabs = [
-    { value: 'basic', label: 'Basic' },
+    { value: 'main', label: 'Basic' },
     { value: 'withimage', label: 'Include Image' },
     { value: 'dynamic', label: 'Dynamic' },
     { value: 'bulk', label: 'Bulk' },
@@ -56,7 +56,7 @@ const QRPage = () => {
 
         {/* Tab Content */}
         
-          {activeTab === "basic" && <Basic/>}
+          {activeTab === "basic" && <Main/>}
           {activeTab === "withimage" && <WithImage />}
           {activeTab === "dynamic" && <div>Dynamic Component</div>}
           {activeTab === "bulk" && <div>Bulk Component</div>}

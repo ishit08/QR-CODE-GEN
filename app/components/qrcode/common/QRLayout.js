@@ -1,55 +1,24 @@
-import React, { useState } from "react";
+// components/common/QRLayout.js
+import React from "react";
 import "../../../styles/qrlayout.css";
-import GenerateButton from "../../ui/GenerateButton";
-import ResetButton from "../../ui/ResetButton";
-import { Checkbox } from "../../ui/checkbox";
+import GenerateButton from "../../ui/GenerateButton"; // Adjust path as necessary
+import ResetButton from "../../ui/ResetButton"; // Adjust path as necessary
 
 const QRLayout = ({ children, title, onGenerate, onReset, onPrint, onDownload, hasQRCodes }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [actionType, setActionType] = useState("");
-  const [useAltLibrary, setUseAltLibrary] = useState(false);
-
-  const handleIconClick = (type) => {
-    setActionType(type);
-    setIsModalOpen(true);
-  };
-
-  const handleModalSave = (settings) => {
-    if (actionType === "print") {
-      onPrint(settings);
-    } else if (actionType === "download") {
-      onDownload(settings);
-    }
-    setIsModalOpen(false);
-  };
-
-  const childrenArray = React.Children.toArray(children);
-
   return (
     <div className="container flex">
-      <div className="left-section p-5">
-      <div className="header flex items-center justify-center relative mb-4">
-  <h2 className="title text-lg font-bold">{title}</h2>
-  <button onClick={() => handleIconClick("help")} className="icon-button absolute right-0">
-    <i className="fa fa-question-circle"></i>
-  </button>
-</div>
+      <div className="left-section p-5 flex flex-col">
+        <div className="header flex items-center justify-center relative mb-4">
+          <h2 className="title text-lg font-bold">{title}</h2>
+          <button onClick={onPrint} className="icon-button absolute right-0">
+            <i className="fa fa-question-circle"></i>
+          </button>
+        </div>
 
+        {/* Controls (children passed from Main.js) */}
+        {children}
 
-        {/* Checkbox Component */}
-     <div className="flex justify-start mb-4">
-  <Checkbox
-    id="use-alternate-library"
-    checked={useAltLibrary}
-    onChange={(e) => setUseAltLibrary(e.target.checked)}
-  >
-    Would you like to use a language other than English?
-  </Checkbox>
-</div>
-
-        {/* First child component */}
-        {childrenArray[0]}
-
+        {/* Generate and Reset buttons */}
         <div className="flex justify-between mt-6 space-x-6">
           <GenerateButton onClick={onGenerate} />
           <ResetButton onClick={onReset} />
@@ -61,14 +30,14 @@ const QRLayout = ({ children, title, onGenerate, onReset, onPrint, onDownload, h
           <h2 className="title text-lg font-bold">QR Code</h2>
           <div className="icon-group flex space-x-3">
             <button
-              onClick={() => handleIconClick("print")}
+              onClick={onPrint}
               className={`icon-button ${!hasQRCodes ? "disabled-button" : ""}`}
               disabled={!hasQRCodes}
             >
               <i className="fa fa-print"></i>
             </button>
             <button
-              onClick={() => handleIconClick("download")}
+              onClick={onDownload}
               className={`icon-button ${!hasQRCodes ? "disabled-button" : ""}`}
               disabled={!hasQRCodes}
             >
@@ -79,7 +48,10 @@ const QRLayout = ({ children, title, onGenerate, onReset, onPrint, onDownload, h
 
         {/* QR Code Display */}
         <div className="flex justify-center items-center h-full">
-          {childrenArray[1]}
+          <div id="qrcode" className="flex justify-center items-center h-full w-full border border-gray-300">
+            {/* Placeholder for QR Code */}
+            {/* The generated QR code will be appended here */}
+          </div>
         </div>
       </div>
     </div>

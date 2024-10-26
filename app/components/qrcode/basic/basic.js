@@ -1,38 +1,14 @@
 // components/qrcode/Basic.js
-import React, { useState } from 'react';
-import QRLayout from '../common/QRLayout'; // Adjust path as per your project structure
-import QRCodeDisplay from '../common/QRCodeDisplay';
-import { Input } from '../../../components/ui/input';
-import QRStyleSelector from '../QRStyleSelector';
-import ColorPicker from '../ColorPicker';
-import { handleGenerate, handleReset } from '../../../utility/qrcode/handleQrFunctions';
+import React from 'react';
+import QRLayout from '../common/QRLayout'; // Adjust path as necessary
+import QRCodeDisplay from '../common/QRCodeDisplay'; // Adjust path as necessary
+import { handleGenerate } from '../../../utility/qrcode/handleQrFunctions'; // Adjust path as necessary
+import { Input } from '../../../components/ui/input'; // Adjust path as necessary
+import QRStyleSelector from '../QRStyleSelector'; // Adjust path as necessary
+import ColorPicker from '../ColorPicker'; // Adjust path as necessary
 
-
-const Basic = () => {
-  const [text, setText] = useState("");
-  const [qrStyle, setQrStyle] = useState({
-    dotsType: "", // Default to empty to ensure user selection is needed
-    cornersSquareType: "",
-    cornersDotType: "",
-  });
-  const [colors, setColors] = useState({
-    dark: "#000000",
-    light: "#ffffff",
-  });
-  const [size, setSize] = useState(300);
-  const [qrCode, setQrCode] = useState(null);
-
+const Basic = ({ text, qrStyle, colors, size, qrCode, setQrCode, setQrStyle, setColors, setSize, setText }) => {
   const handleGenerateClick = () => {
-    console.log("Generating QR code with:", {
-      data: text,
-      size,
-      dotsType: qrStyle.dotsType,
-      darkColor: colors.dark,
-      lightColor: colors.light,
-      cornersSquareType: qrStyle.cornersSquareType,
-      cornersDotType: qrStyle.cornersDotType,
-    });
-
     handleGenerate({
       data: text,
       size,
@@ -45,30 +21,11 @@ const Basic = () => {
     });
   };
 
-  const handleResetClick = () => {
-    console.log("Resetting QR code state");
-    handleReset({
-      setText,
-      setQrStyle,
-      setColors,
-      setSize,
-      setQrCode,
-    });
-  };
-
   return (
-    <QRLayout
-      title="Create QR Code"
-      onPrint={() => console.log("Print")}
-      onDownload={() => console.log("Download")}
-      hasQRCodes={!!qrCode}
-      onGenerate={handleGenerateClick}
-      onReset={handleResetClick}
-    >
-      <div className="p-4 space-y-4">
+          <div className="p-4 space-y-4">
         <Input
           type="text"
-          placeholder="Enter text or Url"
+          placeholder="Enter text or URL"
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
@@ -86,11 +43,8 @@ const Basic = () => {
           />
         </div>
       </div>
-      {/* QR Code display section */}
-      <div>
-        <QRCodeDisplay qrCode={qrCode} />
-      </div>
-    </QRLayout>
+   
+  
   );
 };
 
