@@ -1,14 +1,17 @@
-// components/qrcode/QRCodeDisplay.js
 import React, { useEffect, useRef } from 'react';
 import '../../../styles/qrcodes.css';
+
 const QRCodeDisplay = ({ qrCode }) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
     if (qrCode && canvasRef.current) {
       // Clear the canvas before drawing the new QR code
-      canvasRef.current.innerHTML = "";
-      qrCode.append(canvasRef.current); 
+      canvasRef.current.innerHTML = "";  // Clear any previous QR code
+      qrCode.append(canvasRef.current);  // Append the new QR code
+    } else if (canvasRef.current) {
+      // Clear the canvas if qrCode is null (after reset)
+      canvasRef.current.innerHTML = "No QR code to display.";  // Show a placeholder message when no QR code
     }
   }, [qrCode]);
 

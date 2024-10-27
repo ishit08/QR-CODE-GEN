@@ -94,8 +94,8 @@ export default function Register() {
               </form>
               {/* Added the Google and Facebook login buttons outside the CardFooter */}
               <div className="flex flex-col space-y-4 mt-2">
-                <GoogleLoginButton handleGoogleLogin={() => signIn("google", { callbackUrl: "/" })} />
-                <FacebookLoginButton handleFacebookLogin={() => signIn("facebook", { callbackUrl: "/" })} />
+                <GoogleLoginButton  type="button" handleGoogleLogin={() => signIn("google", { callbackUrl: "/" })} />
+                <FacebookLoginButton  type="button"  handleFacebookLogin={() => signIn("facebook", { callbackUrl: "/" })} />
               </div>
             </CardContent>
           </Card>

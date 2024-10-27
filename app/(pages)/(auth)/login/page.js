@@ -117,11 +117,11 @@ const LoginPage = () => {
                 <Button type="submit" className="login-button">
                   Login
                 </Button>
-                <GoogleLoginButton
+                <GoogleLoginButton  type="button"
                   handleGoogleLogin={handleGoogleLogin}
                   className="social-login-button"
                 />
-                <FacebookLoginButton
+                <FacebookLoginButton  type="button"
                   handleFacebookLogin={handleFacebookLogin}
                   className="social-login-button"
                 />
