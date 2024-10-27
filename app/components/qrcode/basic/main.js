@@ -1,7 +1,7 @@
 // components/qrcode/Main.js
 import React, { useState } from 'react';
 import QRLayout from '../common/QRLayout'; // Adjust path as necessary
-import QRCodeDisplay from '../common/QRCodeDisplay'; // Adjust path as necessary
+
 import Basic from './basic'; // Adjust path as necessary
 import BasicNative from './basicNative'; // Adjust path as necessary
 import { Checkbox } from '../../ui/checkbox'; // Adjust path as necessary
@@ -55,7 +55,7 @@ const Main = () => {
         onReset={handleReset}
         onGenerate={handleGenerate} // Pass generate function to QRLayout
       >
-           <div className="flex justify-start mb-4">
+       <div className="flex justify-start mb-4">
         <Checkbox
           id="use-alternate-library"
           checked={useNative}
@@ -88,10 +88,9 @@ const Main = () => {
             setText={setText} 
           />
         )}
-      </QRLayout>
-
-      {/* QR Code Display integrated into QRLayout */}
-      <QRCodeDisplay qrCode={qrCode} />
+           {/* QR Code Display integrated into QRLayout */}
+    
+      </QRLayout>   
     </div>
   );
 };

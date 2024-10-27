@@ -26,23 +26,10 @@
 }
 
 .right-section {
-    flex: 0 0 35%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center content vertically */
-    align-items: center; /* Center content horizontally */
+    flex: 0 0 34%;
+
 }
 
-/* Ensure the QR Code display area is properly styled */
-#qrcode {
-    width: 100%; /* Full width of the right section */
-    height: 200px; /* Adjust height as needed */
-    border: 1px solid #ccc; /* Optional border for visibility */
-    display: flex; /* Flexbox for centering */
-    justify-content: center;
-    align-items: center;
-    margin: 10px 0; /* Space around the QR code display */
-}
 
 /* Media Query for Mobile Devices */
 @media (max-width: 768px) {
@@ -67,20 +54,16 @@
 }
 
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    position: relative;
+    margin-bottom: 1rem;
+    text-align: center;
+    /* Ensures the title is centered */
 }
 
 .left-section .flex {
     justify-content: center;
 }
 
-.right-section .icon-group {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-}
 
 .icon-button {
     color: #005cc8;
@@ -91,36 +74,167 @@
 }
 
 .icon-button:hover {
-    color: #2c5282; /* Darker blue */
+    color: #2c5282;
+    /* Darker blue */
+}
+.slider-label {
+    display: block;
+    color: #4a5568;
+    /* gray-700 */
+    font-weight: medium;
 }
 
-.icon-group {
+/* Wrapper for padding and alignment */
+.generate-button-wrapper {
+    padding: 0;
     display: flex;
-    gap: 1rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Styling for the Generate button */
+.generate-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.75rem;
+    font-weight: 500;
+    color: #005cc8;
+    /* Button text color */
+    transition: all 0.3s ease-out;
+    /* Smooth transition for hover effects */
+    border: 2px solid #005cc8;
+    /* Button border */
+    border-radius: 9999px;
+    /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Background span animation for Generate button */
+.generate-button-background {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: white;
+    background-color: #005cc8;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.generate-button:hover .generate-button-background {
+    transform: translateX(0);
+}
+
+/* Text styling for Generate button */
+.generate-button-text {
+    position: relative;
+    color: #005cc8;
+    transition: all 0.3s ease;
+    transform: translateX(0);
+}
+
+.generate-button:hover .generate-button-text {
+    transform: translateX(100%);
+    visibility: hidden;
+}
+
+/* Hidden text span for Generate button */
+.generate-button-text-hidden {
+    position: relative;
+    visibility: hidden;
+}
+
+/* SVG Icon Styling for Generate button */
+.generate-button-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+/* Wrapper for padding and alignment for Reset button */
+.reset-button-wrapper {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Styling for the Reset button */
+.reset-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.75rem;
+    /* Same padding as Generate button */
+    font-weight: 500;
+    color: #e53e3e;
+    transition: all 0.3s ease-out;
+    border: 2px solid #e53e3e;
+    border-radius: 9999px;
+    /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Background span animation for Reset button */
+.reset-button-background {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: white;
+    background-color: #e53e3e;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.reset-button:hover .reset-button-background {
+    transform: translateX(0);
+}
+
+/* Text styling for Reset button */
+.reset-button-text {
+    position: relative;
+    padding-left:12px;
+    padding-right: 12px;
+    color: #e53e3e;
+    transition: all 0.3s ease;
+    transform: translateX(0);
+}
+
+.reset-button:hover .reset-button-text {
+    transform: translateX(100%);
+    visibility: hidden;
+}
+
+/* Hidden text span for Reset button */
+.reset-button-text-hidden {
+    position: relative;
+    visibility: hidden;
+}
+
+/* Icon styling for Reset button */
+.reset-button-icon {
+    font-size: 1.5rem;
+}
+.qr-display-wrapper {
+    margin-top: -100px;
+    /* Moves the QR Code Display a bit up */
 }
 
 .disabled-button {
     opacity: 0.5;
     cursor: not-allowed;
-}
-
-.slider-label {
-    display: block;
-    color: #4a5568; /* gray-700 */
-    font-weight: medium;
-}
-
-/* Additional styles for the buttons */
-.scan-button {
-    margin-top: 20px; /* Space above the button */
-    padding: 10px 20px; /* Button padding */
-    background-color: #4CAF50; /* Green background */
-    color: white; /* White text */
-    border: none;
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer;
-}
-
-.scan-button:hover {
-    background-color: #45a049; /* Darker green on hover */
 }

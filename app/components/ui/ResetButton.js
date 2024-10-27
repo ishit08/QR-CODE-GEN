@@ -1,5 +1,5 @@
 // components/ResetButton.js
-// components/ResetButton.js
+
 import React from 'react';
 
 const ResetButton = ({ onClick }) => (

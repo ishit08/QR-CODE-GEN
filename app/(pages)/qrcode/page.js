@@ -56,7 +56,7 @@ const QRPage = () => {
 
         {/* Tab Content */}
         
-          {activeTab === "basic" && <Main/>}
+          {activeTab === "main" && <Main/>}
           {activeTab === "withimage" && <WithImage />}
           {activeTab === "dynamic" && <div>Dynamic Component</div>}
           {activeTab === "bulk" && <div>Bulk Component</div>}

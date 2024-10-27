@@ -1,16 +1,19 @@
 // components/common/QRLayout.js
-import React from "react";
+import React, { useState } from 'react';
 import "../../../styles/qrlayout.css";
 import GenerateButton from "../../ui/GenerateButton"; // Adjust path as necessary
 import ResetButton from "../../ui/ResetButton"; // Adjust path as necessary
+import QRCodeDisplay from './QRCodeDisplay'; // Adjust path as necessary
 
-const QRLayout = ({ children, title, onGenerate, onReset, onPrint, onDownload, hasQRCodes }) => {
+const QRLayout = ({ children, title, onGenerate, onReset, onPrint,onHelp, onDownload, hasQRCodes }) => {
+  const [qrCode, setQrCode] = useState(null);
+
   return (
     <div className="container flex">
       <div className="left-section p-5 flex flex-col">
         <div className="header flex items-center justify-center relative mb-4">
           <h2 className="title text-lg font-bold">{title}</h2>
-          <button onClick={onPrint} className="icon-button absolute right-0">
+          <button onClick={onHelp} className="icon-button absolute right-0">
             <i className="fa fa-question-circle"></i>
           </button>
         </div>
@@ -25,35 +28,35 @@ const QRLayout = ({ children, title, onGenerate, onReset, onPrint, onDownload, h
         </div>
       </div>
 
-      <div className="right-section p-5">
-        <div className="header flex justify-between">
-          <h2 className="title text-lg font-bold">QR Code</h2>
-          <div className="icon-group flex space-x-3">
-            <button
-              onClick={onPrint}
-              className={`icon-button ${!hasQRCodes ? "disabled-button" : ""}`}
-              disabled={!hasQRCodes}
-            >
-              <i className="fa fa-print"></i>
-            </button>
-            <button
-              onClick={onDownload}
-              className={`icon-button ${!hasQRCodes ? "disabled-button" : ""}`}
-              disabled={!hasQRCodes}
-            >
-              <i className="fa fa-download"></i>
-            </button>
-          </div>
-        </div>
+<div className="right-section p-5 flex flex-col">
+  {/* Header with QR Code title and action buttons */}
+  <div className="header flex items-center justify-center relative mb-4">
+    <h2 className="title text-lg font-bold">QR Code</h2>
+    <div className="icon-button absolute right-0 space-x-2">
+      <button
+        onClick={onPrint}
+        className={`icon-button ${!hasQRCodes ? "disabled-button" : ""}`}
+        disabled={!hasQRCodes}
+      >
+        <i className="fa fa-print"></i>
+      </button>
+      <button
+        onClick={onDownload}
+        className={`icon-button ${!hasQRCodes ? "disabled-button" : ""}`}
+        disabled={!hasQRCodes}
+      >
+        <i className="fa fa-download"></i>
+      </button>
+    </div>
+  </div>
 
-        {/* QR Code Display */}
-        <div className="flex justify-center items-center h-full">
-          <div id="qrcode" className="flex justify-center items-center h-full w-full border border-gray-300">
-            {/* Placeholder for QR Code */}
-            {/* The generated QR code will be appended here */}
-          </div>
-        </div>
-      </div>
+  {/* QR Code Display */}
+  <div className="flex-1 flex items-center justify-center mb-4 qr-display-wrapper">
+    <QRCodeDisplay qrCode={qrCode} />
+  </div>
+</div>
+
+
     </div>
   );
 };

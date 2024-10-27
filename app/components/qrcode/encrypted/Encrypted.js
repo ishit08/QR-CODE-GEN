@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import QRLayout from '../common/QRLayout';
 import QRCodeDisplay from '../common/QRCodeDisplay';
-import QRStyleSelector from '../QRStyleSelector';
-import ColorPicker from '../ColorPicker';
+import QRStyleSelector from '../../ui/QRStyleSelector';
+import ColorPicker from '../../ui/ColorPicker';
 import GenerateButton from '../GenerateButton';
 import { handleGenerate, handleReset } from "../../../utility/qrcode/handleQrFunctions";
 import Encryptor from '../Encryptor';
