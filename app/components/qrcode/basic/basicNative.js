@@ -1,51 +1,65 @@
-// components/qrcode/BasicNative.js
+// src/components/qrcode/native/BasicNative.js
 import React from 'react';
-import QRLayout from '../common/QRLayout'; // Adjust path as necessary
-import { generateQRCodeCanvas, applyQRStyle } from '../../../utility/qr/comman/qrUtils'; // Adjust path as necessary
+import Slider from '../../ui/Slider'; // Adjust path as necessary
+import ColorPicker from '../native/ColorPicker'; // Adjust path as necessary
+import QrStyleSelector from '../native/QrStyleSelector'; // Adjust path as necessary
 
-const BasicNative = ({ text, qrStyle, colors, size, setQrCode }) => {
-  const generateQRCode = async () => {
-    const qrCodeElement = document.getElementById("qrcode");
-    qrCodeElement.innerHTML = "";
-
-    if (text) {
-      const options = {
-        errorCorrectionLevel: "H",
-        margin: 1,
-        scale: 8,
-        color: {
-          dark: colors.dark,
-          light: colors.light,
-        },
-      };
-
-      try {
-        const canvas = await generateQRCodeCanvas(text, options);
-        qrCodeElement.appendChild(canvas);
-        setQrCode(canvas); // Assuming qrCode is the canvas
-
-        if (qrStyle !== "none") {
-          applyQRStyle(canvas, qrStyle, colors.dark, colors.light, "#ff0000", "#0000ff"); // Example colors
-        }
-      } catch (error) {
-        console.error("QR Code generation error:", error);
-      }
-    } else {
-      alert("Please enter some text or URL to generate the QR code.");
-    }
-  };
-
+const BasicNative = ({
+  text,
+  setText,
+  placeholder, 
+  className,  
+  style,
+  bnQrStyle,
+  setBnQrStyle,
+  primaryColor,
+  setPrimaryColor,
+  secondaryColor,
+  setSecondaryColor,
+  thirdColor,
+  setThirdColor,
+  fourthColor,
+  setFourthColor,
+  size,
+  setSize,
+}) => {
   return (
-    <QRLayout
-      title="Create QR Code"
-      onPrint={() => console.log("Print")} // Replace with actual print function
-      onDownload={() => console.log("Download")} // Replace with actual download function
-      hasQRCodes={!!setQrCode}
-      onGenerate={generateQRCode}
-      onReset={() => setQrCode(null)} // Implement reset logic
-    >
-      <div id="qrcode" className="flex justify-center items-center h-full"></div>
-    </QRLayout>
+    <div className="p-4 space-y-4">
+      {/* Text Input */}
+      <input
+        type="text"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder={placeholder}
+        className={className}
+        style={style}
+      />
+
+      {/* QR Style Selector */}
+      <QrStyleSelector bnQrStyle={bnQrStyle} setBnQrStyle={setBnQrStyle}  />
+
+      {/* Color Pickers */}
+      <ColorPicker
+        primaryColor={primaryColor}
+        setPrimaryColor={setPrimaryColor}
+        secondaryColor={secondaryColor}
+        setSecondaryColor={setSecondaryColor}
+        thirdColor={thirdColor}
+        setThirdColor={setThirdColor}
+        fourthColor={fourthColor}
+        setFourthColor={setFourthColor}
+        bnQrStyle={bnQrStyle}
+      />
+
+     {/* Slider for Size */}
+      <Slider
+        label="Size"
+        size={size}          // Correct prop name
+        setSize={setSize}    // Correct prop name
+        min={100}
+        max={300}
+      />
+    </div>
   );
 };
 

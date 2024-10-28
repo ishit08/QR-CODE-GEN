@@ -3,7 +3,7 @@ import TextInput from "../TextInput";
 import QRLayout from '../common/QRLayout';
 import GenerateButton from "../GenerateButton";
 import QRCodeDisplay from "../common/QRCodeDisplay";
-import { GenerateQRStyle } from "../../../utility/qrcode/QRUtils";
+import { GenerateQRStyle } from "../../../utility/qrcode/qrUtils";
 import ColorPicker from "./ColorPicker";
 import PresetQRCode from "./PresetQRCode"; // Importing the PresetQRCode component
 

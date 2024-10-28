@@ -1,5 +1,5 @@
 // utility/qr/handleQrFunctions.js
-import { GenerateQRStyle } from './QRUtils'; // Correct import statement
+import { GenerateQRStyle } from './qrUtils'; // Correct import statement
 
 export const handleGenerate = ({
   data,

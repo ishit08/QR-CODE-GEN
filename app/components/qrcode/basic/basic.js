@@ -4,7 +4,7 @@ import QRStyleSelector from '../../ui/QRStyleSelector'; // Adjust path as necess
 import ColorPicker from '../../ui/ColorPicker'; // Adjust path as necessary
 import Slider from '../../ui/Slider';
 
-const Basic = ({ text, qrStyle, colors, size, setQrStyle, setColors, setSize, setText, inputError, errorMessage }) => {
+const Basic = ({ text, qrStyle, colors, size, setQrStyle, setColors, setSize, setText }) => {
   return (
     
     <div className="p-4 space-y-4">

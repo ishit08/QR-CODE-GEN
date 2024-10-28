@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "../../../styles/qrlayout.css";
 import GenerateButton from "../../ui/GenerateButton"; // Adjust path as necessary
 import ResetButton from "../../ui/ResetButton"; // Adjust path as necessary
 import QRCodeDisplay from './QRCodeDisplay'; // Adjust path as necessary
 
-const QRLayout = ({ children, title, onGenerate, onReset, onPrint, onHelp, onDownload, hasQRCodes, qrCode }) => {
+const QRLayout = ({ children, title, onGenerate, onReset, onPrint, onHelp, onDownload, hasQRCodes,qrCode }) => {
 
   return (
     <div className="container flex">
