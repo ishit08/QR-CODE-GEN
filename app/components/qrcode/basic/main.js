@@ -18,6 +18,7 @@ const Main = () => {
   const [hasQRCodes, setHasQRCodes] = useState(false);
   const [inputError, setInputError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [imageFile, setImageFile] = useState(null);
 // Separate State for Basic QR Style
   const [basicQrStyle, setBasicQrStyle] = useState({
     dotsType: "square",
@@ -30,6 +31,10 @@ const Main = () => {
     light: "#ffffff",
   });
 
+  const [pmColors, setPMColors] = useState({
+  position: '#000000', // Default color for position marker
+  pixel: '#ffffff',    // Default color for pixel
+});
   // Separate State for BasicNative QR Style
   const [bnQrStyle, setBnQrStyle] =  useState("none");
 
@@ -117,7 +122,7 @@ const Main = () => {
     setInputError(false);
     setErrorMessage("");
     setHasQRCodes(false);
-
+    setImageFile(null);
     // Reset Basic QR Style
     setBasicQrStyle({
       dotsType: "square",
@@ -132,9 +137,7 @@ const Main = () => {
     // Reset BasicNative QR Style
     setBnQrStyle({
       bnQrStyle: "none"
-    });
-    
-   
+    });   
   };
 
   // Handlers for printing and downloading QR code
@@ -223,36 +226,37 @@ const Main = () => {
             bnQrStyle={bnQrStyle}
             setBnQrStyle={setBnQrStyle}
             // Color Props for BasicNative
-              primaryColor={primaryColor}
-      setPrimaryColor={setPrimaryColor}
-      secondaryColor={secondaryColor}
-      setSecondaryColor={setSecondaryColor}
-      thirdColor={thirdColor}
-      setThirdColor={setThirdColor}
-      fourthColor={fourthColor}
-      setFourthColor={setFourthColor}
+            primaryColor={primaryColor}
+            setPrimaryColor={setPrimaryColor}
+            secondaryColor={secondaryColor}
+            setSecondaryColor={setSecondaryColor}
+            thirdColor={thirdColor}
+            setThirdColor={setThirdColor}
+            fourthColor={fourthColor}
+            setFourthColor={setFourthColor}
           />
         ) : (
-          <Basic
-            // Common Props
-            text={text}
-            setText={setText}
-            placeholder={placeholder}
-            setPlaceholder={setPlaceholder}
-            className={className}
-            setClassName={setClassName}
-            style={style}
-            setStyle={setStyle}
-            size={size}
-            setSize={setSize}
-            // QR Style Props for Basic
-            qrStyle={basicQrStyle}
-            setQrStyle={setBasicQrStyle}
-            // Color Props for Basic
-            colors={basicColors}
-            setColors={setBasicColors}
-            // QR Code Setter
-            setQrCode={setQrCode}
+            <Basic
+              // Common Props
+              text={text}
+              setText={setText}
+              placeholder={placeholder}
+              setPlaceholder={setPlaceholder}
+              className={className}
+              setClassName={setClassName}
+              style={style}
+              setStyle={setStyle}
+              size={size}
+              setSize={setSize}
+              // QR Style Props for Basic
+              qrStyle={basicQrStyle}
+              setQrStyle={setBasicQrStyle}
+              // Color Props for Basic
+              colors={basicColors}
+              setColors={setBasicColors}
+              // QR Code Setter
+              setQrCode={setQrCode}
+              setImageFile={setImageFile}
           />
         )}
 

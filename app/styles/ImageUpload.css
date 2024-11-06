@@ -1,0 +1,62 @@
+/* ImageUpload.css */
+.image-upload-container {
+    margin: 0 auto;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin-top: 1rem;
+}
+
+.image-upload-inner {
+    display: flex;
+}
+
+.image-upload-box {
+    width: 100%;
+}
+
+.image-upload-content {
+    position: relative;
+    border: 2px dashed #1e40af;
+    border-radius: 0.5rem;
+    background-color: #f3f4f6;
+    display: flex;
+    justify-content: flex-start;
+    /* Align items to the start */
+    align-items: center;
+    /* Vertically center the items */
+    height: 100%;
+    width: 100%;
+}
+
+.image-upload-placeholder {
+    color: #9ca3af;
+    font-weight: normal;
+    white-space: nowrap;
+    display: inline-block;
+    cursor: pointer;
+    margin-left: 8px;
+    /* Add margin between icon and placeholder text */
+}
+
+.uploaded-image-name {
+    position: absolute;
+    bottom: 0.75rem;
+    left: 8%;
+    transform: translateX(-8%);
+   
+}
+
+.uploaded-image-text {
+    color: #4b5563;
+    font-size: 0.875rem;
+}
+
+.image-upload-input {
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    position: absolute;
+    z-index: 10;
+    /* Ensure input stays above other elements */
+    cursor: pointer;
+}

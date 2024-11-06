@@ -1,50 +1,62 @@
-// components/ColorPicker.js
 import { useRef, useState } from 'react';
 import { FaPalette } from 'react-icons/fa';
+import '../../styles/ColorPicker.css'
 
-const ColorPicker = ({ colors = { dark: '#000000', light: '#ffffff' }, onChange }) => {
+const ColorPicker = ({ colors, pmColors = { position: '#000000', pixel: '#ffffff' }, onChange }) => {
   const [iconHoverColorDark, setIconHoverColorDark] = useState(null);
   const [iconHoverColorLight, setIconHoverColorLight] = useState(null);
+  const [iconHoverColorPosition, setIconHoverColorPosition] = useState(null);
+  const [iconHoverColorPixel, setIconHoverColorPixel] = useState(null);
+
+  // Refs for color inputs
   const darkColorInputRef = useRef(null);
   const lightColorInputRef = useRef(null);
+  const positionColorInputRef = useRef(null);
+  const pixelColorInputRef = useRef(null);
 
-  // Function to trigger the QR color input click
+  // Function to trigger QR code color input click
   const handleDarkColorIconClick = () => {
     darkColorInputRef.current.click();
   };
 
-  // Function to trigger the background color input click
+  // Function to trigger QR background color input click
   const handleLightColorIconClick = () => {
     lightColorInputRef.current.click();
   };
 
+  // Function to trigger position color input click
+  const handlePositionColorIconClick = () => {
+    positionColorInputRef.current.click();
+  };
+
+  // Function to trigger pixel color input click
+  const handlePixelColorIconClick = () => {
+    pixelColorInputRef.current.click();
+  };
+
+  // Handle color changes for QR code and position/pixel
   const handleColorChange = (key, value) => {
     onChange({
       ...colors,
+      ...pmColors,
       [key]: value,
     });
   };
 
   return (
-    <div className="mb-4">
-      <label className="block text-gray-700">
-        Select Colors: (Please choose colors carefully to ensure the QR code remains easily scannable.)
-      </label>
-      <div
-  className="flex mt-5 p-5 space-x-8 items-center rounded-lg shadow-md"
-  style={{
-    background: 'linear-gradient(to right, #e0e0e0, #b0b0b0, #808080, #505050, #303030)'
-  }}
->
+    <div className="color-picker-container">
+      <label className="block text-gray-700">Select Colors for QR and Position/Pixel:</label>
+      
+      {/* Combined Gradient Container */}
+      <div className="color-picker-grid">
         {/* QR Color Picker */}
-        <div className="flex items-center space-x-4 mt-0">
+        <div className="color-picker-item">
           <label className="text-lg font-semibold text-gray-700">QR Color:</label>
           <FaPalette
             onClick={handleDarkColorIconClick}
-            className="text-4xl cursor-pointer transition-colors duration-300 ease-in-out"
+            className="color-icon"
             style={{
               color: iconHoverColorDark || colors.dark,
-              padding: '5px',
             }}
             onMouseEnter={() => setIconHoverColorDark('#4A90E2')}
             onMouseLeave={() => setIconHoverColorDark(null)}
@@ -54,20 +66,18 @@ const ColorPicker = ({ colors = { dark: '#000000', light: '#ffffff' }, onChange 
             ref={darkColorInputRef}
             value={colors.dark}
             onChange={(e) => handleColorChange('dark', e.target.value)}
-            className="absolute top-0 left-0 opacity-0 w-0 h-0"
-            style={{ position: 'absolute' }}
+            className="color-input"
           />
         </div>
 
         {/* QR Background Color Picker */}
-        <div className="flex items-center space-x-4">
+        <div className="color-picker-item">
           <label className="text-lg font-semibold text-gray-100">QR Background Color:</label>
           <FaPalette
             onClick={handleLightColorIconClick}
-            className="text-4xl cursor-pointer transition-colors duration-300 ease-in-out"
+            className="color-icon"
             style={{
               color: iconHoverColorLight || colors.light,
-              padding: '5px',
             }}
             onMouseEnter={() => setIconHoverColorLight('#4A90E2')}
             onMouseLeave={() => setIconHoverColorLight(null)}
@@ -77,8 +87,49 @@ const ColorPicker = ({ colors = { dark: '#000000', light: '#ffffff' }, onChange 
             ref={lightColorInputRef}
             value={colors.light}
             onChange={(e) => handleColorChange('light', e.target.value)}
-            className="absolute top-0 left-0 opacity-0 w-0 h-0"
-            style={{ position: 'absolute' }}
+            className="color-input"
+          />
+        </div>
+
+        {/* Position Marker Color Picker */}
+        <div className="color-picker-item">
+          <label className="text-lg font-semibold text-gray-700">Position Marker Color:</label>
+          <FaPalette
+            onClick={handlePositionColorIconClick}
+            className="color-icon"
+            style={{
+              color: iconHoverColorPosition || pmColors?.position,
+            }}
+            onMouseEnter={() => setIconHoverColorPosition('#4A90E2')}
+            onMouseLeave={() => setIconHoverColorPosition(null)}
+          />
+          <input
+            type="color"
+            ref={positionColorInputRef}
+            value={pmColors?.position || '#000000'}
+            onChange={(e) => handleColorChange('position', e.target.value)}
+            className="color-input"
+          />
+        </div>
+
+        {/* Pixel Color Picker */}
+        <div className="color-picker-item">
+          <label className="text-lg font-semibold text-gray-100">Pixel Color:</label>
+          <FaPalette
+            onClick={handlePixelColorIconClick}
+            className="color-icon"
+            style={{
+              color: iconHoverColorPixel || pmColors?.pixel,
+            }}
+            onMouseEnter={() => setIconHoverColorPixel('#4A90E2')}
+            onMouseLeave={() => setIconHoverColorPixel(null)}
+          />
+          <input
+            type="color"
+            ref={pixelColorInputRef}
+            value={pmColors?.pixel || '#ffffff'}
+            onChange={(e) => handleColorChange('pixel', e.target.value)}
+            className="color-input"
           />
         </div>
       </div>
