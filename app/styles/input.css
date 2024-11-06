@@ -9,11 +9,14 @@
     border: 2px solid #6b7280;
     padding-left: 0.75rem;
     outline: none;
+    position: relative;
+    /* Ensure proper positioning for the label */
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .input-field::placeholder {
     color: transparent;
+    /* Keep placeholder transparent */
 }
 
 .input-field:focus {
@@ -24,31 +27,49 @@
 .input-label {
     position: absolute;
     left: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.875rem;
+    top: .75rem;
+    /* Start position visible */
+    font-size: 1rem;
     color: #6b7280;
     background-color: white;
     padding-left: 0.25rem;
     padding-right: 0.25rem;
-    transition: all 0.2s;
+    transition: all 0.3s ease-in-out;
+    /* Smoother transition */
+    cursor: pointer;
+    pointer-events: none;
+    /* Disable interaction in default state */
+    z-index: 0;
+    /* Ensure label is below the input field initially */
 }
 
+/* Ensure the label remains visible if the input is not focused and has no text */
 .peer-placeholder-shown+.input-label {
-    top: 50%;
-    transform: translateY(-50%);
+    top: 1rem;
+    /* Keep it in the default position */
     font-size: 1rem;
     color: #6b7280;
 }
 
+/* When the input is focused or when text is entered, move the label above */
 .peer:focus+.input-label,
 .peer:not(:placeholder-shown)+.input-label {
     top: -0.5rem;
+    /* Move label above the input */
     transform: translateY(0);
+    /* Smooth transition effect */
     color: #0ea5e9;
     font-size: 0.875rem;
     background-color: white;
     padding-left: 0.25rem;
     padding-right: 0.25rem;
+    pointer-events: all;
+    /* Re-enable interaction when label is above input */
+    z-index: 1;
+    /* Ensure label is above the input when focused */
 }
 
+/* Change cursor to hand on hover */
+.input-label:hover {
+    cursor: pointer;
+}

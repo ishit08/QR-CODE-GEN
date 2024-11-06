@@ -16,7 +16,7 @@ const Input = React.forwardRef(({ className, type, placeholder, label, ...props 
       />
       <label
         htmlFor={label}
-        className="input-label"
+        className="input-label cursor-pointer"
       >
         {placeholder}
       </label>
