@@ -1,5 +1,31 @@
 import QRCode from 'qrcode';
 import QRCodeStyling from "qr-code-styling";
+
+export const GenerateQRStyle = (options) => {
+  console.log(options);
+  const qrCode = new QRCodeStyling({
+    width: options.width,
+    height: options.height,
+    data: options.data,
+    dotsOptions: {
+      color: options.dotsOptions?.color || "#000000", // Default color if not provided
+      type: options.dotsOptions?.type || "square", // Default type if not provided
+    },
+    backgroundOptions: {
+      color: options.backgroundOptions?.color || "#ffffff", // Default background color
+    },
+    cornersSquareOptions: {
+      color: options.cornersSquareOptions?.color || options.dotsOptions?.color || "#000000",
+      type: options.cornersSquareOptions?.type || "square", // Default type if not provided
+    },
+    cornersDotOptions: {
+      color: options.cornersDotOptions?.color || options.dotsOptions?.color || "#000000",
+      type: options.cornersDotOptions?.type || "square", // Default type if not provided
+    },
+    image: options.image || null, // Ensure image is handled
+  });
+  return qrCode;
+};
 // Function to generate QR code canvas using the `qrcode` library
 export const GenerateQRNative = (text, options) => {
  return new Promise((resolve, reject) => {
@@ -33,30 +59,7 @@ export const GenerateQRNative = (text, options) => {
   });
 };
 // Function to generate QR code using qr-code-styling library
-export const GenerateQRStyle = (options) => {
-  const qrCode = new QRCodeStyling({
-    width: options.width,
-    height: options.height,
-    data: options.data,
-    dotsOptions: {
-      color: options.dotsOptions?.color || "#000000", // Default color if not provided
-      type: options.dotsOptions?.type || "square", // Default type if not provided
-    },
-    backgroundOptions: {
-      color: options.backgroundOptions?.color || "#ffffff", // Default background color
-    },
-    cornersSquareOptions: {
-      color: options.cornersSquareOptions?.color || options.dotsOptions?.color || "#000000",
-      type: options.cornersSquareOptions?.type || "square", // Default type if not provided
-    },
-    cornersDotOptions: {
-      color: options.cornersDotOptions?.color || options.dotsOptions?.color || "#000000",
-      type: options.cornersDotOptions?.type || "square", // Default type if not provided
-    },
-    image: options.image || null, // Ensure image is handled
-  });
-  return qrCode;
-};
+
 export const applyQRStyle = (canvas, qrStyle, primaryColor, secondaryColor, thirdColor, fourthColor) => {
  
  

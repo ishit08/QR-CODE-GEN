@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { FaPalette } from 'react-icons/fa';
 import '../../styles/ColorPicker.css'
 
-const ColorPicker = ({ colors, pmColors = { position: '#000000', pixel: '#ffffff' }, onChange }) => {
+const ColorPicker = ({ colors, onChange }) => {
   const [iconHoverColorDark, setIconHoverColorDark] = useState(null);
   const [iconHoverColorLight, setIconHoverColorLight] = useState(null);
   const [iconHoverColorPosition, setIconHoverColorPosition] = useState(null);
@@ -37,8 +37,7 @@ const ColorPicker = ({ colors, pmColors = { position: '#000000', pixel: '#ffffff
   // Handle color changes for QR code and position/pixel
   const handleColorChange = (key, value) => {
     onChange({
-      ...colors,
-      ...pmColors,
+      ...colors,     
       [key]: value,
     });
   };
@@ -51,7 +50,7 @@ const ColorPicker = ({ colors, pmColors = { position: '#000000', pixel: '#ffffff
       <div className="color-picker-grid">
         {/* QR Color Picker */}
         <div className="color-picker-item">
-          <label className="text-lg font-semibold text-gray-700">QR Color:</label>
+          <label className="text-lg font-semibold text-gray-700">QR Dot Color:</label>
           <FaPalette
             onClick={handleDarkColorIconClick}
             className="color-icon"
@@ -93,12 +92,12 @@ const ColorPicker = ({ colors, pmColors = { position: '#000000', pixel: '#ffffff
 
         {/* Position Marker Color Picker */}
         <div className="color-picker-item">
-          <label className="text-lg font-semibold text-gray-700">Position Marker Color:</label>
+          <label className="text-lg font-semibold text-gray-700">Corner Color:</label>
           <FaPalette
             onClick={handlePositionColorIconClick}
             className="color-icon"
             style={{
-              color: iconHoverColorPosition || pmColors?.position,
+              color: iconHoverColorPosition || colors.position,
             }}
             onMouseEnter={() => setIconHoverColorPosition('#4A90E2')}
             onMouseLeave={() => setIconHoverColorPosition(null)}
@@ -106,7 +105,7 @@ const ColorPicker = ({ colors, pmColors = { position: '#000000', pixel: '#ffffff
           <input
             type="color"
             ref={positionColorInputRef}
-            value={pmColors?.position || '#000000'}
+            value={colors.position || '#000000'}
             onChange={(e) => handleColorChange('position', e.target.value)}
             className="color-input"
           />
@@ -114,12 +113,12 @@ const ColorPicker = ({ colors, pmColors = { position: '#000000', pixel: '#ffffff
 
         {/* Pixel Color Picker */}
         <div className="color-picker-item">
-          <label className="text-lg font-semibold text-gray-100">Pixel Color:</label>
+          <label className="text-lg font-semibold text-gray-100">Corner Inside Color:</label>
           <FaPalette
             onClick={handlePixelColorIconClick}
             className="color-icon"
             style={{
-              color: iconHoverColorPixel || pmColors?.pixel,
+              color: iconHoverColorPixel || colors.pixel,
             }}
             onMouseEnter={() => setIconHoverColorPixel('#4A90E2')}
             onMouseLeave={() => setIconHoverColorPixel(null)}
@@ -127,7 +126,7 @@ const ColorPicker = ({ colors, pmColors = { position: '#000000', pixel: '#ffffff
           <input
             type="color"
             ref={pixelColorInputRef}
-            value={pmColors?.pixel || '#ffffff'}
+            value={colors.pixel || '#ffffff'}
             onChange={(e) => handleColorChange('pixel', e.target.value)}
             className="color-input"
           />

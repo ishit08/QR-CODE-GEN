@@ -17,8 +17,8 @@ const PresetQRCode = ({ onPresetClick }) => {
   };
 
   return (
-    <div className="mb-4 ">
-      <h3 className="text-gray-700 mb-2">Select Any:</h3>
+    <div>
+   
       <Image
         src="/imagesframe/facebook.png" // Use the path relative to the public folder
         alt="Facebook"

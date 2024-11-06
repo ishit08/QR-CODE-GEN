@@ -41,8 +41,8 @@
 .uploaded-image-name {
     position: absolute;
     bottom: 0.75rem;
-    left: 8%;
-    transform: translateX(-8%);
+    left: 12%;
+    transform: translateX(-15%);
    
 }
 

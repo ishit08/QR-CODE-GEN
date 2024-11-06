@@ -59,6 +59,7 @@ const Basic = ({ text, qrStyle, colors, size, setQrStyle, setColors, setSize, se
         {/* Right section (20% width) */}
         <div className="w-1/5 px-10">
           {/* Add Preset QR Code below the image upload */}
+         <h3 className="text-gray-700">Select Any:</h3>
           <PresetQRCode onPresetClick={handlePresetClick} />
         </div>
       </div>
