@@ -6,7 +6,7 @@ import ImageUpload from '../../ui/ImageUpload'; // Adjust path as necessary
 import Slider from '../../ui/Slider';
 import PresetQRCode from '../../ui/PresetQRCode'; // Adjust path as necessary
 
-const Basic = ({ text, qrStyle, colors, size, setQrStyle, setColors, setSize, setText, setImageFile }) => {
+const Basic = ({ text, qrStyle, colors, size, setQrStyle, setColors, setSize, setText, setImage }) => {
     const handlePresetClick = (presetOptions) => {
     setColors({ position: presetOptions.position, pixel: presetOptions.pixel });
     setCornerStyle(presetOptions.cornerStyle);
@@ -15,19 +15,7 @@ const Basic = ({ text, qrStyle, colors, size, setQrStyle, setColors, setSize, se
     setImage(presetOptions.image);
   };
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-  
-  
-  return (
+ return (
     <div>
       {/* Main content with two side-by-side divs */}
       <div className="flex space-x-4">
@@ -41,7 +29,7 @@ const Basic = ({ text, qrStyle, colors, size, setQrStyle, setColors, setSize, se
             required
             className="input-field"
           />
-          <ImageUpload setImageFile={setImageFile} />
+          <ImageUpload setImage={setImage} />
           
           <QRStyleSelector value={qrStyle} onChange={setQrStyle} />
           <ColorPicker colors={colors} onChange={setColors} />

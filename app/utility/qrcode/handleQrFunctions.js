@@ -3,13 +3,9 @@ import { GenerateQRStyle, GenerateQRNative } from './qrUtils';
 
 export const handleGenerate = async ({
   e, text, setInputError, setErrorMessage, useNative, size, 
-  basicQrStyle, basicColors, nativeColors, bnQrStyle, setQrCode, setHasQRCodes
+  basicQrStyle, basicColors, nativeColors, bnQrStyle, setQrCode, setHasQRCodes,image
 }) => {
- console.log(useNative);
-  console.log(text);
-  
-  console.log(basicQrStyle);
-    console.log(basicColors);
+
 
   e.preventDefault();
 
@@ -41,6 +37,14 @@ export const handleGenerate = async ({
       width: size,
       height: size,
       data: text,
+      image: image,
+      imageOptions: {
+        crossOrigin: "anonymous",
+        margin: 10,
+        imageSize: 0.4,
+        hideBackgroundDots: true,
+        backgroundOpacity: 0.8,
+      },
       dotsOptions: {
         color: basicColors.dark,
         type: basicQrStyle.dotsType || "square",
@@ -69,23 +73,24 @@ export const handleGenerate = async ({
 }
 };
 
-export const handleReset = ({
-  setText, setPlaceholder, setClassName, setStyle, setSize, setQrCode,
-  setInputError, setErrorMessage, setHasQRCodes, setBasicQrStyle,
-  setBasicColors, setBnQrStyle
-}) => {
-  setText("");
-  setPlaceholder("Enter text or URL");
-  setClassName("p-2 mb-4 border rounded w-full");
-  setStyle({ width: "300px" });
-  setSize(300);
-  setQrCode(null);
-  setInputError(false);
-  setErrorMessage("");
-  setHasQRCodes(false);
-  setBasicQrStyle({ dotsType: "square", cornersSquareType: "square" });
-  setBasicColors({ dark: "#000000", light: "#ffffff" });
-  setBnQrStyle("none");
+export const handleReset = (resetFields) => {
+  const defaultSettings = {
+    text: "",
+    placeholder: "Enter text or URL",
+    className: "p-2 mb-4 border rounded w-full",
+    style: { width: "300px" },
+    size: 300,
+    qrCode: null,
+    inputError: false,
+    errorMessage: "",
+    hasQRCodes: false,
+    basicQrStyle: { dotsType: "square", cornersSquareType: "square" },
+    basicColors: { dark: "#000000", light: "#ffffff" },
+    bnQrStyle: "none",
+    image: null,
+  };
+
+  Object.entries(defaultSettings).forEach(([key, value]) => resetFields[key](value));
 };
 
 export const handlePrint = (qrCode) => {
@@ -110,3 +115,16 @@ export const handleDownload = (qrCode) => {
     document.body.removeChild(link);
   }
 };
+
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setUploadedImageName(file.name); // Set the uploaded image file name
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };

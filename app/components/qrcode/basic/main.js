@@ -1,7 +1,7 @@
 // src/components/qrcode/Main.js
 import React, { useState } from 'react';
 import QRLayout from '../common/QRLayout';
-import Basic from './Basic';
+import Basic from './basic';
 import BasicNative from './BasicNative';
 import { Checkbox } from '../../ui/checkbox';
 import {
@@ -41,9 +41,10 @@ const Main = () => {
     fourthColor: '#000000',    // Default color for pixel
   });
   const [bnQrStyle, setBnQrStyle] = useState("none");
-
+  const [image, setImage] = useState(null);
   // Handlers
   const handleGenerateClick = (e) => {
+    console.log(image);
     handleGenerate({
       e,
       text,
@@ -57,6 +58,7 @@ const Main = () => {
       bnQrStyle,
       setQrCode,
       setHasQRCodes,
+      image
     });
   };
 
@@ -74,6 +76,7 @@ const Main = () => {
       setBasicQrStyle,
       setBasicColors,
       setBnQrStyle,
+      setImage
     });
   };
 
@@ -116,21 +119,22 @@ const Main = () => {
           />
         ) : (
           <Basic
-            text={text}
-            setText={setText}
-            placeholder={placeholder}
-            setPlaceholder={setPlaceholder}
-            className={className}
-            setClassName={setClassName}
-            style={style}
-            setStyle={setStyle}
-            size={size}
-            setSize={setSize}
-            qrStyle={basicQrStyle}
-            setQrStyle={setBasicQrStyle}
-            colors={basicColors}
-            setColors={setBasicColors}
-            setQrCode={setQrCode}
+              text={text}
+              setText={setText}
+              placeholder={placeholder}
+              setPlaceholder={setPlaceholder}
+              className={className}
+              setClassName={setClassName}
+              style={style}
+              setStyle={setStyle}
+              size={size}
+              setSize={setSize}
+              qrStyle={basicQrStyle}
+              setQrStyle={setBasicQrStyle}
+              colors={basicColors}
+              setColors={setBasicColors}
+              setQrCode={setQrCode}
+              setImage={setImage}
           />
         )}
 

@@ -23,6 +23,7 @@ export const GenerateQRStyle = (options) => {
       type: options.cornersDotOptions?.type || "square", // Default type if not provided
     },
     image: options.image || null, // Ensure image is handled
+    imageOptions: options.imageOptions,
   });
   return qrCode;
 };

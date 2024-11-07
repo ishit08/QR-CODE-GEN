@@ -3,14 +3,19 @@
 import { useState } from 'react';
 import '../../styles/ImageUpload.css'; // Import the CSS file
 
-const ImageUpload = ({ setImageFile }) => {
+const ImageUpload = ({ setImage }) => {
   const [uploadedImageName, setUploadedImageName] = useState(''); // State to store the uploaded image file name
+  
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setUploadedImageName(file.name); // Set the uploaded image file name
-      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
