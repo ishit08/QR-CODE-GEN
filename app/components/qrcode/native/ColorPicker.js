@@ -6,7 +6,6 @@ export default function ColorPicker({
   setBnColors, 
   bnQrStyle 
 }) {
-
   const [iconHoverColors, setIconHoverColors] = useState({
     qr: null,
     background: null,
@@ -74,7 +73,7 @@ export default function ColorPicker({
           </div>
         ))}
 
-        {/* Conditional Secondary Color */}
+        {/* Conditional Secondary Color for Specific Styles */}
         {(bnQrStyle === 'vertical' || bnQrStyle === 'horizontal' || bnQrStyle === 'diagonal') && (
           <div className="color-item" style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
             <label>Secondary</label>
@@ -99,8 +98,8 @@ export default function ColorPicker({
           </div>
         )}
 
-        {/* Additional Colors (Third and Fourth) if bnQrStyle is 'quad' */}
-        {bnQrStyle === 'quad' && ['third', 'fourth'].map((colorKey) => (
+        {/* All Colors (Secondary, Third, Fourth) if bnQrStyle is 'quad' */}
+        {bnQrStyle === 'quad' && ['secondary', 'third', 'fourth'].map((colorKey) => (
           <div key={colorKey} className="color-item" style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
             <label>{colorKey.charAt(0).toUpperCase() + colorKey.slice(1)}</label>
             <FaPalette

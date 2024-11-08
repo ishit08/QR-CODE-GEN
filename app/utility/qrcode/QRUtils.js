@@ -33,12 +33,11 @@ export const GenerateQRNative = (text, options) => {
     // Map the colors as per your provided options structure
     const qrOptions = {
       width: options.width,
-      height: options.height,
+      color: { dark: options.color.dark, light: options.color.light },     // Background color
       errorCorrectionLevel: options.errorCorrectionLevel,
       margin: options.margin,
-      scale: options.scale,
-      primaryColor: options.color.dark,            // QR (dark) color
-      backgroundColor: options.color.light,        // Background color
+      scale: options.scale,      
+      primaryColor: options.color.dark,           // QR (dark) color             
       secondaryColor: options.secondaryColor,      // Secondary color for styling
       thirdColor: options.thirdColor,              // Third color for quad style
       fourthColor: options.fourthColor,            // Fourth color for quad style
@@ -51,7 +50,7 @@ export const GenerateQRNative = (text, options) => {
       } else {
         // Apply style if qrStyle is specified
         if (qrOptions.qrStyle && qrOptions.qrStyle !== 'none') {        
-          applyQRStyle(canvas, qrOptions.qrStyle, qrOptions.primaryColor, qrOptions.backgroundColor, qrOptions.secondaryColor, qrOptions.thirdColor, qrOptions.fourthColor);
+          applyQRStyle(canvas, qrOptions.qrStyle, qrOptions.primaryColor, qrOptions.secondaryColor, qrOptions.thirdColor, qrOptions.fourthColor);
         }
         resolve(canvas);
       }
@@ -60,7 +59,7 @@ export const GenerateQRNative = (text, options) => {
 };
 
 // Function to apply styles to the QR code
-export const applyQRStyle = (canvas, qrStyle, primaryColor, backgroundColor, secondaryColor, thirdColor, fourthColor) => {
+export const applyQRStyle = (canvas, qrStyle, primaryColor, secondaryColor, thirdColor, fourthColor) => {
   const context = canvas.getContext("2d");
   const imgData = context.getImageData(0, 0, canvas.width, canvas.height);
   const data = imgData.data;
