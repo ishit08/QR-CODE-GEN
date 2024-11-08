@@ -3,62 +3,61 @@ import { GenerateQRStyle, GenerateQRNative } from './qrUtils';
 
 export const handleGenerate = async ({
   e, text, setInputError, setErrorMessage, useNative, size, 
-  basicQrStyle, basicColors, nativeColors, bnQrStyle, setQrCode, setHasQRCodes,image
+  basicQrStyle, basicColors, bnColors, bnQrStyle, setQrCode, setHasQRCodes,image
 }) => {
-
-
   e.preventDefault();
-
   if (!text) {
     setInputError(true);
     setErrorMessage("Please enter a value to generate QR code.");
     return;
   }
-
   setInputError(false);
   setErrorMessage("");
-
   try {
   let qrCodeInstance;
   if (useNative) {
     const options = {
       width: size,
+      height:size,
       errorCorrectionLevel: "H",
       margin: 1,
       scale: 8,
-      color: { dark: primaryColor, light: secondaryColor },
+      color: { dark: bnColors.qr, light: bnColors.background },
       qrStyle: bnQrStyle,
-      thirdColor: thirdColor,
-      fourthColor: fourthColor,
-    };
+      secondaryColor:bnColors.secondary,
+      thirdColor: bnColors.third,
+      fourthColor: bnColors.fourth,
+    };  
     qrCodeInstance = await GenerateQRNative(text, options);
   } else {
     const options = {
+       
       width: size,
       height: size,
       data: text,
       image: image,
+      qrOptions: { errorCorrectionLevel: "H" },
       imageOptions: {
-        crossOrigin: "anonymous",
-        margin: 10,
+        hideBackgroundDots: true,     
         imageSize: 0.4,
-        hideBackgroundDots: true,
-        backgroundOpacity: 0.8,
+        margin:1,
+        crossOrigin: "anonymous",
+        saveAsBlob: false
       },
       dotsOptions: {
-        color: basicColors.dark,
-        type: basicQrStyle.dotsType || "square",
+        color: basicColors.dark,        
+        type: basicQrStyle.dotsType,
       },
       backgroundOptions: {
         color: basicColors.light,
       },
       cornersSquareOptions: {
         color: basicColors.position, // Use position for corners
-        type: basicQrStyle.cornersSquareType || "square",
+        type: basicQrStyle.cornersSquareType,
       },
       cornersDotOptions: {
         color: basicColors.pixel, // Use position for cornersDot
-        type: basicQrStyle.cornersDotType || "square",
+        type: basicQrStyle.cornersDotType,
       },
     };
     qrCodeInstance = GenerateQRStyle(options);
@@ -84,8 +83,8 @@ export const handleReset = (resetFields) => {
     inputError: false,
     errorMessage: "",
     hasQRCodes: false,
-    basicQrStyle: { dotsType: "square", cornersSquareType: "square" },
-    basicColors: { dark: "#000000", light: "#ffffff" },
+    basicQrStyle: { dotsType: "square", cornersSquareType: "square" ,cornersDotType:"square"},
+    basicColors: { dark: "#000000", light: "#ffffff",position:"#000000",  pixel: '#000000'},
     bnQrStyle: "none",
     image: null,
   };

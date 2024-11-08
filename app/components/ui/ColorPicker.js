@@ -44,7 +44,7 @@ const ColorPicker = ({ colors, onChange }) => {
 
   return (
     <div className="color-picker-container">
-      <label className="block text-gray-700">Select Colors for QR and Position/Pixel:</label>
+      <label className="block text-gray-700">Select Colors for QR:</label>
       
       {/* Combined Gradient Container */}
       <div className="color-picker-grid">

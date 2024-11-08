@@ -30,6 +30,8 @@ export async function POST(req) {
         email,
         password: hashedPassword, // Store the hashed password
       },
+
+      
     });
 
     return NextResponse.json({
