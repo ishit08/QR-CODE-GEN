@@ -17,15 +17,15 @@ const PresetQRCode = ({ onPresetClick }) => {
   };
 
   return (
-    <div className="mb-4">
-      <h3 className="text-gray-700">Choose Preset Design:</h3>
+    <div>
+   
       <Image
         src="/imagesframe/facebook.png" // Use the path relative to the public folder
-        alt="Preset QR"
+        alt="Facebook"
         className="cursor-pointer"
         onClick={handleClick}
-        width={150} // Adjust width as necessary
-        height={150} // Adjust height as necessary
+        width={100} // Adjust width as necessary
+        height={100} // Adjust height as necessary
       />
     </div>
   );

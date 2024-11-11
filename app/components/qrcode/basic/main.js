@@ -1,13 +1,18 @@
 // src/components/qrcode/Main.js
-import React, { useState } from 'react';
-import QRLayout from '../common/QRLayout'; // Adjust path as necessary
-import Basic from './Basic'; // Adjust path as necessary
-import BasicNative from './BasicNative'; // Adjust path as necessary
-import { Checkbox } from '../../ui/checkbox'; // Adjust path as necessary
-import { GenerateQRStyle, GenerateQRNative } from '../../../utility/qrcode/qrUtils'; // Adjust path as necessary
+import React, { useState, useEffect, useCallback } from 'react';
+import QRLayout from '../common/QRLayout';
+import Basic from './basic';
+import BasicNative from './basicNative';
+import { Checkbox } from '../../ui/checkbox';
+import {
+  handleGenerate,
+  handleReset,
+  handlePrint,
+  handleDownload
+} from '../../../utility/qrcode/handleQrFunctions';
 
 const Main = () => {
-  // Common State Variables
+  // State Variables for QR Code generation
   const [text, setText] = useState("");
   const [placeholder, setPlaceholder] = useState("Enter text or URL");
   const [className, setClassName] = useState("p-2 mb-4 border rounded w-full");
@@ -18,250 +23,173 @@ const Main = () => {
   const [hasQRCodes, setHasQRCodes] = useState(false);
   const [inputError, setInputError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-// Separate State for Basic QR Style
+
+  // State Variables for QR Code Styles and Colors
   const [basicQrStyle, setBasicQrStyle] = useState({
     dotsType: "square",
     cornersSquareType: "square",
     cornersDotType: "square",
   });
-
   const [basicColors, setBasicColors] = useState({
     dark: "#000000",
     light: "#ffffff",
+    position: '#000000', // Default color for position marker
+    pixel: '#000000',    // Default color for pixel
   });
+  const [bnColors, setBnColors] = useState({
+    qr: '#000000',         // Default color for QR
+    background: '#FFFFFF',  // Default color for background
+    secondary: '#FF5733',   // Default color for secondary
+    third: '#C70039',       // Default color for third
+    fourth: '#8E44AD',      // Default color for fourth
+  });
+  const [bnQrStyle, setBnQrStyle] = useState("none");
+  const [image, setImage] = useState(null);
+  const [orgText, setOrgText] = useState("");
+  const [textColor, setTextColor] = useState("#000000");
+  const [bgColor, setBgColor] = useState("#FFFFFF");
+  const [bnImage, setBnImage] = useState(null);
+  const [showNativeWarning, setShowNativeWarning] = useState(false);
+  const [fontSize, setFontSize] = useState(16);
+  const [fontStyle, setFontStyle] = useState("normal");
+  const [bgStyle, setBgStyle] = useState("solid");
+  const [gradientColors, setGradientColors] = useState(["#ffffff", "#000000"]);
 
-  // Separate State for BasicNative QR Style
-  const [bnQrStyle, setBnQrStyle] =  useState("none");
-
-  const [primaryColor, setPrimaryColor] = useState('#000000');
-  const [secondaryColor, setSecondaryColor] = useState('#ffffff');
-  const [thirdColor, setThirdColor] = useState('#cccccc');
-  const [fourthColor, setFourthColor] = useState('#888888');
-
-  // Handler to generate QR code
-  const handleGenerate = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
-
-    // Validate input text
-    if (!text) {
-      setInputError(true);
-      setErrorMessage("Please enter a value to generate QR code.");
-      return;
-    }
-
-    // Clear previous errors if valid
-    setInputError(false);
-    setErrorMessage("");
-
-    try {
-      let qrCodeInstance;
-      if (useNative) {
-      // Use native QR code generation logic
-       const options = {
-          width:size,
-          errorCorrectionLevel: "H",
-          margin: 1,
-          scale: 8,
-          color: {
-            dark: primaryColor, // Use primary color
-            light: secondaryColor,
-          },
-          qrStyle: bnQrStyle, // Use BasicNative QR Style
-          thirdColor: thirdColor,
-          fourthColor: fourthColor,
-        };
-        console.log("Native QR Options:", options);
-        qrCodeInstance = await GenerateQRNative(text, options); // Generate using native method
-       // console.log("Native QR:", qrCodeInstance);
-      } else {
-        // Use styled QR code generation logic
-        const options = {
-          width: size,
-          height: size,
-          data: text,
-          dotsOptions: {
-            color: basicColors.dark,
-            type: basicQrStyle.dotsType || "square",
-          },
-          backgroundOptions: {
-            color: basicColors.light,
-          },
-          cornersSquareOptions: {
-            color: basicColors.dark,
-            type: basicQrStyle.cornersSquareType || "square",
-          },
-          cornersDotOptions: {
-            color: basicColors.dark,
-            type: basicQrStyle.cornersDotType || "square",
-          },
-        };
-        qrCodeInstance = GenerateQRStyle(options); // Generate using styled method
-      }
-      setQrCode(qrCodeInstance);     
-      setHasQRCodes(!!qrCodeInstance);
-    } catch (error) {
-      console.error("QR Code generation error:", error);
-      setInputError(true);
-      setErrorMessage("Failed to generate QR code. Please try again.");
-    }
-  };
-
-  // Handler to reset all fields
-  const handleReset = () => {
-    setText("");
-    setPlaceholder("Enter text or URL");
-    setClassName("p-2 mb-4 border rounded w-full");
-    setStyle({ width: "300px" });
-    setSize(300);
-    setQrCode(null);
-    setInputError(false);
-    setErrorMessage("");
-    setHasQRCodes(false);
-
-    // Reset Basic QR Style
-    setBasicQrStyle({
-      dotsType: "square",
-      cornersSquareType: "square",
-      cornersDotType: "square",
+  const handleGenerateClick = useCallback((e) => {
+    handleGenerate({
+      e,
+      text,
+      setInputError,
+      setErrorMessage,
+      useNative,
+      size,
+      basicQrStyle,
+      basicColors,
+      bnColors,
+      bnQrStyle,
+      setQrCode,
+      setHasQRCodes,
+      image,
+      orgText,
+      textColor,
+      bgColor,
+      fontSize,
+      fontStyle,
+      bgStyle,
+      gradientColors,
+      bnImage
     });
-    setBasicColors({
-      dark: "#000000",
-      light: "#ffffff",
+  }, [text, useNative, size, basicQrStyle, basicColors, bnColors, bnQrStyle, image, orgText, textColor, bgColor, fontSize, fontStyle, bgStyle, gradientColors, bnImage]);
+
+  const handleResetClick = useCallback(() => {
+    handleReset({
+      setText,
+      setPlaceholder,
+      setClassName,
+      setStyle,
+      setSize,
+      setQrCode,
+      setInputError,
+      setErrorMessage,
+      setHasQRCodes,
+      setBasicQrStyle,
+      setBasicColors,
+      setBnQrStyle,
+      setImage,
+      setBnColors,
+      setOrgText,
+      setTextColor,
+      setBgColor,
+      setBnImage
     });
+  }, []);
 
-    // Reset BasicNative QR Style
-    setBnQrStyle({
-      bnQrStyle: "none"
-    });
-    
-   
+  useEffect(() => {
+    // Load checkbox state from local storage on component mount
+    const savedUseNative = JSON.parse(localStorage.getItem('useNative')) || false;
+    setUseNative(savedUseNative);
+  }, []);
+
+  useEffect(() => {
+    // Save checkbox state to local storage whenever it changes
+    localStorage.setItem('useNative', JSON.stringify(useNative));
+    setShowNativeWarning(useNative);
+  }, [useNative]);
+
+  const handleCheckboxChange = (e) => {
+    setUseNative(e.target.checked);
   };
 
-  // Handlers for printing and downloading QR code
-  const handlePrint = () => {
-    // Implement your print functionality here
-    if (qrCode) {
-      const printWindow = window.open('', '_blank');
-      if (printWindow) {
-        printWindow.document.write('<html><head><title>Print QR Code</title></head><body>');
-        if (typeof qrCode === 'string') {
-          // If QR code is a data URL
-          printWindow.document.write(`<img src="${qrCode}" alt="QR Code" />`);
-        } else {
-          // If QR code is a DOM element (e.g., Canvas)
-          const qrClone = qrCode.cloneNode(true);
-          printWindow.document.body.appendChild(qrClone);
-        }
-        printWindow.document.write('</body></html>');
-        printWindow.document.close();
-        printWindow.focus();
-        printWindow.print();
-        printWindow.close();
-      }
-    }
-  };
-
-  const handleDownload = () => {
-    if (qrCode) {
-      if (typeof qrCode === 'string') {
-        // If QR code is a data URL
-        const link = document.createElement('a');
-        link.href = qrCode;
-        link.download = 'qrcode.png';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } else if (qrCode instanceof HTMLCanvasElement) {
-        // If QR code is a Canvas element
-        const link = document.createElement('a');
-        link.href = qrCode.toDataURL("image/png");
-        link.download = 'qrcode.png';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    }
-  };
-
-
-  
   return (
     <div>
       <QRLayout
         title="Create QR Code"
-        onPrint={handlePrint}
-        onDownload={handleDownload}
+        onPrint={() => handlePrint(qrCode)}
+        onDownload={() => handleDownload(qrCode)}
         hasQRCodes={hasQRCodes}
-        onReset={handleReset}
-        onGenerate={handleGenerate}
+        onReset={handleResetClick}
+        onGenerate={handleGenerateClick}
         qrCode={qrCode}
       >
         <div className="flex justify-start mb-4">
           <Checkbox
             id="use-alternate-library"
             checked={useNative}
-            onChange={(e) => setUseNative(e.target.checked)}
+            onChange={handleCheckboxChange}
           >
-            Use Native QR Code Generator
+            Need QR In Native Language?
           </Checkbox>
         </div>
 
-        {/* Render the appropriate QR code generation component */}
+        {showNativeWarning && (
+          <div className="text-yellow-600 mb-4 text-center">
+            To revert to the previous styling options, please uncheck the "Need QR In Native Language?" checkbox.
+          </div>
+        )}
+
         {useNative ? (
           <BasicNative
-            // Common Props
             text={text}
             setText={setText}
-            placeholder={placeholder}
-            setPlaceholder={setPlaceholder}
-            className={className}
-            setClassName={setClassName}
-          
             size={size}
             setSize={setSize}
-            // QR Style Props for BasicNative
             bnQrStyle={bnQrStyle}
             setBnQrStyle={setBnQrStyle}
-            // Color Props for BasicNative
-              primaryColor={primaryColor}
-      setPrimaryColor={setPrimaryColor}
-      secondaryColor={secondaryColor}
-      setSecondaryColor={setSecondaryColor}
-      thirdColor={thirdColor}
-      setThirdColor={setThirdColor}
-      fourthColor={fourthColor}
-      setFourthColor={setFourthColor}
+            bnColors={bnColors}
+            setBnColors={setBnColors}
+            orgText={orgText}
+            setOrgText={setOrgText}
+            textColor={textColor}
+            setTextColor={setTextColor}
+            bgColor={bgColor}
+            setBgColor={setBgColor}
+            fontSize={fontSize}
+            setFontSize={setFontSize}
+            fontStyle={fontStyle}
+            setFontStyle={setFontStyle}
+            bgStyle={bgStyle}
+            setBgStyle={setBgStyle}
+            gradientColors={gradientColors}
+            setGradientColors={setGradientColors}
+            setBnImage={setBnImage}
           />
         ) : (
           <Basic
-            // Common Props
             text={text}
             setText={setText}
-            placeholder={placeholder}
-            setPlaceholder={setPlaceholder}
-            className={className}
-            setClassName={setClassName}
-            style={style}
-            setStyle={setStyle}
             size={size}
             setSize={setSize}
-            // QR Style Props for Basic
             qrStyle={basicQrStyle}
             setQrStyle={setBasicQrStyle}
-            // Color Props for Basic
             colors={basicColors}
             setColors={setBasicColors}
-            // QR Code Setter
             setQrCode={setQrCode}
+            image={image}
+            setImage={setImage}
           />
         )}
 
-        {/* Display error message if any */}
-        {inputError && (
-          <div className="text-red-500 mt-2">
-            {errorMessage}
-          </div>
-        )}
+        {inputError && <div className="text-red-500 mt-2">{errorMessage}</div>}
       </QRLayout>
     </div>
   );

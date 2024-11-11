@@ -1,0 +1,35 @@
+.color-picker-container {
+    margin-bottom: 1rem;
+}
+
+.color-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    padding: 1.25rem;
+    background: linear-gradient(to right, #e0e0e0, #b0b0b0, #808080, #505050, #303030);
+    border-radius: 0.375rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.color-picker-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.color-icon {
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+    padding: 0.25rem;
+}
+
+.color-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}

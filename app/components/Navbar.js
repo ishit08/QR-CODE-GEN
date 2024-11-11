@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useSession, signOut } from "next-auth/react"; 
 import Link from "next/link";
 import Image from "next/image";
-import { Skeleton, Avatar, Menu, MenuItem, Divider, ListItemText } from "@mui/material";
+import { Avatar, Menu, MenuItem, Divider, ListItemText } from "@mui/material";
 
 import styles from '../styles/Navbar.module.css';
 
@@ -60,23 +60,17 @@ const Navbar = () => {
 
         {/* Menu links for desktop */}
         <div className={`${styles['menu-links']} hidden md:flex space-x-6`}>
-          {status === "loading" ? (
-            <Skeleton variant="text" width={100} />
-          ) : (
-            links.map((link) => (
-              <Link key={link.href} href={link.href} className={styles['menu-link']}>
-                <i className={`${link.icon} ${styles.icon}`}></i>
-                <span>{link.label}</span>
-              </Link>
-            ))
-          )}
+          {links.map((link) => (
+            <Link key={link.href} href={link.href} className={styles['menu-link']}>
+              <i className={`${link.icon} ${styles.icon}`}></i>
+              <span>{link.label}</span>
+            </Link>
+          ))}
         </div>
 
         {/* User profile or login/register links */}
         <div className="flex items-center space-x-6">
-          {status === "loading" ? (
-            <Skeleton variant="circular" width={40} height={40} />
-          ) : status === "authenticated" ? (
+          {status === "authenticated" ? (
             <div className="flex items-center space-x-2 pl-10 pr-10">
               <Avatar
                 sx={{ bgcolor: '#54cb5a82', cursor: 'pointer', fontSize: '1rem' }}
