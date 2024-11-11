@@ -1,6 +1,8 @@
+"use client";
+
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { detectDeviceAndSetCamera, initCamera, stopCamera, processQRCode } from '../../utility/qrcode/qrCodeScan';
-import { startBarcodeScanner, stopBarcodeScanner } from '../../utility/barcode/barCodeScan';
+import { BrowserMultiFormatReader, BarcodeFormat } from '@zxing/library';
 
 const CameraScanner = ({ type, handleFileUpload }) => {
     const [cameraFacingMode, setCameraFacingMode] = useState('environment');
@@ -11,9 +13,9 @@ const CameraScanner = ({ type, handleFileUpload }) => {
     const [hasFlash, setHasFlash] = useState(false);
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
-    const quaggaInitialized = useRef(false);
+    const readerRef = useRef(null);
     const [data, setData] = useState(null);
-    const [isScanning, setIsScanning] = useState(true); // Add state to manage scanning
+    const [isScanning, setIsScanning] = useState(true);
 
     // Callback to detect device and set camera
     const memoizedDetectDeviceAndSetCamera = useCallback(() => {
@@ -35,41 +37,64 @@ const CameraScanner = ({ type, handleFileUpload }) => {
 
         getCameras();
         checkFlashlight();
-        initCamera(videoRef, cameraFacingMode);
 
-        // Start scanning based on type
+        // Initialize appropriate scanner based on type
         if (type === 'QR Code') {
-            processQRCode(videoRef, canvasRef, setData, isScanning); // Pass isScanning state
+            initCamera(videoRef, cameraFacingMode);
+            processQRCode(videoRef, canvasRef, setData, isScanning);
         } else if (type === 'Bar Code') {
-            startBarcodeScanner(videoRef, quaggaInitialized, setData);
+            const formats = [
+                BarcodeFormat.CODE_128,
+                BarcodeFormat.CODE_39,
+                BarcodeFormat.EAN_13,
+                BarcodeFormat.EAN_8,
+                BarcodeFormat.UPC_A,
+                BarcodeFormat.UPC_E
+            ];
+            
+            readerRef.current = new BrowserMultiFormatReader(undefined, formats);
+            
+            const startBarcodeScanning = async () => {
+                try {
+                    const videoInputDevices = await readerRef.current.listVideoInputDevices();
+                    if (videoInputDevices.length > 0) {
+                        await readerRef.current.decodeFromVideoDevice(
+                            videoInputDevices[0].deviceId,
+                            videoRef.current,
+                            (result, err) => {
+                                if (result && isScanning) {
+                                    setData(result.getText());
+                                    new Audio('/beep.mp3').play().catch(() => {});
+                                }
+                            }
+                        );
+                    }
+                } catch (err) {
+                    console.error('Error starting barcode scanner:', err);
+                }
+            };
+
+            startBarcodeScanning();
         }
 
         const videoElement = videoRef.current;
-
-        const onLoadedData = () => {
-            setVideoLoaded(true);
-        };
-
+        const onLoadedData = () => setVideoLoaded(true);
         if (videoElement) {
             videoElement.addEventListener('loadeddata', onLoadedData);
         }
 
-        // Cleanup function to stop camera and scanning
         return () => {
-            stopCamera(videoRef);
-            stopBarcodeScanner(quaggaInitialized);
+            if (type === 'QR Code') {
+                stopCamera(videoRef);
+            } else if (type === 'Bar Code' && readerRef.current) {
+                readerRef.current.reset();
+                readerRef.current = null;
+            }
             if (videoElement) {
                 videoElement.removeEventListener('loadeddata', onLoadedData);
             }
         };
-    }, [cameraFacingMode, type, memoizedDetectDeviceAndSetCamera, isScanning]); // Include isScanning in the dependency array
-
-    // Function to stop scanning and camera
-    const stopScanning = () => {
-        setIsScanning(false); // Set scanning to false
-        stopCamera(videoRef); // Stop the camera
-        setData(null); // Clear the detected data
-    };
+    }, [cameraFacingMode, type, memoizedDetectDeviceAndSetCamera, isScanning]);
 
     // Switch camera function
     const switchCamera = () => {
@@ -85,11 +110,9 @@ const CameraScanner = ({ type, handleFileUpload }) => {
     // Toggle flashlight function
     const toggleFlashlight = async () => {
         if (!hasFlash) return;
-
         const stream = videoRef.current.srcObject;
         const videoTrack = stream.getVideoTracks()[0];
         const capabilities = videoTrack.getCapabilities();
-
         if (capabilities.torch) {
             const torchState = !isFlashOn;
             await videoTrack.applyConstraints({ advanced: [{ torch: torchState }] });
@@ -115,35 +138,30 @@ const CameraScanner = ({ type, handleFileUpload }) => {
 
                 {videoLoaded && (
                     <>
-                        {/* Conditional Overlay */}
                         {type === 'QR Code' ? (
                             <div className="scanner-square-overlay"></div>
                         ) : (
                             <div className="scanner-rectangle-overlay"></div>
                         )}
 
-                        {/* Scanner Line */}
                         {type === 'QR Code' ? (
                             <div className="scanner-line"></div>
                         ) : (
                             <div className="scanner-line-horizontal"></div>
                         )}
 
-                        {/* Upload Button */}
                         <label htmlFor="file-upload" className="upload-icon">
                             <i className="fa-solid fa-upload"></i>
                             <input id="file-upload" type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
                         </label>
                         <span className="upload-caption">Scan<br />from<br />Gallery</span>
 
-                        {/* Camera Switch Icon */}
                         <i 
                             className="fa-solid fa-camera-rotate switch-cam-icon" 
                             onClick={switchCamera}
                             style={{ cursor: availableCameras.length > 1 ? 'pointer' : 'not-allowed', opacity: availableCameras.length > 1 ? 1 : 0.5 }} 
                         />
 
-                        {/* Flashlight Toggle Icon */}
                         <i 
                             className={`fa-solid fa-bolt flash-icon ${isFlashOn ? 'active' : ''}`} 
                             onClick={toggleFlashlight}
